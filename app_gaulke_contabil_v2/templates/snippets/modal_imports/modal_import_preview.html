@@ -1,0 +1,289 @@
+<article class="container-import-preview">
+    <div class="block-import-preview">
+
+        <div class="block-actions-table-import-JB jc-start">
+            <span title="voltar" onclick="closeModalTableImportJB();">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <p>voltar</p>
+            </span>
+        </div>
+
+        <div class="block-actions-table-import-JB jc-center" id="title-modal-table-import-JB">
+            <h4></h4>
+        </div>
+            
+        
+        <div class="block-inputs-table-inmport-JB">
+            <!-- <span>
+                <p>Código JB: <b>123</b></p>
+            </span> -->
+
+            <span data-field-update-table-import-JB="filial">
+                <label for="filial">Filial</label>
+                <input type="text" maxlength="2" name="filial" id="filial" data-update-row="filial" oninput="updateAccountCodeImportTableJB(this);" placeholder="filial">
+            </span>
+            <span data-field-update-table-import-JB="date_lancamento">
+                <label for="date_lanc">Data Lanç.</label>
+                <input type="date" name="date_lanc" id="date_lanc" data-update-row="DT_LANC" onchange="updateAccountCodeImportTableJB(this);"  oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <!-- ----------------------------- -->
+            <span data-field-update-table-import-JB="account_code_credit">
+                <label for="account_code_credit">Conta Crédito</label>
+                <input type="text" name="account_code_credit" maxlength="8" id="account_code_credit" data-update-row="C--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <span data-field-update-table-import-JB="account_code_credit_desconto">
+                <label for="account_code_credit_desconto">Conta Crédito (Desconto)</label>
+                <input type="text" name="account_code_credit_desconto" maxlength="8" id="account_code_credit_desconto" data-update-row="C--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <span data-field-update-table-import-JB="account_code_credit_devolucao">
+                <label for="account_code_credit_devolucao">Conta Crédito (Devolução)</label>
+                <input type="text" name="account_code_credit_devolucao" maxlength="8" id="account_code_credit_devolucao" data-update-row="C--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <!-- ----------------------------- -->
+            <span data-field-update-table-import-JB="account_code_debit">
+                <label for="account_code_debit">Conta Débito</label>
+                <input type="text" name="account_code_debit" maxlength="8" id="account_code_debit" data-update-row="D--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <span data-field-update-table-import-JB="account_code_debit_juros">
+                <label for="account_code_debit_juros">Conta Débito (Juros)</label>
+                <input type="text" name="account_code_debit_juros" maxlength="8" id="account_code_debit_juros" data-update-row="D--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <span data-field-update-table-import-JB="code_debit_recebivel">
+                <label for="account_code_debit_recebivel">Conta Débito (recebível)</label>
+                <input type="text" name="account_code_debit_recebivel" maxlength="8" id="account_code_debit_recebivel" data-update-row="D--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <span data-field-update-table-import-JB="code_debit_comissao">
+                <label for="account_code_debit_comissao">Conta Débito (comissão)</label>
+                <input type="text" name="account_code_debit_comissao" maxlength="8" id="account_code_debit_comissao" data-update-row="D--" placeholder="código da conta" oninput="updateAccountCodeImportTableJB(this);">
+            </span>
+            <!-- ----------------------------- -->
+            
+        </div>
+        
+        <div class="block-actions-table-import-JB jc-end">
+            <span id="btn-download-file-txt-import-JB" title="arquivo .txt" onclick="validFileImportJB_TXT()">
+                <p>baixar</p>
+                <i class="fa-regular fa-file-lines"></i>
+            </span>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>TP_REGISTRO</th>
+                    <th>NOME</th>
+                    <th>COD_EMPRESA</th>
+                    <th>FILIAL</th>
+                    <th>DATA</th>
+                    <th>NR_L_CTO_ERP</th>
+                    <th>TP</th>
+                    <th>CONTA</th>
+                    <th>SUBCONTA</th>
+                    <th>VALOR</th>
+                    <th>ACAO</th>
+                    <th>PRIMEIRO_HIST_CTA</th>
+                    <th>COD_HISTORICO</th>
+                    <th>COMPL_HISTORICO</th>
+                    <th>GRUPO_LCTO</th>
+                    <th>CNPJ</th>
+                    <th>IESTADUAL</th>
+                    <th>TP_CNPJ</th>
+                    <th>CONTA_ORIGEM</th>
+                    <th>CNPJ_EMPRESA</th>
+                    <th>IE_EMPRESA</th>
+                    <th>TYPE_PROCESS</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+       </table>
+    </div>
+</article>
+
+<script>
+
+    async function checkInputsForm(){
+
+        let count_null = 0;
+        let inputs = document.querySelectorAll(`[data-field-update-table-import-jb]`);
+
+        for(let i = 0; i < inputs.length; i++){
+            if(inputs[i].classList.contains("active")){
+                // console.log(inputs[i].querySelector("input"))
+                if(inputs[i].querySelector("input").value == ""){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function closeModalTableImportJB(){
+        document.querySelector(".container-import-preview").classList.remove("active");
+    }
+
+    async function updateAccountCodeImportTableJB(element){
+
+        let checkInputs = await checkInputsForm();
+        let value = element.value.trim();
+        element.value = value;
+        
+
+        let status_error_input = true;
+        
+        if(element.id == "date_lanc"){
+            value = String(value).split("-");
+            if(value.length == 3){
+                try {
+                    d = await value[2];
+                    m = await value[1];
+                    y = await value[0];
+                    if( d != undefined && m != undefined && y != undefined && parseInt(d) > 0 && parseInt(m) > 0 && parseInt(y) > 2020 ){
+                        value = await `${d}/${m}/${y}`;
+                        status_error_input = true;
+                    } else {
+                        value = "";
+                        status_error_input = false;
+                    }
+                } catch (error) {
+                    value = "";
+                    console.error(error)
+                }
+            } else {
+                status_error_input = false;
+            }
+        }
+        else if ( element.id.includes("account_code") && isNaN(value) ) { // && parseInt(value) <= 0
+            status_error_input = false;
+        }
+
+
+        if(status_error_input){
+            element.style.border = "1px solid #63615f";
+            let field_update = element.id;
+            document.querySelectorAll(`[data-tb-row-JB="row-${field_update}"]`).forEach((e)=>{
+                e.textContent = value;
+            });
+
+            // if(checkInputs){
+            //     document.getElementById("btn-download-file-txt-import-JB").classList.add("active");
+            // } else {
+            //     document.getElementById("btn-download-file-txt-import-JB").classList.remove("active");
+            // }
+        } else {
+            element.style.border = "1px solid red";
+            document.getElementById("btn-download-file-txt-import-JB").classList.remove("active");
+        }
+    }
+
+    async function validFileImportJB_TXT(){
+        let checkInputs = await checkInputsForm();
+        if(!checkInputs){
+            document.querySelector(".container-confirm-download-file-txt").classList.add("active");
+
+        } else {
+            console.log("seguir com dowload do arquivo...")
+            dowloadFileImportJB_TXT();
+        }
+    }
+    async function dowloadFileImportJB_TXT(){
+        let title = document.getElementById("title-modal-table-import-JB").querySelector("h4").textContent.replace("#", "");
+        let table, rows, td;
+        const arr_rows = [];
+        table = document.querySelector(".container-import-preview").querySelector("table");
+        rows = table.querySelector("tbody").querySelectorAll("tr");
+        rows.forEach((tr)=>{
+            td = tr.querySelectorAll("td");
+            let TP_REGISTRO         = td[0].textContent.trim();
+            // let NOME                = td[1].textContent.trim();
+            let COD_EMPRESA         = td[2].textContent.trim();
+            let FILIAL              = td[3].textContent.trim();
+            let DATA                = td[4].textContent.trim();
+            let NR_L_CTO_ERP        = td[5].textContent.trim();
+            let TP                  = td[6].textContent.trim();
+            let CONTA               = td[7].textContent.trim();
+            let SUBCONTA            = td[8].textContent.trim();
+            let VALOR               = td[9].textContent.trim();
+            let ACAO                = td[10].textContent.trim();
+            let PRIMEIRO_HIST_CTA   = td[11].textContent.trim();
+            let COD_HISTORICO       = td[12].textContent.trim();
+            let COMPL_HISTORICO     = td[13].textContent.trim();
+            let GRUPO_LCTO          = td[14].textContent.trim();
+            let CNPJ                = td[15].textContent.trim();
+            let IESTADUAL           = td[16].textContent.trim();
+            let TP_CNPJ             = td[17].textContent.trim();
+            let CONTA_ORIGEM        = td[18].textContent.trim();
+            let CNPJ_EMPRESA        = td[19].textContent.trim();
+            let IE_EMPRESA          = td[20].textContent.trim();
+
+            let arr_caract_remove = [",", "-", "/", "."];
+            for(let i = 0; i < 5; i++){
+                for(let j = 0; j < arr_caract_remove.length; j++){
+                    DATA = DATA.replace(arr_caract_remove[j], "");
+                    CNPJ = CNPJ.replace(arr_caract_remove[j], "");
+                }
+            }
+
+            console.log(`
+                ---------------------------------------------
+                >> TP_REGISTRO: ${TP_REGISTRO}
+                >> COD_EMPRESA: ${COD_EMPRESA}
+                >> FILIAL: ${FILIAL}
+                >> DATA: ${DATA}
+                >> NR_L_CTO_ERP: ${NR_L_CTO_ERP}
+                >> TP: ${TP}
+                >> CONTA: ${CONTA}
+                >> SUBCONTA: ${SUBCONTA}
+                >> VALOR: ${VALOR}
+                >> ACAO: ${ACAO}
+                >> PRIMEIRO_HIST_CTA: ${PRIMEIRO_HIST_CTA}
+                >> COD_HISTORICO: ${COD_HISTORICO}
+                >> COMPL_HISTORICO: ${COMPL_HISTORICO}
+                >> GRUPO_LCTO: ${GRUPO_LCTO}
+                >> CNPJ: ${CNPJ}
+                >> IESTADUAL: ${IESTADUAL}
+                >> TP_CNPJ: ${TP_CNPJ}
+                >> CONTA_ORIGEM: ${CONTA_ORIGEM}
+                >> CNPJ_EMPRESA: ${CNPJ_EMPRESA}
+                >> IE_EMPRESA: ${IE_EMPRESA}
+            `)
+            arr_rows.push([
+                TP_REGISTRO,
+                COD_EMPRESA,
+                FILIAL,
+                DATA,
+                NR_L_CTO_ERP,
+                TP,
+                CONTA,
+                SUBCONTA,
+                VALOR,
+                ACAO,
+                PRIMEIRO_HIST_CTA,
+                COD_HISTORICO,
+                COMPL_HISTORICO,
+                GRUPO_LCTO,
+                CNPJ,
+                IESTADUAL,
+                TP_CNPJ,
+                CONTA_ORIGEM,
+                CNPJ_EMPRESA,
+                IE_EMPRESA,
+            ]);
+        });
+
+        var csv = '';
+        for(var i=0; i < arr_rows.length; i++){
+            var values = Object.values(arr_rows[i]);
+            csv += values.join(';') + '\n';
+        }
+        
+        var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${title}.txt`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>

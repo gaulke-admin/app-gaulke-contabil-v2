@@ -1,0 +1,105 @@
+{% load static %}
+<nav>
+    <header>
+        <div class="logo-navbar">
+            <img src="{% static 'Logo-principal-branca.png' %}" alt="Logo">
+        </div>
+        <div class="menu"> <!-- style="border-color: transparent;" -->
+            <ul data-dropdown-menu-asidebar-ul="0" class="active">
+                <li class="active" data-menu-link="home" data-menu-url-link="{% url 'home' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-house active"></i>
+                    <span class="active">Início</span>
+                </li>
+            </ul>
+        </div>
+
+        {% if user.sessao_config_users %}
+        <div class="menu"> <!-- style="border-color: transparent;" -->
+            <ul data-dropdown-menu-asidebar-ul="0" class="active">
+                <li class="active" data-menu-link="config_users" data-menu-url-link="{% url 'accounts' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span class="active">Config. Usuários</span>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if user.sessao_atividades %}
+        <div class="menu">
+            <article data-dropdown-menu-asidebar-article="1" onclick="displayDropdownMenuAsidebar(this);">
+                <span>Atividades</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </article>
+            <ul data-dropdown-menu-asidebar-ul="1">
+                
+                <li class="active" data-menu-link="imports_JB" data-menu-url-link="{% url 'imports_JB' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-arrow-up-from-bracket active"></i>
+                    <span class="active">Importações JB</span>
+                </li>
+                <li class="active" data-menu-link="apont_hours" data-menu-url-link="{% url 'apont_hours' %}" onclick="setMenulink(this);">
+                    <i class="fa-regular fa-clock active"></i>
+                    <span class="active">Apont. Horas</span>
+                </li>
+                
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if user.sessao_relatorios %}
+        <div class="menu">
+            <article data-dropdown-menu-asidebar-article="2" onclick="displayDropdownMenuAsidebar(this);">
+                <span>Relatórios</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </article>
+            <ul data-dropdown-menu-asidebar-ul="2">
+                
+                <li class="active" data-menu-link="report_01" data-menu-url-link="{% url 'report_01' %}" onclick="setMenulink(this);">
+                    <!-- <i class="fa-regular fa-clock active"></i> -->
+                    <i class="fa-regular fa-calendar-days active"></i>
+                    <span class="active">Report #01</span>
+                </li>
+                
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if user.sessao_imposto_de_renda %}
+        <div class="menu">
+            <article data-dropdown-menu-asidebar-article="3" onclick="displayDropdownMenuAsidebar(this);">
+                <span>Imposto de Renda</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </article>
+            <ul data-dropdown-menu-asidebar-ul="3">
+                <li data-menu-link="deliveries_IR" data-menu-url-link="{% url 'deliveries_IR' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Entregas I.R.</span>
+                </li>
+                <li data-menu-link="clients" data-menu-url-link="{% url 'clients' %}" onclick="setMenulink(this);">
+                    <i class="fa-regular fa-address-card"></i>
+                    <span>Clientes</span>
+                </li>
+                <li data-menu-link="configurations" data-menu-url-link="{% url 'configurations' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </li>
+                
+            </ul>
+        </div>
+
+        {% endif %}
+    </header>
+    <div class="block-session-info-user-asidebar">
+        <div class="block-info-user-asidebar">
+            <div class="block-avatar-user-asidebar">
+                <img src="{% static 'logo gaulke contabil azul claro.png' %}" alt="">
+            </div>
+            <span id="asidebar-username">{{user.first_name}}</span>
+        </div>
+   
+        <a href="{% url 'logout' %}" class="block-logout-asidebar">
+            <span>sair</span>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+        
+    </div>
+</nav>

@@ -1,0 +1,899 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Apontamento de Horas{% endblock %}
+{% block content %}
+
+{% include 'snippets/modal_apont_hours/model_add_note_apont_hour.html' %}
+{% include 'snippets/modal_apont_hours/modal_add_new_subtask_apont_hours.html' %}
+
+<article class="container-apont-hours active" data-block="apont_hours">
+    
+    <div class="block-select-template-import">
+        <ul>
+            <li>
+                <button data-link="apont-hours" onclick="selectSectionActivity(this)">Apont. Horas</button>
+            </li>
+            <li>
+                <button data-link="pendecy-apont-hours" onclick="selectSectionActivity(this)">Apont. Horas V2</button>
+            </li>
+        </ul>
+    </div>
+    
+    <section class="container-add-new-apont-hours" data-block-name="apont-hours">
+        <form action="POST" id="form-add-new-apont-hour">
+            <div>
+                <label for="date_init">Data Início</label>
+                <input type="date" value="{{today}}" max="{{today}}" name="date_init" id="date_init" data-input-apont-hour="date_init" data-input-create-new-apont-hours="date_init" onchange="checkInputsFormCreateNewApontHours(this.id.id);">
+            </div>
+            <div>
+                <label for="hour_init">Hora Início</label>
+                <input type="time" min="07:30" name="hour_init" id="hour_init" data-input-apont-hour="hour_init" data-input-create-new-apont-hours="hour_init" onchange="checkInputsFormCreateNewApontHours(this.id);"> <!-- step="1" -->
+            </div>
+            <div>
+                <label for="hour_final">Hora Fim</label>
+                <input type="time" name="hour_final" id="hour_final" data-input-apont-hour="hour_final" onchange="checkInputsFormCreateNewApontHours(this.id);"> <!-- data-input-create-new-apont-hours="hour_final" --> <!-- step="1" -->
+            </div>
+            <div>
+                <label for="competencia">Competência</label>
+                <!-- <input type="text" maxlength="7" placeholder="mm/aaaa" name="competencia" id="competencia" data-input-apont-hour="competencia" data-input-create-new-apont-hours="competencia" oninput="checkInputsFormCreateNewApontHours(this.id);" style="width: 140px;"> -->
+                <input type="text" maxlength="7" placeholder="mm/aaaa" name="competencia" id="competencia" data-input-apont-hour="competencia" data-input-create-new-apont-hours="competencia" oninput="checkInputsFormCreateNewApontHours(this.id);" style="width: 140px;">
+            </div>
+            <div>
+                <label for="company_name">Empresa</label>
+                <input type="text" placeholder="selecione uma empresa" name="company_name" id="company_name" data-input-apont-hour="company_name" data-input-create-new-apont-hours="company_name" oninput="filterDropdownCompaniesCreateNewApontHours(this);" onchange="checkInputsFormCreateNewApontHours(this.id);" onclick="displayDropdownAllCompaniesCreateNewApontHours();" >
+                <div class="block-dropdown-all-companies-create-new-apont-hours">
+                    <div class="block-btn-close-modal">
+                        <i class="fa-regular fa-circle-xmark" onclick="closeDropdownAllCompaniesCreateNewApontHours();"></i>
+                    </div>
+                    <ul>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label for="activity">Atividade</label>
+                <select name="activity" id="activity" data-input-create-new-apont-hours="activity" onchange="checkInputsFormCreateNewApontHours(this.id);">
+                    <option value="-">Selecione uma atividade</option>
+                    <option value="Apoio">Apoio</option>
+                    <option value="Atendimento">Atendimento</option>
+                    <option value="Fechamento">Fechamento</option>
+                    <option value="IRPF">IRPF</option>
+                    <option value="Lançamento">Lançamento</option>
+                    <option value="Separação">Separação</option>
+                </select>
+            </div>
+
+            <div class="block-button-create-new-apont-hour">
+                <button id="btn-create-new-apont-hour" disabled onclick="createNewApontHour();">
+                    <span>criar</span>
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <div class="block-filters-apont-hours" data-block-name="apont-hours">
+        <span>
+            <span>filter 1</span>
+            <span>filter 2</span>
+        </span>
+    </div>
+
+    <div class="block-table-apont-hours" data-block-name="apont-hours">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="min-width: 125px;">Atividade</th>
+                    <th>Ano</th>
+                    <th>Mês</th>
+                    <th style="min-width: 105px;" data-text-align-center>Data</th>
+                    <th data-text-align-center>Hora Início</th>
+                    <th data-text-align-center>Hora Fim</th>
+                    <th data-text-align-center>Tempo</th>
+                    <th style="min-width: 105px;">Competência</th>
+                    <th style="min-width: 110px;" data-text-align-center>ID Acessórias</th>
+                    <th style="min-width: 240px;">Razão Social</th>
+                    <th style="min-width: 145px;">regime</th>
+                    <th style="min-width: 100px;">Tipo Empresa</th>
+                    <th style="min-width: 144px;">Username</th>
+                    <th>Setor</th>
+                    <th class="position-col-right-observations">Observação</th>
+                    <th class="position-header-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in data_apont_hours %}
+                    <tr data-row="{{data.id}}">
+                        <td class="{{data.class_row}}">{{data.atividade}}</td>
+                        <td class="{{data.class_row}}">{{data.ano}}</td>
+                        <td class="{{data.class_row}}">{{data.mes}}</td>
+                        <td class="td-bold {{data.class_row}}" data-text-align-center>{{data.data_apont}}</td>
+                        <td class="{{data.class_row}}" data-text-align-center data-row-time-init="{{data.id}}">{{data.horario_inicio}}</td>
+                        <td class="{{data.class_row}} input-time-edit">
+                            <input type="time" value="{{data.horario_fim}}" data-row-time-final="{{data.id}}" onchange="editTimeFinalApontHour(this);" oninput="editTimeFinalApontHour(this);">
+                        </td>
+                        <td class="{{data.class_row}}" data-text-align-center data-row-time="{{data.id}}">{{data.tempo}}</td>
+                        <td class="{{data.class_row}}">{{data.competencia}}</td>
+                        <td class="{{data.class_row}}" data-text-align-center-500>{{data.codigo_empresa}}</td>
+                        <td class="{{data.class_row}} razao-social" title="{{data.razao_social}}">{{data.razao_social}}</td>
+                        <td class="{{data.class_row}}">{{data.regime}}</td>
+                        <td class="{{data.class_row}}">{{data.tipo_empresa}}</td>
+                        <td class="{{data.class_row}}">{{data.username}}</td>
+                        <td class="{{data.class_row}}">{{data.setor}}</td>
+                        <td class="{{data.class_row}} position-col-right-observations">
+                            <input type="text" value="{{data.observacao}}" data-obs-row="{{data.id}}" name="obs-{{data.id}}" id="obs-{{data.id}}" oninput="updateObservationApontHour(this);">
+                        </td>
+                        <td class="position-col-right block-btn-actions-apont-hours">
+                            <i class="fa-solid fa-circle-exclamation" data-btn-row="{{data.id}}" data-btn-name="add-note-apont-hour" title="problema/impedimento" onclick="openModal(this);"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ----------------------------------------------------------- -->
+    <div class="block-pending-apont-hours" data-block-name="pendecy-apont-hours">
+        <span>
+            <p>Pendência</p>
+            <i class="fa-regular fa-flag"></i>
+        </span>
+        <div class="block-create-pendency-apont-hour">
+            <button>
+                <i class="fa-solid fa-plus"></i>
+                <p>Adicionar pendência</p>
+            </button>
+        </div>
+    </div>
+
+
+    
+    <section class="block-table-apont-hours" data-block-name="pendecy-apont-hours">
+
+        <!-- ---------------------------------------- TABLE HEADER ---------------------------------------- -->
+
+        <div class="block-header-table block-pendencies-row" style="border: 0 !important; padding: 0px; background: white;">
+
+            <div style="min-width: 100px;"></div>
+
+            <div class="block-pendency-columns" style="background: white;">
+                <span style="align-items: center; justify-content: center; min-width: 75px;">ID</span>
+                <span>Atividade</span>
+                <span style="min-width: 75px;">Ano</span>
+                <span>Mês</span>
+                <span>Data</span>
+                <span style="justify-content: center;">Hora (Início)</span>
+                <span style="justify-content: center;">Hora (Fim)</span>
+                <span style="justify-content: center;">Tempo</span>
+                <span>Competência</span>
+                <span style="justify-content: center;">ID Acessórias</span>
+                <span class="col-190">Razão Social</span>
+                <span class="col-190">Regime</span>
+                <span>Tipo Empresa</span>
+                <span class="col-160">Usuário</span>
+                <span>Setor</span>
+                <span class="col-190 col-f-r">Observação</span>
+            </div>
+        </div>
+
+        <!-- ----------------------------------------- TABLE BODY ----------------------------------------- -->
+
+        <!-- ---------------------------------------------------------------------------------------------- -->
+        {% for data in data_apont_hours %}
+            <div class="container-activity">
+                <!-- ----------------------- PRINCIPAL-TASK ----------------------- -->
+                <div class="block-pendencies-row">
+                    <div class="block-pendency-dropdown">
+                        <i class="fa-solid fa-caret-right" data-btn-expend-row="{{data.id}}" onclick="expendRows(this)"></i>
+                    </div>
+                    <div class="block-pendency-action">
+                        <i class="fa-regular fa-circle-check {{data.class_row_btn_check}}" data-check-pendency="{{data.id}}" data-row-pendency="{{data.id}}" onclick="updateStatusPendency(this, 'principal-task');"></i>
+                        <i class="fa-solid fa-plus" data-check-pendency="{{data.id}}" data-row-pendency="{{data.id}}" onclick="addNewSub_Task(this);" ></i>
+                        <i class="fa-solid fa-ellipsis-vertical" data-check-pendency="{{data.id}}" data-row-pendency="{{data.id}}"></i>
+                    </div>
+                    <div class="block-pendency-columns" data-row-activity="{{data.id}}">
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}" style="align-items: center; justify-content: center; min-width: 75px;">#{{data.id}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.atividade}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}" style="min-width: 75px;">{{data.ano}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.mes}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.data_apont}}</span>
+                        <span
+                            class="{{data.class_row}}"
+                            data-row-pendency="{{data.id}}"
+                            data-row-pendency-init-hour="{{data.id}}"
+                            style="justify-content: center;">
+                            {{data.horario_inicio}}
+                        </span>
+                        <span class="{{data.class_row}}">
+                            <input
+                                type="time"
+                                value="{{data.horario_fim}}"
+                                data-row-pendency="{{data.id}}"
+                                data-final-hour-subpendency="{{data.id}}"
+                                style="justify-content: center;"
+                                oninput="updateFinalHour(this);"
+                                >
+                        </span>
+                        <span
+                            class="{{data.class_row}}"
+                            data-row-pendency="{{data.id}}"
+                            data-row-pendency-init-tempo="{{data.id}}"
+                            style="justify-content: center;">
+                            {{data.tempo}}
+                        </span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.competencia}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}" style="justify-content: center;">{{data.codigo_empresa}}</span>
+                        <span class="{{data.class_row}} col-190" data-row-pendency="{{data.id}}" title="{{data.razao_social}}">{{data.razao_social_aux}}</span>
+                        <span class="{{data.class_row}} col-190" data-row-pendency="{{data.id}}" title="{{data.regime}}">{{data.regime_aux}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.tipo_empresa}}</span>
+                        <span class="{{data.class_row}} col-160" data-row-pendency="{{data.id}}">{{data.username}}</span>
+                        <span class="{{data.class_row}}" data-row-pendency="{{data.id}}">{{data.setor}}</span>
+                        <span class="{{data.class_row}} col-190 col-f-r" data-row-pendency="{{data.id}}" title="{{data.observacao}}">
+                            <input type="text" title="{{data.observacao}}" value="{{data.observacao}}" data-row-pendency="{{data.id}}" oninput="updateObservation_ApontHour(this);">
+                        </span>
+                    </div>
+                </div>
+                <!-- ----------------------- SUB-TASKs ----------------------- -->
+                <div data-row-pendencies="{{data.id}}">
+
+                    <!-- ---- -->
+                    <div class="block-pendencies-row" data-pendency-row="{{data.id}}" data-subtask-row="{{data.id}}-1">
+                        <div style="min-width: 80px;"></div>
+                        <div class="block-pendency-action">
+                            <i class="fa-regular fa-circle-check" data-check-pendency="{{data.id}}-1" onclick="updateStatusPendency(this, 'sub-task');"></i>
+                        </div>
+                        <div class="block-subpendency-columns">
+                            <span data-row-subactivity="{{data.id}}" data-index-subtask="{{data.id}}">#1</span>
+                            <span class="col-190" data-row-subactivity="{{data.id}}">Documento Faltante</span>
+                            <span data-row-subactivity="{{data.id}}">01/01/2024</span>
+                            <span data-row-subactivity="{{data.id}}">09:15</span>
+                            <span>
+                                <input type="time" data-row-pendency="{{data.id}}" data-final-hour-subpendency="{{data.id}}-1">
+                            </span>
+                            <span data-row-subactivity="{{data.id}}">-</span>
+                            <span>
+                                <input type="text" placeholder="observação">
+                            </span>
+                            <span style="background: white;">
+                                <i class="fa-regular fa-trash-can" data-btn-delete-subtask="{{data.id}}-1" onclick="deleteSubtask(this);"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- ---- -->
+                    <div class="block-pendencies-row" data-pendency-row="{{data.id}}" data-subtask-row="{{data.id}}-2">
+                        <div style="min-width: 80px;"></div>
+                        <div class="block-pendency-action">
+                            <i class="fa-regular fa-circle-check" data-check-pendency="{{data.id}}-2" onclick="updateStatusPendency(this, 'sub-task');"></i>
+                        </div>
+                        <div class="block-subpendency-columns">
+                            <span data-row-subactivity="{{data.id}}" data-index-subtask="{{data.id}}">#2</span>
+                            <span class="col-190" data-row-subactivity="{{data.id}}">Aguardando retorno</span>
+                            <span data-row-subactivity="{{data.id}}">01/01/2024</span>
+                            <span data-row-subactivity="{{data.id}}-2">09:15</span>
+                            <span>
+                                <input type="time" data-row-pendency="{{data.id}}" data-final-hour-subpendency="{{data.id}}-2">
+                            </span>
+                            <span data-row-subactivity="{{data.id}}-2">-</span>
+                            <span>
+                                <input type="text" placeholder="observação">
+                            </span>
+                            <span style="background: white;">
+                                <i class="fa-regular fa-trash-can" data-btn-delete-subtask="{{data.id}}-2" onclick="deleteSubtask(this);"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!-- ---------------------------------------------------------------------------------------------- -->
+        
+        
+    </section>
+
+</article>
+
+
+<script>
+
+    async function expendRows(element){
+        // expande linhas com pendências da atividade selecionada
+        element.classList.toggle("active");
+        let pendency_id = element.getAttribute("data-btn-expend-row");
+        document.querySelectorAll(`[data-pendency-row="${pendency_id}"]`).forEach((e)=>{
+            e.classList.toggle("active");
+        });
+    }
+
+    async function updateFinalHour(element){
+
+        let id = element.getAttribute("data-row-pendency");
+        let init_hour = document.querySelector(`[data-row-pendency-init-hour="${id}"]`).textContent.trim();
+        let final_hour = element.value;
+
+        console.log(`
+            --------------------------------------
+            >> id: ${id}
+            >> init_hour: ${init_hour}
+            >> final_hour: ${final_hour}
+        `)
+
+        document.querySelector(`[data-check-pendency="${id}"]`).classList.remove("active");
+        document.querySelector(`[data-row-activity="${id}"]`).querySelectorAll("span").forEach((e)=>{
+            e.classList.remove("apont-pending");
+        });
+
+        let data = {
+            "id": id,
+            "init_hour": init_hour,
+            "final_hour": final_hour,
+            "field_name": "final_hour"
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log("\n ----------------- DATA EDIT FINAL HOUR ----------------- ")
+            console.log(data)
+            
+  
+            document.querySelector(`[data-row-activity="${id}"]`).querySelectorAll("span").forEach((e)=>{
+                e.classList.add(data["class_effect"]);
+            });
+            document.querySelector(`[data-row-pendency-init-tempo="${id}"]`).textContent = data["calc_apont_hour"];
+            document.querySelector(`[data-check-pendency="${id}"]`).classList.add(data["class_row_btn_check"]);
+           
+        });
+
+    }
+
+    // --------------------------------------------------------- EDIT PRINCIPAL TASK ---------------------------------------------------------
+    async function updateObservation_ApontHour(element){
+        let id = element.getAttribute("data-row-pendency");
+        let observacao = element.value;
+
+        console.log(`
+            --------------------------------------
+            >> id: ${id}
+            >> observacao: ${observacao}
+        `)
+
+        
+        let data = {
+            "id": id,
+            "observacao": observacao,
+            "field_name": "observacao"
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log("\n ----------------- DATA EDIT OBSERVAÇÃO ----------------- ")
+            console.log(data)
+        });
+
+    }
+
+    async function updateStatusPendency(element, mode) {
+        // altera cor do botão de status da atividade (verde ou cinca claro)
+        element.classList.toggle("active");
+        let row_pendendy = element.getAttribute("data-check-pendency");
+        
+        const currentdate = new Date(); 
+        let hour      = currentdate.getHours();
+        let minute    = currentdate.getMinutes();
+        let second    = currentdate.getSeconds();
+        if(hour < 10){
+            hour = `0${hour}`;
+        }
+        if(minute < 10){
+            minute = `0${minute}`;
+        }
+        if(second < 10){
+            second = `0${second}`;
+        }
+        const datetime = `${hour}:${minute}`;
+        if(element.classList.contains("active")){
+            document.querySelector(`[data-final-hour-subpendency="${row_pendendy}"]`).value = datetime;
+        } else {
+            document.querySelector(`[data-final-hour-subpendency="${row_pendendy}"]`).value = "";
+        }
+        let final_hour = document.querySelector(`[data-final-hour-subpendency="${row_pendendy}"]`);
+        console.log(final_hour)
+        if(mode == "principal-task"){
+            updateFinalHour(final_hour);
+        }
+    }
+
+    // --------------------------------------------------------- EDIT SUB-TASK ---------------------------------------------------------
+    async function addNewSub_Task(element){
+
+        let id_activity = element.getAttribute("data-row-pendency");
+        openModalTask(id_activity);
+
+        
+        document.querySelector(`[data-modal-name="add-new-subtask-apont-hour"]`).classList.add("active");
+        // garante a exibição das subtasks da task origem
+        document.querySelector(`[data-btn-expend-row="${id_activity}"]`).style.display = "flex";
+        document.querySelector(`[data-btn-expend-row="${id_activity}"]`).classList.add("active");
+        document.querySelectorAll(`[data-pendency-row="${id_activity}"]`).forEach((e)=>{
+            e.classList.add("active");
+        });
+
+
+        // let block_subtasks = document.querySelector(`[data-row-pendencies="${id_activity}"]`);
+        // let subtasks = block_subtasks.querySelectorAll(".block-pendencies-row");
+        
+                
+        // const currentdate = new Date();
+        // let day     = currentdate.getDate();
+        // let month   = currentdate.getMonth()+1;
+        // let year    = currentdate.getFullYear();
+
+        // let hour    = currentdate.getHours();
+        // let minute  = currentdate.getMinutes();
+        // let second  = currentdate.getSeconds();
+
+        // // -----------------------------------
+        // if(day < 10){
+        //     day = `0${day}`;
+        // }
+        // if(month < 10){
+        //     month = `0${month}`;
+        // }
+        // // -----------------------------------
+        // if(hour < 10){
+        //     hour = `0${hour}`;
+        // }
+        // if(minute < 10){
+        //     minute = `0${minute}`;
+        // }
+        // if(second < 10){
+        //     second = `0${second}`;
+        // }
+        
+        // const date = `${day}/${month}/${year}`;
+        // const datetime = `${hour}:${minute}`;
+        
+        // const url = "{% url 'apont_hours_new_subtask' %}";
+        // const body = {
+        //     "user": "{{user.pk}}",
+        //     "id_task": id_activity,
+        //     "date": date,
+        //     "datetime": datetime,
+        //     "month": month,
+        //     "year": year,
+        // };
+        // let headers      = {
+        //     "X-CSRFToken": "{{csrf_token}}",
+        // };
+        // fetch(url, {
+        //     method: "POST",
+        //     headers: headers,
+        //     body: JSON.stringify(body)
+        // })
+        // .then((data)=>{
+        //     return data.json();
+        // })
+        // .then((data)=>{
+        //     console.log(data)
+        // })
+        
+        // return;
+        
+        // let indexes_tasks = document.querySelectorAll(`[data-index-subtask="${id_activity}"]`);
+        // next_id = parseInt(indexes_tasks[indexes_tasks.length-1].textContent.replace("#", "")) + 1;
+        
+        // // garante a exibição das subtasks da task origem
+        // document.querySelector(`[data-btn-expend-row="${id_activity}"]`).style.display = "flex";
+        // document.querySelector(`[data-btn-expend-row="${id_activity}"]`).classList.add("active");
+        // document.querySelectorAll(`[data-pendency-row="${id_activity}"]`).forEach((e)=>{
+        //     e.classList.add("active");
+        // });
+
+        // let new_subtask = `
+        //     <div class="block-pendencies-row active" data-pendency-row="${id_activity}" data-subtask-row="${id_activity}-${next_id}">
+        //         <div style="min-width: 80px;"></div>
+        //         <div class="block-pendency-action">
+        //             <i class="fa-regular fa-circle-check" data-check-pendency="${id_activity}-${next_id}" onclick="updateStatusPendency(this, 'sub-task');"></i>
+        //         </div>
+        //         <div class="block-subpendency-columns">
+        //             <span data-row-subactivity="${id_activity}" data-index-subtask="${id_activity}">#${next_id}</span>
+        //             <span class="col-190" data-row-subactivity="${id_activity}">Aguardando retorno</span>
+        //             <span data-row-subactivity="${id_activity}">${date}</span>
+        //             <span data-row-subactivity="${id_activity}-${next_id}">${datetime}</span>
+        //             <span>
+        //                 <input type="time" data-row-pendency="${id_activity}" data-final-hour-subpendency="${id_activity}-${next_id}">
+        //             </span>
+        //             <span data-row-subactivity="${id_activity}-${next_id}">-</span>
+        //             <span>
+        //                 <input type="text" placeholder="observação">
+        //             </span>
+        //             <span style="background: white;">
+        //                 <i class="fa-regular fa-trash-can" data-btn-delete-subtask="${id_activity}-${next_id}" onclick="deleteSubtask(this);"></i>
+        //             </span>
+        //         </div>
+        //     </div>
+        // `;
+        // console.log(new_subtask)
+        // block_subtasks.innerHTML += new_subtask;
+    
+    }
+
+
+
+
+
+
+
+
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------------------
+    async function deleteSubtask(element){
+        let id = element.getAttribute("data-btn-delete-subtask");
+        let id_expand = id.split("-")[0];
+        document.querySelector(`[data-subtask-row="${id}"]`).remove();
+
+        let block_subtasks = document.querySelector(`[data-row-pendencies="${id_expand}"]`);
+        let subtasks = block_subtasks.querySelectorAll(".block-pendencies-row");
+        if(subtasks.length < 1) {
+            document.querySelector(`[data-btn-expend-row="${id_expand}"]`).style.display = "none";
+        }
+    }
+
+
+    async function selectSectionActivity(element){
+        window.localStorage.setItem("select_link_activity", element.getAttribute("data-link"));
+        updateLink();
+    }
+    
+    async function regexCompentecia(input_id){
+
+        // ---------------------------------------------------------------------------------
+        // ---------- Valida formato da competência e aplica a máscara "mm/aaaa". ----------
+        // ---------------------------------------------------------------------------------
+
+        const input = document.getElementById(input_id);
+        const valorNumerico = input.value.replace(/([^\d])+/gim, '');
+        input.value = valorNumerico;
+        const regexMesAno = /^(0[1-9]|1[0-2])\/\d{4}$/;
+        if (valorNumerico.length == 6) {
+            
+            const mes = valorNumerico.slice(0, 2);
+            const ano = valorNumerico.slice(2);
+            
+            input.value = `${mes}/${ano}`;
+            input.style.border = "1px solid var(--color-principal-cinza)";
+            return true;
+        }
+        input.style.border = "1px solid red";
+        return false;
+    }
+
+    async function checkInputsFormCreateNewApontHours(id=null){
+        
+        // let id = element.id;
+        let inputs = await document.querySelectorAll(`[data-input-create-new-apont-hours]`);
+        let count_invalid_input = 0;
+
+
+        if(id == "-"){
+            document.getElementById("btn-create-new-apont-hour").disabled = true;
+            document.getElementById("btn-create-new-apont-hour").classList.remove("active");
+        } else {
+            for(let i = 0; i < inputs.length; i++){
+
+                if(inputs[i].value == "" || inputs[i].value == "-"){
+                    count_invalid_input += 1;
+                }
+            }
+        }
+
+        if(regexCompentecia("competencia")){
+            if(count_invalid_input == 0){
+                enableDisableBtn("btn-create-new-apont-hour", true);
+            } else {
+                enableDisableBtn("btn-create-new-apont-hour", false);
+            }
+        } else {
+            enableDisableBtn("btn-create-new-apont-hour", false);
+        }
+
+    }
+
+    async function enableDisableBtn(button_id, status){
+        if(!status){
+            document.getElementById(button_id).disabled = true;
+            document.getElementById(button_id).classList.remove("active");
+        } else {
+            document.getElementById(button_id).disabled = false;
+            document.getElementById(button_id).classList.add("active");
+        }
+    }
+
+    async function editTimeFinalApontHour(element){
+        let id = element.getAttribute("data-row-time-final")
+        let time_init = document.querySelector(`[data-row-time-init="${id}"]`).textContent;
+        let final_hour = element.value;
+   
+        let data = {
+            "id": id,
+            "time_init": time_init,
+            "final_hour": final_hour,
+            "field_name": "final_hour"
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            element.classList.remove("input-edit-invalid");
+            if(data["code"] == 200){
+                update_table_apont_hours(data);
+            } else {
+                element.classList.add("input-edit-invalid");
+            }
+        });
+    }
+    
+    async function updateObservationApontHour(element){
+        let id = element.getAttribute("data-obs-row")
+        let observacao = element.value;
+
+        let data = {
+            "id": id,
+            "observacao": observacao,
+            "field_name": "observacao"
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            if(data["code"] == 200){
+                document.getElementById(`obs-${id}`).value = element.value;
+            }
+        });
+    }
+
+    async function update_table_apont_hours(data){
+        let arr_rows = [];
+        let class_row, id_row;
+        for (let i in data["data_apont_hours"]){
+            id_row = data["data_apont_hours"][i]["id"];
+            class_row = data["data_apont_hours"][i]["class_row"];
+            arr_rows.push(`
+            <tr data-row="${id_row}">
+                <td class="${class_row}">${data["data_apont_hours"][i]["atividade"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["ano"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["mes"]}</td>
+                <td class="td-bold ${class_row}" data-text-align-center>${data["data_apont_hours"][i]["data_apont"]}</td>
+                <td class="${class_row}" data-row-time-init="${id_row}" data-text-align-center>${data["data_apont_hours"][i]["horario_inicio"]}</td>
+                <td class="${class_row} input-time-edit">
+                    <input type="time" value="${data["data_apont_hours"][i]["horario_fim"]}" data-row-time-final="${id_row}" onchange="editTimeFinalApontHour(this);" oninput="editTimeFinalApontHour(this);">
+                </td>
+                <td class="${class_row}" data-text-align-center>${data["data_apont_hours"][i]["tempo"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["competencia"]}</td>
+                <td class="${class_row}" data-text-align-center-500>${data["data_apont_hours"][i]["codigo_empresa"]}</td>
+                <td class="${class_row} razao-social" title="${data["data_apont_hours"][i]["razao_social"]}">${data["data_apont_hours"][i]["razao_social"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["regime"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["tipo_empresa"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["username"]}</td>
+                <td class="${class_row}">${data["data_apont_hours"][i]["setor"]}</td>
+                
+                <td class="${class_row} position-col-right-observations">
+                    <input type="text" value="${data["data_apont_hours"][i]["observacao"]}" data-obs-row="${id_row}" name="obs-${id_row}" id="obs-${id_row}" oninput="updateObservationApontHour(this);">
+                </td>
+
+                <td class="position-col-right block-btn-actions-apont-hours">
+                    <i class="fa-solid fa-circle-exclamation" data-btn-row="${id_row}" data-btn-name="add-note-apont-hour" title="problema/impedimento" onclick="openModal(this);"></i>
+                </td>
+                    
+            </tr>
+            `);
+        }
+        document.querySelector(".block-table-apont-hours").querySelector("table").querySelector("tbody").innerHTML = arr_rows.join("");  
+    }
+
+    async function deleteApontHour(element){
+        document.querySelector(`[data-modal-name="add-note-apont-hour"]`).classList.remove("active");
+        let id = element.getAttribute("data-btn-delete-row-apont-hour")
+        console.log(`>>>> ID: ${id}`)
+
+        let data = {
+            "id": id
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "DELETE",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            if(data["code"] == 200){
+                document.querySelector(`[data-row="${id}"]`).remove();
+            }
+        });
+    }
+
+    async function createNewApontHour(){
+
+        let form = document.getElementById("form-add-new-apont-hour");
+        form.addEventListener("submit", (e)=>{
+            e.preventDefault();
+        });
+        let username_pk     = "{{user.pk}}";
+        let username_name   = "{{user.username}}";
+        let date_init       = document.getElementById("date_init").value;
+        let hour_init       = document.getElementById("hour_init").value;
+        let hour_final      = document.getElementById("hour_final").value;
+        let competencia     = document.getElementById("competencia").value;
+        let company_name    = document.getElementById("company_name").value;
+        let activity        = document.getElementById("activity").value;
+        let data = {
+            "username_pk": username_pk,
+            "username_name": username_name,
+            "date_init": date_init,
+            "hour_init": hour_init,
+            "hour_final": hour_final,
+            "competencia": competencia,
+            "company_name": company_name,
+            "activity": activity,
+        }
+        let headers      = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let url = "{% url 'apont_hours' %}";
+        
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            document.querySelectorAll(`[data-input-apont-hour]`).forEach((e)=>{
+                e.classList.remove("input-invalid");
+            });
+
+            console.log(" -------------- FINSH POST -------------- ")
+            console.log(data)
+            
+            if (data["code"] == 200){
+                console.log(" -------------- data_apont_hours -------------- ")
+                console.log(data["data_apont_hours"])
+                update_table_apont_hours(data);
+                resetFieldsFormCreateNewApontHours(data["today"]);
+
+            } else if (data["code"] == 400){
+
+                if(data["error"] == "error hour"){
+                    document.querySelector(`[data-input-apont-hour="hour_init"]`).classList.add("input-invalid");
+                    document.querySelector(`[data-input-apont-hour="hour_final"]`).classList.add("input-invalid");
+                    console.log("css invalid aplicado...")
+                }
+            }
+          
+        });
+    }
+
+    async function createPendencyApontHour(element){
+        console.log(element)
+    }
+
+    async function resetFieldsFormCreateNewApontHours(today){
+        document.getElementById("date_init").value = today;
+        document.getElementById("date_init").max = today;
+        document.getElementById("hour_init").value = "";
+        document.getElementById("hour_final").value = "";
+        document.getElementById("competencia").value = "";
+        document.getElementById("activity").querySelectorAll("option")[0].selected = true;
+    }
+
+    async function displayDropdownAllCompaniesCreateNewApontHours(){
+        document.querySelector(".block-dropdown-all-companies-create-new-apont-hours").classList.add("active");
+    }
+    
+    async function closeDropdownAllCompaniesCreateNewApontHours(){
+        document.querySelector(".block-dropdown-all-companies-create-new-apont-hours").classList.remove("active");
+        let obj_create_new_apont_hour = window.localStorage.getItem("obj_create_new_apont_hour");
+        if (obj_create_new_apont_hour != null){
+            obj_create_new_apont_hour = JSON.parse(obj_create_new_apont_hour);
+            document.getElementById("company_name").value = `[${obj_create_new_apont_hour.id_acessorias}] - ${obj_create_new_apont_hour.razao_social}`;
+            checkInputsFormCreateNewApontHours(obj_create_new_apont_hour.id_acessorias);
+        } else {
+            document.getElementById("company_name").value = "";
+            checkInputsFormCreateNewApontHours("-");
+        }
+
+    }
+
+    async function filterDropdownCompaniesCreateNewApontHours(element){
+        displayDropdownAllCompaniesCreateNewApontHours();
+        let value, text_filter, text_row;
+        let id_acessorias, razao_social, cnpj;
+        text_filter = element.value.toUpperCase();
+        for(let i in data_all_companies){
+            id_acessorias   = data_all_companies[i].id_acessorias.toUpperCase();
+            razao_social    = data_all_companies[i].razao_social.toUpperCase();
+            cnpj    = data_all_companies[i].cnpj.toUpperCase();
+            text_row = `[${id_acessorias}] - ${razao_social} - ${cnpj}`;
+            
+            if(text_filter == "" || text_row.indexOf(text_filter) > -1){
+                document.querySelector(`[data-row-company-apont-hours="${id_acessorias}"]`).style.display = "flex";
+            } else {
+                document.querySelector(`[data-row-company-apont-hours="${id_acessorias}"]`).style.display = "none";
+            }
+        }
+    }
+
+    async function selectCompanyApontHour(element){
+
+        let company_name = document.getElementById("company_name");
+        let id_acessorias   = element.querySelectorAll("span")[0].textContent;
+        let razao_social    = element.querySelectorAll("span")[1].textContent;
+        window.localStorage.setItem("obj_create_new_apont_hour", JSON.stringify({
+            "id_acessorias": id_acessorias,
+            "razao_social": razao_social,
+        }));
+
+        company_name.value = `[${id_acessorias}] - ${razao_social}`;
+        document.querySelectorAll(`[data-row-company-apont-hours]`).forEach((e)=>{
+            e.classList.remove("active");
+        });
+        element.classList.add("active");
+        closeDropdownAllCompaniesCreateNewApontHours();
+        checkInputsFormCreateNewApontHours(id_acessorias);
+
+    }
+</script>
+{% endblock %}

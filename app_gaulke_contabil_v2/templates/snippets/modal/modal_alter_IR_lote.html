@@ -1,0 +1,97 @@
+<div class="container-modal" data-modal="options-alter-lote">
+    <div class="modal-import-file" style="width: 760px; max-width: 90%;">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" id="options-alter-lote" onclick="displayModalByID(this);" > </i> <!-- data-modal-name="options-alter-lote" onclick="displayModal(this);" -->
+            </span>
+        </div>
+
+        <div class="bloco-content-update-lote">
+            <ul>
+                <li>
+                    <label for="dificuldade_lote">Dificuldade</label>
+                    <select name="dificuldade_lote" id="dificuldade_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                        <option value="Muito simples">Muito simples</option>
+                        <option value="Fácil">Fácil</option>
+                        <option value="Média">Média</option>
+                        <option value="Difícil">Difícil</option>
+                        <option value="Complexa">Complexa</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="status_smart_IR_lote">Status SmartIR</label>
+                    <select name="status_smart_IR_lote" id="status_smart_IR_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+    
+                        <option value="Pronta para digitar"> Pronta para digitar </option>
+                        <option value="Documentos pendentes"> Documentos pendentes </option>
+                        <option value="Digitadas"> Digitadas </option>
+                        <option value="Agendado"> Agendado </option>
+                        <option value="Sem retorno do cliente"> Sem retorno do cliente </option>
+                        <!--  -->
+                        <option value="Em andamento">Em andamento</option>
+                        <option value="Concluído">Concluído</option>
+                        <option value="Nova">Nova</option>
+                        
+                    </select>
+                </li>
+                <li>
+                    <label for="status_paymanet_lote">Pago</label>
+                    <select name="status_paymanet_lote" id="status_paymanet_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                        <option value="Não">Não</option>
+                        <option value="Sim">Sim</option>
+                    </select>
+                </li>
+                <li data-block-input="info_forma_pagamento_lote" style="display: none;">
+                    <label for="info_forma_pagamento_lote">Forma de Pagamento</label>
+                    <select name="info_forma_pagamento_lote" id="info_forma_pagamento_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                        <option value="Pix">Pix</option>
+                        <option value="Boleto">Boleto</option>
+                        <option value="Caixa">Caixa</option>
+                    </select>
+                </li>
+                <li data-block-input="date_payment" style="display: none;">
+                    <label for="date_payment">Data Pagamento</label>
+                    <input type="date" name="date_payment" id="date_payment" onchange="displayBTNSaveLote(this)">
+                </li>
+            </ul>
+
+            <article>
+                
+            </article>
+            <div id="btn-save-lote" class="block-btn-save-rows-lote">
+                <button onclick="postSaveLote();">Salvar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    async function displayBTNSaveLote(element){
+        
+        let btn_save_lote = document.getElementById("btn-save-lote");
+        let status_paymanet_lote = document.getElementById("status_paymanet_lote").value;
+        let date_payment = document.getElementById("date_payment");
+        
+        if (status_paymanet_lote == "Sim" && date_payment.value != ""){
+            btn_save_lote.style.display = "flex";
+            document.querySelector(`[data-block-input="date_payment"]`).style.display = "flex";
+            document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "flex";
+        }
+        else if (status_paymanet_lote == "Sim" && date_payment.value == ""){
+            btn_save_lote.style.display = "none";
+            document.querySelector(`[data-block-input="date_payment"]`).style.display = "flex";
+            document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "flex";
+        } else {
+            date_payment.value = "";
+            document.querySelector(`[data-block-input="date_payment"]`).style.display = "none";
+            document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "none";
+
+            if(status_paymanet_lote == "Não"){
+                btn_save_lote.style.display = "flex";
+            } else {
+                btn_save_lote.style.display = "none";
+            }
+        }
+    }
+</script>

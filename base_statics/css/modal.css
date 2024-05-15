@@ -1,0 +1,751 @@
+
+.container-modal,
+.container-modal-generic {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #55554c75;
+    z-index: 9;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.container-modal.active {
+    display: flex;
+}
+.container-modal-generic.active {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+.block-info-modal-apont-hour {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+}
+.block-info-modal-apont-hour div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid #cfcfd7;
+    border-radius: 2px;
+    padding: 2px 6px;
+    gap: 20px;
+}
+.block-info-modal-apont-hour div:nth-child(1) {
+    border: 1px solid transparent;
+    /* border-bottom-color: #cfcfd7; */
+}
+.block-info-modal-apont-hour div span p:nth-child(1) {
+    font-weight: 500;
+    height: 32px;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.block-info-modal-apont-hour div span p:nth-child(2) {
+    font-size: 14px;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+}
+.block-info-modal-apont-hour div span {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.block-info-modal-apont-hour div span input {
+    width: 100%;
+    height: 26px;
+    padding: 6px;
+    outline: none;
+    border: 1px solid #d7d7d7;
+    background: #f7f7ed;
+    margin: 4px 0;
+}
+[flex-column] {
+    flex-direction: column !important;
+}
+[flex-row] {
+    flex-direction: row !important;
+}
+/* .block-modal-generic {
+    width: 100vh;
+    min-height: 50vh;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: scroll;
+    background: white;
+    border-radius: 4px;
+} */
+/* .block-modal-generic .block-close-modal {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 9px 11px 0 0;
+    background: white;
+    position: sticky;
+    top: 0;
+} */
+.block-modal-generic {
+    width: 100vh;
+    height: 100%;
+    max-width: 90%;
+    max-height: 100%;
+    overflow-y: scroll;
+    background: white;
+    /* border-radius: 4px; */
+}
+.block-modal-generic .block-close-modal {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 9px 0 16px 10px;
+    background: white;
+    box-shadow: var(--box-shadow-03);
+    position: sticky;
+    top: 0;
+}
+
+.block-modal-generic .block-close-modal i {
+    color: #45454d;
+    cursor: pointer;
+}
+.block-modal-generic .block-close-modal i:hover {
+    color: #1d1d20;
+}
+.block-btns-superior-modal-generic {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 4px 20px;
+    position: sticky;
+    top: 42px;
+    background: white;
+}
+.block-btns-superior-modal-generic span {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 12px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.block-btns-superior-modal-generic span p {
+    margin: 0;
+}
+
+[data-modal="add-new-IR"].active {
+    display: flex;
+}
+
+.modal-import-file {
+    width: 600px;
+    max-height: 85vh;
+    max-width: 85%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: var(--box-shadow-01);
+    background: var(--color-principal-branco-puro);
+    border-radius: 14px;
+    padding: 20px 10px;
+    /* overflow: scroll; */
+}
+
+.block-action-modal {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background: white;
+    border-radius: 6px 6px 0 0;
+}
+
+.block-action-modal span {
+    margin: 2px 6px;
+}
+.block-action-modal span i {
+    color: #d78a8a;
+    cursor: pointer;
+    font-weight: 300;
+    transition: .4s ease-in-out;
+}
+.block-action-modal span i:hover {
+    color: #c97878;
+}
+
+
+.block-import-file {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 6px;
+    height: 100%;
+    max-height: 75vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.block-import-file h3 {
+    text-align: center;
+    width: 100%;
+    position: sticky;
+    top: -2px;
+    background: white;
+    margin-top: 22px;
+}
+.block-import-file form {
+    width: 94%;
+    min-height: 37vh;
+    max-height: 67vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    margin: 14px;
+    gap: 14px;
+    /* overflow: scroll; */
+}
+.block-import-file article {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    height: 85px;
+}
+.block-import-file article button {
+    width: 88px;
+    height: 34px;
+    border: none;
+    color: black;
+    background: transparent;
+    border-radius: 7px;
+    transition: .4s ease-in-out;
+}
+.block-import-file article button:nth-child(1) {
+    color: white;
+    background: #e33d3d;
+}
+.block-import-file article button:nth-child(1):hover {
+    color: white;
+    background: red;
+}
+
+.block-import-file form article {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+}
+.block-import-file form tbody tr:hover {
+    background: blue !important;
+}
+.block-cod-valid {
+    display: none !important;
+}
+.block-cod-valid.active {
+    display: flex !important;
+}
+
+.block-import-file form .block-input-file,
+.block-import-file form .block-btn-send-file {
+    width: 95%;
+}
+.block-import-file form .block-input-file  {
+    padding: 14px;
+    border-radius: 4px;
+    border: 1px dotted var(--color-principal-cinza);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.block-import-file form .block-input-file label {
+    padding: 0 3px;
+}
+.block-import-file form .block-input-file input {
+    outline: none;
+    border-radius: 4px;
+    padding: 5px 3px;
+    font-size: 14px;
+    border: 1px solid var(--color-principal-cinza);
+}
+
+
+
+.block-import-file form .block-btn-send-file input,
+.block-animation-btn {
+    width: 100%;
+    height: 45px;
+    transition: .4s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: var(--color-background-white-02);
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.block-import-file form .block-btn-send-file input.active {
+    cursor: pointer;
+    background: var(--color-principal-azul-claro) !important;
+}
+
+.block-btn-send-file {
+    position: sticky;
+    bottom: 0;
+}
+
+.block-animation-btn {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.block-animation-btn.active {
+    display: flex;
+}
+.loader {
+    width: 15px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+    0%  {box-shadow: 20px 0 #000, -20px 0 #0002;background: #000 }
+    33% {box-shadow: 20px 0 #000, -20px 0 #0002;background: #0002}
+    66% {box-shadow: 20px 0 #0002,-20px 0 #000; background: #0002}
+    100%{box-shadow: 20px 0 #0002,-20px 0 #000; background: #000 }
+}
+
+
+
+
+.block-info-modal-redirect div {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.block-comments,
+.block-comments span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 14px;
+}
+.block-comments {
+    width: 100%;
+}
+.block-comments span {
+    gap: 6px;
+    color: white;
+    border: 1px solid var(--color-principal-azul-claro);
+    background: var(--color-principal-azul-claro);
+    border-radius: 4px;
+    cursor: pointer;
+}
+.block-comments span p {
+    margin: 0;
+    padding: 0;
+}
+.block-col {
+    display: flex;
+    flex-direction: column;
+}
+.block-align-right {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.block-align-right i {
+    color: red;
+    cursor: pointer;
+}
+
+.block-input-generic {
+    width: 95%;
+    padding: 14px;
+    border-radius: 4px;
+    border: 1px dotted var(--color-principal-cinza);
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.block-input-generic.active {
+    display: flex;
+}
+
+.info-parcial-IR,
+.info-parcial-IR article,
+.info-parcial-IR article span {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
+.info-parcial-IR article span {
+    gap: 10px;
+    border: 1px dotted var(--color-principal-cinza);
+    padding: 1px;
+    border-radius: 4px;
+    min-height: 64px;
+    align-items: center !important;
+    flex-wrap: wrap;
+}
+.info-parcial-IR article span div {
+    height: 100%;
+    padding: 3px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.info-parcial-IR article span p {
+    margin: 0;
+    padding: 0;
+}
+.info-parcial-IR article {
+    flex-direction: column !important;
+}
+.block-row-info-generic {
+    width: 100%  !important;
+    display: flex  !important;
+    flex-direction: row  !important;
+    justify-content: flex-start  !important;
+    align-items: center  !important;
+    gap: 22px  !important;
+    flex-wrap: wrap;
+}
+.block-row-info-generic div {
+    display: flex;
+    flex-direction: column;
+    min-width: 165px;
+}
+
+[data-more-info] {
+    display: none !important;
+}
+[data-more-info].active {
+    display: flex !important;
+}
+
+.block-options-confirm-action {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-around!important;
+}
+
+.block-options-confirm-action {
+    display: none !important;
+}
+.block-options-confirm-action.active {
+    display: flex !important;
+}
+
+.block-options-confirm-action div {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+}
+.block-options-confirm-action div p {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+
+
+
+/* ------------------- MODAL ALTER DATA LOTE ------------------- */
+.bloco-content-update-lote {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 6px;
+    padding: 10px;
+}
+.bloco-content-update-lote div {
+    padding: 12px;
+}
+.bloco-content-update-lote div h3 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.bloco-content-update-lote ul {
+    padding: 0 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 39px;
+    padding: 24px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.bloco-content-update-lote ul li {
+    /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.bloco-content-update-lote ul li input,
+.bloco-content-update-lote ul li select {
+    width: 20vh;
+    max-width: 100%;
+    border-radius: 6px;
+    padding: 4px;
+    outline: none;
+}
+
+
+.block-info-values {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    height: auto !important;
+    border: none !important;
+}
+.block-info-values span {
+    border: none !important;
+}
+
+
+.bloco-content-update-lote article {
+    display: flex;
+    flex-direction: column;
+    padding-top: 24px;
+    gap: 3px;
+    max-height: 35vh;
+    overflow: scroll;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+.bloco-content-update-lote article span {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 3px;
+    border: 1px solid #a2a2a3;
+    width: 94%;
+}
+.bloco-content-update-lote article span p {
+    margin: 0;
+    padding: 0;
+}
+.bloco-content-update-lote article span i {
+    color: red;
+    cursor: pointer;
+    transition: .26s ease-in-out;
+}
+.bloco-content-update-lote article span i:hover {
+    transform: scale(1.2);
+}
+.block-datails-row-update {
+    display: flex;
+    flex-direction: column;
+}
+
+.block-create-pendency-apont-hour {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+}
+.block-create-pendency-apont-hour button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: #3d3d47;
+    border: 1px solid #a4a4a7;
+    border-radius: 4.4px;
+    padding: 4px 10px;
+    font-size: 14px;
+    gap: 8px;
+}
+.block-create-pendency-apont-hour button p {
+    margin: 0;
+}
+
+
+
+/* ------------------------------------------------------------ MODAL CONFIRM DOWNLOAD FILE TXT IMPORT JB ------------------------------------------------------------ */
+.container-confirm-download-file-txt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #55554c75;
+    z-index: 99;
+}
+.container-confirm-download-file-txt.active {
+    display: flex;
+}
+.container-confirm-download-file-txt .block-confirm-download {
+    width: 75vh;
+    max-width: 90%;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 15px;
+    border-radius: 4px;
+    background: white;
+    gap: 20px;
+}
+
+.container-confirm-download-file-txt .block-confirm-download .block-subtile-modal {
+    font-weight: 500;
+    font-size: 18px;
+    color: #727279;
+}
+.container-confirm-download-file-txt .block-btns-confirm-dowload {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 25px 0;
+    gap: 35px;
+}
+.container-confirm-download-file-txt .block-btns-confirm-dowload button {
+    font-size: 20px;
+    padding: 8px 48px;
+    border: 1px solid;
+    border-radius: 2.5px;
+    transition: .2s ease-in-out;
+    background: white;
+    max-width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+[data-button-dowloand-file="download"] {
+    color: #539b53;
+    border-color: #539b53 !important;
+}
+[data-button-dowloand-file="cancel"] {
+    color: #ed5959;
+    border-color: #ed5959 !important;
+}
+[data-button-dowloand-file="download"]:hover {
+    background: #e7ffe7 !important;
+}
+[data-button-dowloand-file="cancel"]:hover {
+    background: #ffe5e5 !important;
+}
+
+
+
+/* ------------------------------------------------------------ MODAL PENCENCIES DELIVERIES IR ------------------------------------------------------------ */
+.container-pendencies-IR  {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: 97%;
+    height: 90vh;
+    width: 94%;
+    border-radius: 8px;
+    background: white;
+}
+.block-pendencies-IR {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+}
+.block-pendencies-IR .block-table-pendencies-IR {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    height: 75vh;
+    max-height: 100%;
+    overflow: scroll;
+    padding: 0 10px 10px 10px;
+}
+
+.block-pendencies-IR .block-table-pendencies-IR::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: transparent;
+}
+.block-pendencies-IR .block-table-pendencies-IR::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #7d83885d;
+}
+
+.block-pendencies-IR .block-table-pendencies-IR table {
+    font-size: 12.5px;
+}
+.block-pendencies-IR .block-table-pendencies-IR table thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    vertical-align: middle;
+    font-weight: 600;
+}
+table i {
+    cursor: pointer;
+}
+

@@ -1,0 +1,18 @@
+<article class="container-confirm-download-file-txt">
+    <div class="block-confirm-download">
+        <div class="title-container">
+            <h3>Confirme o download do arquivo</h3>
+        </div>
+        <span class="block-subtile-modal">Existem campos em branco, deseja seguir com o download?</span>
+        <div class="block-btns-confirm-dowload">
+            <button data-button-dowloand-file="download" onclick="dowloadFileImportJB_TXT();">baixar arquivo</button>
+            <button data-button-dowloand-file="cancel" onclick="cancelDownloadFile_TXT();">cancelar</button>
+        </div>
+    </div>
+</article>
+
+<script>
+    function cancelDownloadFile_TXT(){
+        document.querySelector(".container-confirm-download-file-txt").classList.remove("active");
+    }
+</script>

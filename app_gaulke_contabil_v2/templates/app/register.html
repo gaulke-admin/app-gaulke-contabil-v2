@@ -1,0 +1,271 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block title %}Usuários{% endblock %}
+{% block content %}
+
+
+{% if user.is_authenticated %}
+ 
+    {% include 'snippets/accouts/register.html' %}
+    {% include 'snippets/accouts/edit_register.html' %}
+
+    <main class="container-page-login" style="align-items: flex-start;">
+
+        <div class="block-options-containers-register">
+            <ul data-dropdown-menu-asidebar-ul="0" class="active">
+                <li class="active" data-menu-link="home" data-menu-url-link="{% url 'home' %}" onclick="setMenulink(this);">
+                    <i class="fa-solid fa-house active"></i>
+                    <span class="active">Início</span>
+                </li>
+                <li class="active" data-btn-menu-register="register"   onclick="openModalRegister(this)">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Cadastro</span>
+                </li>
+            </ul>
+        </div>
+
+        
+        <!-- ---------------------------------------- -->
+        <div class="block-login" data-container-controller-users="base_users" style="min-width: 100%">
+            <div class="block-table-base-users">
+                <table class="table table-strip" id="table-base-users" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th style="min-width: 164px;">Sobrenome</th>
+                            <th>E-mail</th>
+                            <th>Setor</th>
+                            <th>Atividades</th>
+                            <th>Relatorios</th>
+                            <th style="min-width: 120px;">Imposto de Renda</th>
+                            <th style="min-width: 120px;">Config. Usuários</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% else %}
+    <div class="block-login-redirect">
+        <span>Ir para página inicial? <a href="{% url 'login' %}">Ir para Login</a></span>
+    </div>
+{% endif %}
+
+<script>
+
+    async function updateMenuRegister(){
+        
+        let option = window.localStorage.getItem("display_modal_register");
+        if (option == null || option == undefined){
+            option = 0;
+            window.localStorage.setItem("display_modal_register", option);
+        }
+
+        if(option == 1){
+            document.querySelector(`[data-modal-name="register"]`).classList.add("active");
+        } else {
+            document.querySelector(`[data-modal-name="register"]`).classList.remove("active");
+        }
+
+   
+        let url = "{% url 'manager_users' %}";
+        fetch(url, {
+            method: "GET"
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+
+            console.log(" -------------------- data -------------------- ")
+            console.log(data)
+            if(data["code"] == 200){
+                updateTableAllUsers(data);
+            }
+        });
+    }
+
+    async function updateTableAllUsers(data){
+        let table = document.getElementById("table-base-users");
+        let arr_body_table = [];
+        for (let i in data["data"]){
+            console.log(data["data"][i])
+
+            let sessao_atividades       = data["data"][i]["sessao_atividades"];
+            let sessao_relatorios       = data["data"][i]["sessao_relatorios"];
+            let sessao_imposto_de_renda = data["data"][i]["sessao_imposto_de_renda"];
+            let sessao_config_users     = data["data"][i]["sessao_config_users"];
+            let checkbox_sessao_atividades = null;
+            let checkbox_sessao_relatorios = null;
+            let checkbox_sessao_imposto_de_renda = null;
+            let checkbox_sessao_config_users = null;
+
+            if(sessao_atividades){
+                checkbox_sessao_atividades = "checked"
+            }
+            if(sessao_relatorios){
+                checkbox_sessao_relatorios = "checked"
+            }
+            if(sessao_imposto_de_renda){
+                checkbox_sessao_imposto_de_renda = "checked"
+            }
+            if(sessao_config_users){
+                checkbox_sessao_config_users = "checked"
+            }
+            
+            let user_id = data["data"][i]["id"];
+            arr_body_table.push(`
+                <tr data-row-user="${user_id}">
+                    <td>${user_id}</td>
+                    <td>${data["data"][i]["first_name"]}</td>
+                    <td>${data["data"][i]["last_name"]}</td>
+                    <td data-row-email="${user_id}">${data["data"][i]["email"]}</td>
+                    <td>${data["data"][i]["sector"]}</td>
+                    <td>
+                        <input type="checkbox" ${checkbox_sessao_atividades} data-user-id="${user_id}" data-field-name="sessao_atividades" data-type-input="checkbox" onclick="updateAccessSectionsUser(this);">
+                    </td>
+                    <td>
+                        <input type="checkbox" ${checkbox_sessao_relatorios} data-user-id="${user_id}" data-field-name="sessao_relatorios" data-type-input="checkbox" onclick="updateAccessSectionsUser(this);">
+                    </td>
+                    <td>
+                        <input type="checkbox" ${checkbox_sessao_imposto_de_renda} data-user-id="${user_id}" data-field-name="sessao_imposto_de_renda" data-type-input="checkbox" onclick="updateAccessSectionsUser(this);">
+                    </td>
+                    <td>
+                        <input type="checkbox" ${checkbox_sessao_config_users} data-user-id="${user_id}" data-field-name="sessao_config_users" data-type-input="checkbox" onclick="updateAccessSectionsUser(this);">
+                    </td>
+                    <td>
+                        <i class="fa-regular fa-pen-to-square" data-user-id="${user_id}" onclick="openModalEditRegister(this);"></i>
+                    </td>
+                </tr>
+            `);
+            
+            table.querySelector("tbody").innerHTML = arr_body_table.join("");
+        }
+
+    }
+
+    async function updateAccessSectionsUser(element){
+        let user_id     = element.getAttribute("data-user-id");
+        let field_name  = element.getAttribute("data-field-name");
+        let data_type_input  = element.getAttribute("data-type-input");
+        let data = null;
+
+        let url = "{% url 'manager_users' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        if(data_type_input == "checkbox"){
+            let status_field = 0;
+            if(element.checked){
+                status_field = 1;
+            }
+            data = {
+                "user_id": user_id,
+                "field_name": field_name,
+                "value": status_field,
+                "form_model": "in-table"
+            }
+        }
+
+        console.log(data)
+        fetch(url, {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(" -------------- finish update field -------------- ")
+            console.log(data)
+        })
+
+    }
+
+    async function openModalRegister(element){
+        window.localStorage.setItem("display_modal_register", 1);
+        document.querySelector(`[data-modal-name="register"]`).classList.add("active");
+        updateMenuRegister();
+    }
+    async function openModalEditRegister(element){
+
+        document.querySelector(".block-edit-msg-select-session").classList.remove("active");
+        document.querySelector(".msg-user-edit-already-exists").classList.remove("active");
+        document.querySelector(`[data-modal-name="edit-register"]`).classList.add("active");
+
+        // -------------------------------- reset fields edit user --------------------------------
+        document.getElementById("btn-edit-user").classList.remove("active");
+        document.getElementById("btn-edit-user").disabled = true;
+        document.querySelectorAll(`[data-input-form-new-user]`).forEach((e)=>{
+            e.style.border = "1.5px solid black";
+        });
+        
+        let user_id = element.getAttribute("data-user-id");
+        let url = "{% url 'manager_users' %}";
+        let headers = {"X-CSRFToken": "{{csrf_token}}"};
+        let body = {"user_id": user_id};
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+
+            document.getElementById("btn-delete-user").setAttribute("data-user-id-delete", data["data"]["id"]);
+            document.getElementById("user_id_edit").value = data["data"]["id"];
+            document.getElementById("edit_first_name").value = data["data"]["first_name"];
+            document.getElementById("edit_last_name").value = data["data"]["last_name"];
+            document.getElementById("edit_username").value = data["data"]["email"];
+            document.getElementById("edit_username").setAttribute("currernt_value", data["data"]["email"]);
+            document.getElementById("edit_password").value = "";
+            document.getElementById("edit_password_2").value = "";
+            document.getElementById("edit_sector").value = data["data"]["sector"];
+            document.getElementById("edit_sessao_atividades").checked = data["data"]["sessao_atividades"];
+            document.getElementById("edit_sessao_relatorios").checked = data["data"]["sessao_relatorios"];
+            document.getElementById("edit_sessao_imposto_de_renda").checked = data["data"]["sessao_imposto_de_renda"];
+            document.getElementById("edit_sessao_config_users").checked = data["data"]["sessao_config_users"];
+        })
+        console.log(user_id)
+    }
+    
+    async function closeModalRegister(){
+        
+        window.localStorage.setItem("display_modal_register", 0);
+        document.querySelector(`[data-modal-name="register"]`).classList.remove("active");
+        
+    }
+    async function closeModalEditRegister(){
+        
+        document.getElementById("btn-delete-user").setAttribute("data-user-id-delete", "");
+        document.querySelector(`[data-modal-name="edit-register"]`).classList.remove("active");
+        document.getElementById("edit_first_name").value = "";
+        document.getElementById("edit_last_name").value = "";
+        document.getElementById("edit_username").value = "";
+        document.getElementById("edit_password").value = "";
+        document.getElementById("edit_password_2").value = "";
+        document.getElementById("sector").value = "";
+        document.getElementById("edit_sessao_atividades").checked = false;
+        document.getElementById("edit_sessao_relatorios").checked = false;
+        document.getElementById("edit_sessao_imposto_de_renda").checked = false;
+        document.getElementById("edit_sessao_config_users").checked = false;
+    }
+
+    
+    updateMenuRegister();
+</script>
+
+
+
+
+
+{% endblock %}

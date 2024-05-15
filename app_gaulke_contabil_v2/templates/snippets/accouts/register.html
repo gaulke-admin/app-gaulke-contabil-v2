@@ -1,0 +1,228 @@
+{% load static %}
+<article class="container-modal-generic active" data-modal-name="register" style="align-items: center; justify-content: center;">
+    <div class="block-login" data-container-controller-users="register" style="width: 90vh; max-width: 90%;">
+
+        <div class="block-actions-modals">
+            <span title="voltar" onclick="closeModalRegister();">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <p>voltar</p>
+            </span>
+        </div>
+
+        <div class="block-title-form">
+            <div class="block-login-logo">
+                <img src="{% static 'logo gaulke contabil azul claro.png' %}" alt="">
+            </div>
+            <h3>Cadastro de usuários</h3>
+        </div>
+        <div class="block-form">
+    
+                <form action="{% url 'accounts' %}" method="POST">
+                    {% csrf_token %}
+    
+                    <div style="width: 90%; display: flex; flex-direction: row; gap: 10px;">
+                        <div class="inputs-form" style="width: 40%;">
+                            <label for="first_name" class="active">Primeiro nome</label>
+                            <input type="text" name="first_name" id="first_name" oninput="checkUserCreate(this);" value="{{first_name}}" autocomplete="email" data-input-form-new-user="first_name">
+                        </div>
+                        <div class="inputs-form">
+                            <label for="last_name" class="active">Sobrenome</label>
+                            <input type="text" name="last_name" id="last_name" oninput="checkUserCreate(this);" value="{{last_name}}" autocomplete="email" data-input-form-new-user="last_name" style="border: 1px solid var(--color-principal-cinza);">
+                        </div>
+                    </div>
+
+                    <div class="inputs-form">
+                        <label for="username" class="active">E-mail</label>
+                        <input type="email" name="username" id="username" oninput="checkUserCreate(this);" value="{{username}}" autocomplete="email" data-input-form-new-user="username">
+                    </div>
+
+                    <span class="msg-user-already-exists">
+                        <p>Este usuário já foi cadastrado</p>
+                    </span>
+    
+                    <!-- -------------------------------------- -->
+                    <div style="width: 90%; display: flex; flex-direction: row; gap: 10px; justify-content: flex-start; align-items: center;">
+                        <div class="inputs-form">
+                            <label for="password" class="active">Senha</label>
+                            <span>
+                                <input type="password" name="password" id="password" oninput="checkUserCreate(this);" value="{{password}}" autocomplete="" data-input-form-new-user="password">
+                            </span>
+                        </div>
+                        <div class="inputs-form">
+                            <label for="password_2" class="active">Confirme a senha</label>
+                            <span>
+                                <input type="password" name="password_2" id="password_2" oninput="checkUserCreate(this);" value="{{password_2}}" autocomplete="" data-input-form-new-user="password_2">
+                            </span>
+                        </div>
+                    </div>
+    
+                    <!-- -------------------------------------- -->
+                    <div class="block-horizontal-selection">
+    
+                        <div class="inputs-form" style="margin: 0;">
+                            <label for="first_name" class="active" style="margin: 0; position: relative;">Setor do usuário</label>
+                            <select name="sector" id="sector" data-input-form-new-user="sector" onchange="checkUserCreate(this);">
+                                <option value="-"> - selecione um setor - </option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Diretoria">Diretoria</option>
+                                <option value="Contábil">Contábil</option>
+                                <option value="Fiscal">Fiscal</option>
+                                <option value="RH">RH</option>
+                                <option value="Societário">Societário</option>
+                                <option value="TI">TI</option>
+                            </select>
+                        </div>
+    
+                        <div class="inputs-form">
+                            <div class="block-acesso-usuario">
+                                <span>Acessos</span>
+                                <div class="block-opcoes-acesso-usuario">
+                                    <input type="checkbox" name="sessao_atividades" id="sessao_atividades" onchange="checkUserCreate(this);">
+                                    <label for="sessao_atividades" id="label_sessao_atividades">Atividades</label>
+                                </div>
+                                <div class="block-opcoes-acesso-usuario">
+                                    <input type="checkbox" name="sessao_relatorios" id="sessao_relatorios" onchange="checkUserCreate(this);">
+                                    <label for="sessao_relatorios" id="label_sessao_relatorios">Relatórios</label>
+                                </div>
+                                <div class="block-opcoes-acesso-usuario">
+                                    <input type="checkbox" name="sessao_imposto_de_renda" id="sessao_imposto_de_renda" onchange="checkUserCreate(this);">
+                                    <label for="sessao_imposto_de_renda" id="label_sessao_imposto_de_renda">Imposto de renda</label>
+                                </div>
+                                <div class="block-opcoes-acesso-usuario">
+                                    <input type="checkbox" name="sessao_config_users" id="sessao_config_users" onchange="checkUserCreate(this);">
+                                    <label for="sessao_config_users" id="label_sessao_config_users">Config. Usuários</label>
+                                </div>
+
+                                <div class="block-opcoes-acesso-usuario">
+                                    <span class="block-msg-select-session" style="margin: 0; padding: 0;">
+                                        <p>Selecione uma sessão</p>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="inputs-form block-btn-send-form-user ">
+                        <button id="btn-create-user" disabled>cadastrar</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+</article>
+
+<script>
+    async function check_inputs_create_user(){
+        
+        let username = document.getElementById("username");
+        let first_name = document.getElementById("first_name");
+        let password = document.getElementById("password");
+        let password_2 = document.getElementById("password_2");
+        // -----
+        let sector = document.getElementById("sector");
+        // -----
+        let sessao_atividades = document.getElementById("sessao_atividades");
+        let sessao_relatorios = document.getElementById("sessao_relatorios");
+        let sessao_imposto_de_renda = document.getElementById("sessao_imposto_de_renda");
+        let sessao_config_users = document.getElementById("sessao_config_users");
+
+        let url = "{% url 'check_user' %}";
+        let headers = {"X-CSRFToken": "{{csrf_token}}"};
+        let body = await {"username": username.value};
+        console.log("\n\n ------------------ body ------------------ ")
+        console.log(body)
+        var status_inputs = true;
+                
+        // ---------------------------------------------------------------------------
+        if(first_name.value.length >= 5){
+            first_name.style.border = "1.5px solid green";
+        } else {
+            status_inputs = false;
+            if(first_name.value == ""){
+                first_name.style.border = "1.5px solid black";
+            } else {
+                first_name.style.border = "1.5px solid red";
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        if(password.value == password_2.value && password.value.length >= 8){
+            password.style.border = "1.5px solid green";
+            password_2.style.border = "1.5px solid green";
+        } else {
+            status_inputs = false;
+            if(password.value && password_2.value == ""){
+                password.style.border = "1.5px solid red";
+                password_2.style.border = "1.5px solid red";
+            } else {
+                password.style.border = "1.5px solid black";
+                password_2.style.border = "1.5px solid black";
+            }
+        }
+        // ---------------------------------------------------------------------------
+        if(sector.value == "-"){
+            status_inputs = false;
+            sector.style.border = "1.5px solid red";
+        } else {
+            sector.style.border = "1.5px solid black";
+        }
+        // ---------------------------------------------------------------------------
+        if(sessao_atividades.checked || sessao_relatorios.checked || sessao_imposto_de_renda.checked || sessao_config_users.checked ){
+            document.querySelector(".block-msg-select-session").classList.remove("active");
+        } else {
+            status_inputs = false;
+            document.querySelector(".block-msg-select-session").classList.add("active");
+        }
+
+
+
+        // -------------------- valida e-mail regex e se existe algum usuário já cadastrado --------------------
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            let valid_username = true;
+            document.querySelector(".msg-user-already-exists").classList.remove("active");
+            // document.getElementById("btn-create-user").disabled = true;
+            // document.getElementById("btn-create-user").classList.remove("active");
+
+            if(data["code"] == 200 && data["validEmail"]) {
+                document.getElementById("username").style.border = "1.5px solid green";
+                document.getElementById("btn-create-user").disabled = false;
+                document.getElementById("btn-create-user").classList.add("active");
+            }
+            else if(data["code"] == 203) {
+                document.getElementById("username").style.border = "1.5px solid red";
+                document.querySelector(".msg-user-already-exists").classList.add("active");
+                valid_username = false;
+            }
+            else {
+                document.getElementById("username").style.border = "1.5px solid red";
+                valid_username = false;
+            }
+            return valid_username;
+
+        })
+        .then((valid_username)=>{
+
+            if(status_inputs && valid_username){
+                document.getElementById("btn-create-user").disabled = false;
+                document.getElementById("btn-create-user").classList.add("active");
+            } else {
+                document.getElementById("btn-create-user").disabled = true;
+                document.getElementById("btn-create-user").classList.remove("active");
+            }
+        });
+
+    }
+    async function checkUserCreate(element){
+        document.getElementById("btn-create-user").disabled = true;
+        document.getElementById("btn-create-user").classList.remove("active");
+        check_inputs_create_user();
+    }
+</script>

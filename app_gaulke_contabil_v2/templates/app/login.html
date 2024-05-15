@@ -1,0 +1,54 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="block-login-redirect">
+    <span>Ir para página inicial? <a href="{% url 'home' %}">Início</a></span>
+    <span>Deseja sair? <a href="{% url 'logout' %}">Sair</a></span>
+</div>
+{% else %}
+    <div data-name-page="home"></div>
+    <main class="container-page-login" style="min-height: 100vh;">
+    <div class="block-login" style="height: auto;">
+        <div class="block-form">
+                <div class="block-login-logo">
+                    <img src="{% static 'logo gaulke contabil azul claro.png' %}" alt="">
+                </div>
+                <div style="margin: 10px 0 15px 0;">
+                    <h3>Login</h3>
+                </div>
+                {% if next %}
+                    <form action="{% url 'login' %}?next={{next_url}}" method="POST" style="gap: 5px;">
+                {% else %}
+                    <form action="{% url 'login' %}?next={{next_url}}" method="POST" style="gap: 5px;">
+                {% endif %}
+                
+                {% csrf_token %}
+                    <div class="inputs-form">
+                        <label id="label_username" for="username" class="active">e-mail</label>
+                        <input type="email" name="username" id="username" value="{{username}}">
+                    </div>
+                    <div class="inputs-form">
+                        <label id="label_password" for="password" class="active">senha</label>
+                        <span>
+                            <input type="password" name="password" id="password" value="{{password}}">
+                        </span>
+                    </div>
+                    {% if error_login_user %}
+                        <div style="margin: 10px;">
+                            <span style="color: red;">Usuário ou senha inválido.</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="inputs-form active">
+                        <button class="active">entrar</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+    </main>
+
+{% endif %}
+{% endblock %}

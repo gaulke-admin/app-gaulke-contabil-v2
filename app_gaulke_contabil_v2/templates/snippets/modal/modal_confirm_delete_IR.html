@@ -1,0 +1,53 @@
+<div class="container-modal" data-modal="confitm-delete-IR">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="confitm-delete-IR" onclick="displayModalDeleteIR(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Deseja excluir esse registro?</span>
+            </h3>
+            <span>
+                <p data-info-modal="info-row-contribuinte" style="margin: 10px 0px; font-weight: 500;"></p>
+                <p data-info-modal="info-row-ano"></p>
+                <p data-info-modal="info-row-status_smart_IR"></p>
+            </span>
+            <article>
+                <button data-row-delete="" onclick="post_delete_iR(this);">Excluir</button>
+                <button data-modal-name="confitm-delete-IR" onclick="displayModalDeleteIR(this);">Cancelar</button>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function post_delete_iR(element){
+            let id_table_IR = element.getAttribute("data-row-delete");
+            let url = "{% url 'post_delete_iR' %}";
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}",
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({
+                    "id_table_IR": id_table_IR,
+                })
+            })
+            .then((data)=>{
+                document.querySelector(`[data-modal="confitm-delete-IR"]`).classList.remove("active");
+                return data.json();
+            })
+            .then((data)=>{
+                console.log(data)
+                get_data_to_table_IR();
+            });
+    }
+
+</script>

@@ -1,0 +1,138 @@
+<article class="container-config-account-code-JB">
+    <div class="block-config-account-code-JB">
+        <div class="block-close-modal-update-company-code-JB">
+            <i class="fa-regular fa-circle-xmark" onclick="closeModalUpdateCompanyCodeJB();"></i>
+        </div>
+        <div class="title-form">
+            <h3>Configuração de conta JB</h3>
+        </div>
+        <div class="inputs-config-account-JB">
+            <span>Acessórias ID</span>
+            <span data-info-company-session="id_acessorias"></span>
+        </div>
+        <div class="inputs-config-account-JB">
+            <span>CNPJ</span>
+            <span data-info-company-session="cnpj"></span>
+        </div>
+        <div class="inputs-config-account-JB">
+            <span>Razão Social</span>
+            <span data-info-company-session="razao_social"></span>
+        </div>
+        <div class="inputs-config-account-JB">
+            <label for="company_code_JB">Código JB</label>
+            <input type="text" name="company_code_JB" id="company_code_JB" maxlength="8" oninput="checkValueInputCompanyCodeJB(this);">
+        </div>
+
+        <div class="block-btn-save-account-code-JB">
+            <button onclick="updateCompanyCodeJB();">
+                <span>salvar</span>
+            </button>
+            <span data-block-msg-error="update-company-code-JB">
+                <p>Erro ao atualizar registro</p>
+            </span>
+            <span data-block-msg-success="update-company-code-JB">
+                <p>Registro atualizado</p>
+            </span>
+        </div>
+    </div>
+</article>
+
+<script>
+
+    function closeModalUpdateCompanyCodeJB(){
+        document.getElementById("company_code_JB").value = "";
+        document.getElementById("company_code_JB").style.border = "1px solid var(--color-principal-cinza)";
+        try {
+            const id_row = document.querySelector(`[data-info-company-session="id_acessorias"]`).textContent;
+            const company_code_JB = JSON.parse( window.localStorage.getItem("session_company_info") )["company_session"]["session_company_code_JB"];
+            const validNumber = testValueCompanyCodeJB(company_code_JB);
+    
+            if(validNumber){
+                document.getElementById("company_code_JB").value = "";
+            } else {
+                window.localStorage.removeItem("session_company_info");
+                document.getElementById("company_session_name").value = "";
+                document.getElementById(`row_${id_row}`).checked = false;
+    
+            }
+            updateDropdowCompanySessionActive();
+            document.querySelector(".container-config-account-code-JB").classList.remove("active");
+        } catch (error) {
+            document.querySelector(".container-config-account-code-JB").classList.remove("active");
+        }
+        filterCompanySession();
+    }
+    
+    async function checkValueInputCompanyCodeJB(element){
+        const validNumber = testValueCompanyCodeJB(element.value);
+        if (validNumber) {
+            element.style.border = "1px solid var(--color-principal-cinza)";
+            document.querySelector(".block-btn-save-account-code-JB").querySelector("button").disabled = false;
+            document.querySelector(".block-btn-save-account-code-JB").querySelector("button").classList.add("active");
+        } else {
+            element.style.border = "1px solid red";
+            document.querySelector(".block-btn-save-account-code-JB").querySelector("button").disabled = true;
+            document.querySelector(".block-btn-save-account-code-JB").querySelector("button").classList.remove("active");
+        }
+    }
+
+    async function updateCompanyCodeJB(){
+
+        const url = `{{url_update_company_code_JB}}`;
+        const company_code_JB = document.getElementById("company_code_JB").value;
+        const razao_social = document.querySelector(`[data-info-company-session="razao_social"]`).textContent;
+        const id_acessorias = document.querySelector(`[data-info-company-session="id_acessorias"]`).textContent;
+        const headers = {"Content-Type": "application/json", "redirect": "follow"};
+        const username = "{{user.username}}";
+        const data = {
+            "username": username,
+            "id_acessorias": id_acessorias,
+            "company_code_JB": company_code_JB,
+        }
+        const testValue = testValueCompanyCodeJB(company_code_JB);
+        if(testValue){
+            console.log(`
+                ----------------------------------------
+                >> url: ${url}
+                >> username: ${username}
+                >> id_acessorias: ${id_acessorias}
+                >> company_code_JB: ${company_code_JB}
+            `)
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            .then((data)=>{
+                return data.json();
+            })
+            .then((data)=>{
+
+                let block_message_error = document.querySelector(`[data-block-msg-error="update-company-code-JB"]`);
+                let block_message_success = document.querySelector(`[data-block-msg-success="update-company-code-JB"]`);
+
+                console.log(data)
+                if(data["code"] == 200){
+                    document.getElementById("company_session_name").value = `[${id_acessorias} / ${company_code_JB}] - ${razao_social}`;
+                    document.querySelector(`[data-info-code-company="row_${id_acessorias}"]`).querySelectorAll("span")[0].textContent = company_code_JB;
+                    block_message_error.classList.remove("active");
+                    block_message_success.classList.add("active");
+                    setTimeout(()=>{
+                        block_message_success.classList.remove("active");
+                    }, 2500);
+
+                    try {
+                        let company_session = JSON.parse(window.localStorage.getItem("session_company_info"));
+                        if(company_session["company_session"]["session_company_code"] == id_acessorias){
+                            company_session["company_session"]["session_company_code_JB"] = company_code_JB;
+                            window.localStorage.setItem("session_company_info", JSON.stringify(company_session));
+                        }
+                    } catch (error) {};
+
+                } else {
+                    block_message_error.classList.add("active");
+                }
+            })
+        }
+    }
+</script>

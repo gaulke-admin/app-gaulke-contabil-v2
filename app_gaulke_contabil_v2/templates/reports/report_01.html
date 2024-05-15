@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Report #01{% endblock %}
+{% block content %}
+
+<div data-name-page="report_01"></div>
+<main class="container-fluid container-main">
+
+    <div class="block-filters-report">
+        
+        <select name="month_init" id="month_init">
+                <option value="janeiro">janeiro</option>
+                <option value="fevereiro">fevereiro</option>
+                <option value="março">março</option>
+                <option value="abril">abril</option>
+                <option value="maio">maio</option>
+                <option value="junho">junho</option>
+                <option value="julho">julho</option>
+                <option value="agosto">agosto</option>
+                <option value="setembro">setembro</option>
+                <option value="outubro">outubro</option>
+                <option value="novembro">novembro</option>
+                <option value="dezembro">dezembro</option>
+        </select>
+
+        <div>
+            <input type="text" name="year_init" id="year_init" data-year-report="1" placeholder="ano" maxlength="4" style="width: 150px; max-width: 100%;" oninput="checkYearToReport(this);">
+        </div>
+        <div class="block-btn-create-report">
+            <button data-btn-create-report="1" disabled onclick="createReport(this);">
+
+                <span data-element-btn="1">gerar relatório</span>
+                <span data-element-btn="2">
+                    <div class="loader"></div>
+                </span>
+
+            </button>
+        </div>
+        
+    </div>
+
+    <div class="block-actions-report">
+        <article>
+            <span data-info-total-rows="1">registros: <b></b></span>
+            <i class="fa-solid fa-file-csv" data-btn-download-report="1" onclick="downloadReportToCSV(this)" style="color: green;"></i>
+        </article>
+    </div>
+    
+    <div class="container-report">
+        <div class="block-table-report">
+            <table class="table table-striped" id="table-repot-1">
+                <thead>
+                    
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+
+<script>
+
+    function validYear(year){
+
+        if (year.length == 4){
+            const regex = /^[0-9]+$/;
+            if (regex.test(year) && parseInt(year) >= 2022) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function checkYearToReport(element){
+        let check_year = validYear(element.value);
+        let report_version = element.getAttribute("data-year-report");
+        let btn_create_report = document.querySelector(`[data-btn-create-report="${report_version}"]`);
+        if(!check_year){
+            btn_create_report.disabled = true;
+            btn_create_report.classList.remove("active");
+        } else {
+            btn_create_report.disabled = false;
+            btn_create_report.classList.add("active");
+        }
+    }
+
+    function createReport(element){
+
+        let report_version = element.getAttribute("data-btn-create-report");
+        let month_init  = document.getElementById("month_init").value;
+        let year_init   = document.getElementById("year_init").value;
+
+        let element_btn_1 = element.querySelector(`[data-element-btn="1"]`);
+        let element_btn_2 = element.querySelector(`[data-element-btn="2"]`);
+
+        element_btn_1.style.display = "none";
+        element_btn_2.style.display = "flex";
+        
+        let url = "{{url_get_report_1}}";
+        
+        let data = {
+            "report_version": report_version,
+            "month_init": month_init,
+            "year_init": year_init,
+        };
+        let headers = {
+            "Content-Type": "application/json",
+            "redirect": "follow",
+
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data),
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+
+            element_btn_1.style.display = "flex";
+            element_btn_2.style.display = "none";
+
+            let block_actions_report = document.querySelector(".block-actions-report");
+
+            if(data["code"] == 200){
+                block_actions_report.classList.add("active");
+                
+                data_all_clients = JSON.parse(data["data"]);
+                hearders_table = data["hearders_table"];
+
+                // console.log(data_all_clients)
+                // console.log(hearders_table)
+
+                
+                
+                let table = document.getElementById("table-repot-1");
+                table.querySelector("thead").innerHTML = "<tr></tr>";
+                table.querySelector("tbody").innerHTML = "";
+                
+                for (let i in hearders_table){
+                    table.querySelector("thead").querySelector("tr").innerHTML += `
+                    <th>${hearders_table[i]}</th>
+                    `;
+                }
+                
+                let extra_arg;
+                let tt_rows = 0;
+                let arr_elements_tbody = [];
+         
+                for (let i in data_all_clients){
+                    let arr_temp = [];
+                    for (j in data_all_clients[i]){
+                        arr_temp.push(`
+                            <td>${data_all_clients[i][j]}</td>
+                        `);
+                    }
+                    
+                    arr_elements_tbody.push(`
+                    <tr>
+                        ${arr_temp.join("")}
+                    </tr>
+                    `);
+                    tt_rows += 1;
+
+                }
+                table.querySelector("tbody").innerHTML = arr_elements_tbody.join("");
+                document.querySelector(`[data-info-total-rows="${report_version}"]`).querySelector("b").innerText = tt_rows;
+            } else {
+                block_actions_report.classList.remove("active");
+            }
+        });
+    }
+</script>
+
+
+
+
+<script>
+    function downloadReportToCSV(element) {
+        let csv_data = [];
+        let report_version = element.getAttribute("data-btn-download-report");
+        const table = document.getElementById(`table-repot-${report_version}`)
+        const headers = table.querySelector("thead").querySelector("tr").querySelectorAll("th");
+        const rows = table.querySelector("tbody").querySelectorAll("tr");
+        let headers_table = [];
+        for (let i = 0; i < headers.length; i++ ){
+            console.log(headers[i])
+            headers_table.push(headers[i].textContent);
+        }
+        csv_data.push(headers_table.join(";"));
+        for (let i = 0; i < rows.length; i++) {
+            const cols = rows[i].querySelectorAll('td, th');
+            const csvrow = [];
+            for (let j = 0; j < cols.length; j++) {
+                csvrow.push(cols[j].textContent);
+            }
+            csv_data.push(csvrow.join(';'));
+        }
+        const csv_content = csv_data.join('\n');
+
+        downloadCSVFile(csv_content);
+    }
+
+    function downloadCSVFile(csv_content) {
+        const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csv_content], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'report_v1.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+
+
+{% endblock %}

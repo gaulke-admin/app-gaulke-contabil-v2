@@ -1,0 +1,353 @@
+<div class="container-modal" data-modal="add-new-IR">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="add-new-IR" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Novo I.R.</span>
+            </h3>
+            <!-- <span class="block-info-modal">Digite um CPF para continuar</span> -->
+            <form action="" id="form-add-new-IR">
+                
+                <div class="block-input-file">
+                    <label for="cpf_cnpj"> *CPF </label>
+                    <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-form="form-add-new-IR" data-check-input="1" oninput="checkInputIR_CPF(this); checkInputsValid();" >
+                </div>
+                
+                <article class="block-cod-valid">
+                    
+                    <!-- <div class="block-input-file">
+                        <label for="cod_sistema"> Código Domínio </label>
+                        <input type="text" name="cod_sistema" id="cod_sistema" data-form="form-add-new-IR" data-check-input="0" >
+                    </div> -->
+
+                    <div class="block-input-file">
+                        <label for="contribuinte"> *Contribuinte </label>
+                        <input type="text" name="contribuinte" id="contribuinte" data-form="form-add-new-IR" data-check-input="0" readonly oninput="checkInputsValid();">
+                    </div>
+                    
+                    <div class="block-input-file">
+                        <label for="ano"> *Ano </label>
+                        <input type="text" name="ano" id="ano" data-form="form-add-new-IR" maxlength="4" data-check-input="1" oninput="checkInputsValid();">
+                    </div>
+
+
+                    <div class="block-input-file">
+                        <label for="situacao_ano_anterior"> *Situação Ano Anterior </label>
+                        <input type="text" name="situacao_ano_anterior" id="situacao_ano_anterior" data-form="form-add-new-IR" maxlength="55" data-check-input="0"  oninput="checkInputsValid();">
+                    </div>
+
+                    <div class="block-input-file block-row">
+                        <div  class="w-col-50-flex">
+                            <label for="valor_ano_anterior"> Valor Ano Anterior </label>
+                            <input type="text" name="valor_ano_anterior" id="valor_ano_anterior" data-form="form-add-new-IR" data-check-input="0" placeholder="R$ 0.000,00" maxlength="25" oninput="checkInputsValid();">
+                        </div>
+                        <div  class="w-col-50-flex">
+                            <label for="valor_ano_atual"> *Valor Ano Atual </label>
+                            <input type="text" name="valor_ano_atual" id="valor_ano_atual" data-form="form-add-new-IR" data-check-input="1" placeholder="R$ 0.000,00" maxlength="25" oninput="checkInputsValid();">
+                        </div>
+                    </div>
+
+                    <div class="block-input-file">
+                        <label for="dificuldade"> *Dificuldade </label>
+                        <select name="dificuldade" id="dificuldade" data-check-input="0">
+                            <option value="Muito simples">Muito simples</option>
+                            <option value="Fácil">Fácil</option>
+                            <option value="Média">Média</option>
+                            <option value="Difícil">Difícil</option>
+                            <option value="Complexa">Complexa</option>
+                        </select>
+                    </div>
+
+                    <div class="block-input-file">
+                        <label for="status_smart_IR"> *Status SmartIR </label>
+                        <select name="status_smart_IR" id="status_smart_IR" data-check-input="0">
+
+                            <option value="Pronta para digitar"> Pronta para digitar </option>
+                            <option value="Documentos pendentes"> Documentos pendentes </option>
+                            <option value="Digitadas"> Digitadas </option>
+                            <option value="Agendado"> Agendado </option>
+                            <option value="Sem retorno do cliente"> Sem retorno do cliente </option>
+                            <!--  -->
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Nova">Nova</option>
+                            
+                        </select>
+                    </div>
+
+    
+                    <div class="block-btn-send-file">
+                        <input type="button" value="enviar" id="btn-post-form" data-status-btn="0" disabled btn-data-file-input="form-add-new-IR" onclick="sendFormAddNewIR(this)">
+                        
+                        <div class="block-animation-btn">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                </article>
+              
+                <span class="block-info-modal">
+                    <p>Digite um CPF para continuar</p>
+                </span>
+                
+                <span class="block-info-modal-redirect" style="display: none;">
+                    <div>
+                        <span>
+                            <p>Nenhum resultado.</p>
+                        </span>
+                        <span data-menu-link="clients" onclick="redirectToPage(this)" style="color: blue; cursor: pointer;">Ir para cadastro de clientes?</span>
+                    </div>
+                </span>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function redirectToPage(element){
+        let menu_link = element.getAttribute("data-menu-link");
+        window.localStorage.setItem("menu_link", menu_link);
+        window.location.href = `{% url 'clients' %}`;
+        
+    }
+
+    async function checkInputsValid(){
+        let cont = 0;
+        let btn = document.getElementById("btn-post-form");
+        btn.value = "enviar"; // aqui elimina a necessidade de resetar o valor original "enviar" após o POST.
+
+        document.querySelectorAll(`[data-check-input="1"]`).forEach((e)=>{
+            if(e.value == ""){
+                cont+=1;
+            }
+        });
+
+        if (cont == 0){
+            btn.classList.add("active");
+            btn.disabled = false;
+        }
+        else {
+            btn.classList.remove("active");
+            btn.disabled = true;
+        }
+    }
+
+    async function checkInputIR_CPF(element) {
+        let value = element.value.trim();
+        console.log(" ----------- value ----------- ")
+        console.log(value)
+
+        if (value == ""){
+            document.querySelector(".block-info-modal").style.display = "flex";
+            document.querySelector(".block-info-modal-redirect").style.display = "none";
+        } else {
+            let url = "{% url 'post_query_by_cpf' %}";
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}"
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({
+                    "field_name": "cpf_cnpj",
+                    "data_field": value
+                })
+            }).then((data) => {
+                return data.json();
+            }).then((data) => {
+                element.value = value;
+    
+                console.log(" >>> finish check doc number | cpf_cnpj ")
+                console.log(data)
+    
+                document.querySelectorAll("[data-check-input]").forEach((e)=>{
+                    let options = e.querySelectorAll("option");
+    
+                    if (e.id != "cpf_cnpj"){
+                        if(options.length > 0){
+                            options[0].selected = true;
+                        } else {
+                            e.value = "";
+                        }
+                    }
+                });
+    
+                
+                if (data["check"]){
+                    // let cod_sistema = data["data"]["cod_sistema"];
+                    let cpf_cnpj = data["data"]["cpf_cnpj"];
+                    let contribuinte = data["data"]["contribuinte"];
+    
+                    // document.getElementById("cod_sistema").value = cod_sistema;
+                    document.getElementById("contribuinte").value = contribuinte;
+                    document.querySelector(".block-cod-valid").classList.add("active");
+                    document.querySelector(".block-info-modal").style.display = "none";
+                    document.querySelector(".block-info-modal-redirect").style.display = "none";
+    
+                    
+                } else {
+                    document.querySelector(".block-cod-valid").classList.remove("active");
+    
+                    document.querySelector(".block-info-modal").style.display = "none";
+                    document.querySelector(".block-info-modal-redirect").style.display = "flex";
+                }
+            });
+        }
+
+
+    }
+
+    async function sendFormAddNewIR(element){
+
+        let data_form = {};
+        let inputs = document.querySelectorAll("[data-check-input]");
+        let btn = document.getElementById("btn-post-form");
+
+        inputs.forEach((e)=>{
+            data_form[e.id] = e.value;
+        });
+
+        console.log(" ------------- data_form | Form Add New IR ------------- ")
+        console.log(data_form)
+
+        let url = "{% url 'post_create_new_IR' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data_form)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            
+            console.log(" ------------ data response ------------ ")
+            console.log(data)
+
+            btn.value = data["msg"];
+            
+            
+            if (data["code"] == 200) {
+                
+                inputs.forEach((e)=>{
+                    let options = e.querySelectorAll("option");
+                    if (options.length > 0){
+                        options[0].selected;
+                    } else {
+                        e.value = "";
+                    }
+                });
+                
+                btn.value = "enviar";
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    setTimeout(()=>{
+                        btn.classList.remove("active");
+                        document.querySelector(".block-cod-valid").classList.remove("active");
+                        document.querySelector(`[data-modal="add-new-IR"]`).classList.remove("active");
+                    }, 1500);
+                }, 2000);
+                
+            }
+            
+            get_data_to_table_IR();
+
+
+        });
+
+    }
+
+    // async function sendFormAddNewIR(element){
+    //     let btn, form, attr, fileInput;
+
+    //     attr = element.getAttribute("btn-data-file-input");
+    //     form = document.getElementById(attr);
+    //     fileInput = form.querySelector(".block-input-file").querySelector("input");
+        
+    //     if (fileInput.files.length > 0){
+            
+    //         let selectData = fileInput.files[0];
+    //         const formData = new FormData();
+    //         await formData.append('file', selectData);
+    //         console.log("\n ---- formData ----- ")
+    //         console.log(formData)
+
+    //         let requestOptions = {
+    //             "data": formData,
+    //         };
+    
+    //         let headers = {
+    //             "X-CSRFToken": "{{csrf_token}}"
+    //         };
+    
+    //         let url = "{% url 'post_file_JB_smart_IR' %}";
+    
+    //         console.log(" ---- requestOptions ---- ")
+    //         console.log(requestOptions)
+    //         console.log(" ---- headers ---- ")
+    //         console.log(headers)
+    //         console.log(" ---- url ---- ")
+    //         console.log(url)
+
+    //         element.style.display = "none";
+    //         document.querySelector(".block-animation-btn").classList.add("active");
+    
+    //         fetch(url, {
+    //             method: "POST",
+    //             headers: headers,
+    //             body: formData
+    //         }).then((data)=>{
+    //             return data.json();
+    //         }).then((data) => {
+
+    //             console.log(" ----------------- data ----------------- ")
+    //             console.log(data)
+
+    //             // element.style.display = "flex";
+    //             // document.querySelector(".block-animation-btn").classList.remove("active");
+
+    //             // console.log(" -------------- data -------------- ")
+    //             // console.log(data)
+
+
+
+    //             // fileInput.value = "";
+
+    //             // if(data["code"] == 200){
+    //             //     element.value = "Base atualizada com sucesso";
+    //             //     updateTableInfo_JBSmartIR();
+    //             // } else {
+    //             //     element.value = "Erro ao atualizar base JB SmartIF";
+    //             //     element.style.background = "red";
+    //             // }
+    //             // setTimeout(()=>{
+    //             //     element.value = "enviar";
+    //             //     element.disabled = true;
+    //             //     element.classList.remove("active");
+    //             //     element.style.background = "var(--color-background-white-02)";
+
+    //             //     setTimeout(()=>{
+    //             //         if(data["code"] == 200){
+    //             //             document.querySelector(".container-modal").classList.remove("active");
+    //             //         }
+    //             //     }, 1500);
+    //             // }, 2500);
+    //         });
+
+    //     }
+
+    // }
+
+</script>

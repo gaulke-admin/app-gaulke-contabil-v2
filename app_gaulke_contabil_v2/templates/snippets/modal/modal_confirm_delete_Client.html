@@ -1,0 +1,54 @@
+<div class="container-modal" data-modal="confitm-delete-client">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="confitm-delete-client" onclick="displayModalDeleteClient(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Deseja excluir esse registro?</span>
+            </h3>
+            <span>
+                <p data-info-modal="info-row-client-contribuinte" style="margin: 10px 0px; font-weight: 500;"></p>
+                <p data-info-modal="info-row-client-cpf"></p>
+            </span>
+            <article>
+                <button data-row-delete="" onclick="post_delete_iR(this);">Excluir</button>
+                <button data-modal-name="confitm-delete-client" onclick="displayModalDeleteClient(this);">Cancelar</button>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function post_delete_iR(element){
+            let id_table_client = element.getAttribute("data-row-delete");
+            console.log(" ------- id_table_client ------- ")
+            console.log(id_table_client)
+            let url = "{% url 'post_delete_client' %}";
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}",
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({
+                    "id_table_client": id_table_client,
+                })
+            })
+            .then((data)=>{
+                document.querySelector(`[data-modal="confitm-delete-client"]`).classList.remove("active");
+                return data.json();
+            })
+            .then((data)=>{
+                console.log(data)
+                updateTableInfo_JBClients();
+            });
+    }
+
+</script>

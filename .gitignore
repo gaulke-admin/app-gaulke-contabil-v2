@@ -1,0 +1,8 @@
+__pycache__
+DUMPS/
+test.py
+*.json
+*.csv
+*.xls
+*.xlsx
+*.pdf

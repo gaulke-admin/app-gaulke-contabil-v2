@@ -1,0 +1,199 @@
+<div class="container-modal" data-modal="add-new-comment">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="add-new-comment" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Informações</span>
+            </h3>
+            <!-- <span></span> -->
+
+            <div class="block-comments">
+                <span id="btn_open_modal_add_new_comment" data-name-block="add-new-comment" data-btn-generic="add-new-comment" data-id-table-IR="" onclick="openModalAddComment(this, 'none')">
+                    <p> Comentários </p>
+                    <i class="fa-solid fa-comment-dots"></i>
+                </span>
+            </div>
+
+            <form action="" id="form-add-new-comment">
+                
+                <article class="block-cod-valid active">
+
+                    <div class="info-parcial-IR">
+                        <article>
+                            <span>
+                                <div>
+                                    <p>CPF:</p>
+                                    <p id="info_cpf_cnpj"></p>
+                                </div>
+                                <div>
+                                    <p>Contribuinte:</p>
+                                    <p id="info_contribuinte"></p>
+                                </div>
+                            </span>
+                            <span>
+                                <div>
+                                    <p>Celular</p>
+                                    <p id="info_celular"></p>
+                                </div>
+                                <div>
+                                    <p>Telefone</p>
+                                    <p id="info_telefone"></p>
+                                </div>
+                            </span>
+                            <span>
+                                <div>
+                                    <p>Ano</p>
+                                    <p id="info_ano"></p>
+                                </div>
+                                
+                                <div>
+                                    <p>Status SmartIR</p>
+                                    <p id="info_status_smart_IR"></p>
+                                </div>
+                                
+                                <div>
+                                    <p>Dificuldade</p>
+                                    <p id="info_dificuldade"></p>
+                                </div>
+                                
+                            </span>
+                            <span>
+                                <div>
+                                    <p>Valor Ano Anterior:</p>
+                                    <div class="block-info-values">
+                                        <span>R$</span>
+                                        <p id="info_valor_ano_anterior"></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p>Valor Ano Atual:</p>
+                                    <div class="block-info-values">
+                                        <span>R$</span>
+                                        <p id="info_valor_ano_atual"></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span>
+                                <div>
+                                    <p>Situação Ano Anterior</p>
+                                    <p id="info_situacao_ano_anterior"></p>
+                                </div>
+
+                            </span>
+
+                            <div class="block-input-file block-row-info-generic" style="width: 100%;">
+                                <div>
+                                    <label for="info_status_pagamento_IR"> I.R Pago? </label>
+                                    <select name="info_status_pagamento_IR" id="info_status_pagamento_IR" onchange="actionConfirmChange(this)">
+                                        <option value="Sim">Sim</option>
+                                        <option value="Não">Não</option>
+                                    </select>
+                                </div>
+
+                                
+                                <div data-more-info="forma_pagamento">
+                                    <label for="info_forma_pagamento"> Forma de Pagamento </label>
+                                    <select name="info_forma_pagamento" id="info_forma_pagamento" data-id-delete-dt-pagamento="" data-value="Sim" onchange="updateDtPagamentoIR(this, true)">
+                                        <option value="Pix">Pix</option>
+                                        <option value="Boleto">Boleto</option>
+                                        <option value="Caixa">Caixa</option>
+                                    </select>
+                                </div>
+                                
+                                <div data-more-info="dt_pagamento">
+                                    <label for="info_dt_pagamento">Data Pagamento</label>
+                                    <input type="date" name="info_dt_pagamento" id="info_dt_pagamento" data-id-delete-dt-pagamento="" data-value="Sim" onchange="updateDtPagamentoIR(this, true)">
+                                </div>
+
+                                <div class="block-options-confirm-action">
+                                    <p>Confirme a alteração</p>
+                                    <div>
+                                        <p id="id-delete-dt-pagamento" data-id-delete-dt-pagamento="" data-value="Sim" onclick="updateDtPagamentoIR(this, false);">Sim</p>
+                                        <p id="id-delete-dt-pagamento" data-id-delete-dt-pagamento="" data-value="Não" onclick="updateDtPagamentoIR(this, false);">Não</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </article>
+                        
+                    </div>
+
+                    
+
+                    
+
+
+                    
+                    <!-- <div class="block-btn-send-file">
+                        <input type="button" value="enviar" class="" id="btn-post-form-add-new-comment" data-status-btn="0" disabled btn-data-file-input="form-add-new-comment" onclick="postFormAddComment(this)">
+                        
+                        <div class="block-animation-btn">
+                            <div class="loader"></div>
+                        </div>
+                        
+                    </div> -->
+
+
+                </article>
+              
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function actionConfirmChange(element){
+        let status = element.value;
+        let info_dt_pagamento = document.getElementById("info_dt_pagamento");
+        
+        console.log(status)
+
+        if (status == "Não" && info_dt_pagamento.value != ""){
+            document.querySelector(".block-options-confirm-action").classList.add("active");
+
+        } else if (status == "Sim") {
+            document.querySelector(`[data-more-info="dt_pagamento"]`).classList.add("active");
+            document.querySelector(`[data-more-info="forma_pagamento"]`).classList.add("active");
+        }
+         else {
+            document.querySelector(".block-options-confirm-action").classList.remove("active");
+            document.querySelector(`[data-more-info="dt_pagamento"]`).classList.remove("active");
+            document.querySelector(`[data-more-info="forma_pagamento"]`).classList.remove("active");
+
+        }
+    }
+
+    async function checkValueInputs(){
+
+        let status_btn_post_form = true;
+        let btn_post_form = document.getElementById("btn-post-form-add-new-comment");
+
+        await document.querySelectorAll(`[data-check-input-add-new-comment]`).forEach((e)=>{
+            console.log(e)
+            if(e.value == "") {
+                status_btn_post_form = false;
+            }
+        });
+
+        console.log(`
+            ---------------------------------------------
+            status_btn_post_form: ${status_btn_post_form}
+        `)
+
+        if(status_btn_post_form){
+            btn_post_form.classList.add("active");
+            btn_post_form.disabled = false;
+        } else {
+            btn_post_form.classList.remove("active");
+            btn_post_form.disabled = true;
+        }
+    }
+</script>

@@ -1,0 +1,307 @@
+<div class="container-modal" data-modal="add-new-IR">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="add-new-IR" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Cliente</span>
+            </h3>
+            <!-- <span></span> -->
+            <form action="" id="form-add-new-IR">
+                
+                <!-- <div class="block-input-file">
+                    <label for="cod_sistema"> Código Domínio </label>
+                    <input type="text" name="cod_sistema" id="cod_sistema" data-form="form-add-new-IR" data-check-input="0" maxlength="8" oninput="checkInputDocClient(this);">
+                </div> -->
+
+                <article class="block-cod-valid active">
+                    <div class="block-input-file">
+                        <label for="cpf_cnpj"> *CPF </label>
+                        <input type="text" name="cpf_cnpj" id="cpf_cnpj" data-form="form-add-new-IR" data-check-input="0" oninput="checkInputCPF(this);" > <!-- oninput="checkInputDocNumber(this);" -->
+                    </div>
+                    <div class="block-input-file">
+                        <label for="contribuinte"> *Contribuinte </label>
+                        <input type="text" name="contribuinte" id="contribuinte" data-form="form-add-new-IR" data-check-input="0" oninput="checkInput(this);">
+                    </div>
+                    
+                    <div class="block-input-file block-row">
+                        <div class="w-col-50-flex">
+                            <label for="telefone"> Telefone </label>
+                            <input type="text" name="telefone" id="telefone" data-form="form-add-new-IR" data-check-input="1" placeholder="(00) 00000-0000"> <!-- oninput="validarTelefone(this)" --> <!-- onchange="checkInputFileValid(this);" -->
+                        </div>
+                        <div class="w-col-50-flex">
+                            <label for="celular"> Celular </label>
+                            <input type="text" name="celular" id="celular" data-form="form-add-new-IR" data-check-input="1" placeholder="(00) 00000-0000" > <!-- oninput="validarTelefone(this)" --> <!-- onchange="checkInputFileValid(this);" -->
+                        </div>
+                    </div>
+    
+                    <div class="block-btn-send-file">
+                        <input type="button" value="criar" id="btn-post-form" data-status-btn="0" disabled btn-data-file-input="form-add-new-IR" onclick="postFormAddCLient(this)">
+                        
+                        <div class="block-animation-btn">
+                            <div class="loader"></div>
+                        </div>
+                        
+                    </div>
+                </article>
+              
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function validarTelefone(element) {
+
+        let value = element.value;
+        // Expressão regular para o formato (00) 00000-0000
+        const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
+
+        if (value == "") {
+            element.style.borderColor = "var(--color-principal-cinza)";
+            element.setAttribute("data-check-input", "1");
+            return true;
+        }
+        else if (regex.test(value)) {
+            console.log(`O telefone ${value} está no formato correto.`);
+            element.style.borderColor = "green";
+            element.setAttribute("data-check-input", "1");
+            return true;
+        } else {
+            console.log(`O telefone ${value} não está no formato correto.`);
+            element.style.borderColor = "red";
+            element.setAttribute("data-check-input", "0");
+            return false;
+        }
+    }
+
+    async function checkInput(element){
+
+        let cpf_cnpj = document.getElementById("cpf_cnpj").value;
+        let contribuinte = document.getElementById("contribuinte").value;
+
+        if (cpf_cnpj && contribuinte != ""){
+            document.getElementById("btn-post-form").classList.add("active");
+            document.getElementById("btn-post-form").disabled = false;
+        } else {
+            document.getElementById("btn-post-form").classList.remove("active");
+            document.getElementById("btn-post-form").disabled = true;
+        }
+    }
+
+    async function checkInputDocClient(element){
+        
+        let value = String(element.value).trim();
+        let cpf_cnpj = document.getElementById("cpf_cnpj").value;
+        let contribuinte = document.getElementById("contribuinte").value;
+        
+        let url = "{% url 'post_query_by_field_cod_sistema' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                "field_name": "cod_sistema",
+                "data_field": value
+            })
+        })
+            .then((data) => {
+                return data.json();
+                })
+                .then((data) => {
+
+                    console.log(" >>> finish check cod sistema ")
+                    console.log(data)
+                    
+                    document.getElementById("cod_sistema").value = value;
+
+                    
+                    if (data["check"]){
+                        
+                        console.log(`
+                            -----------------------------
+                            cpf_cnpj input: ${cpf_cnpj}
+                            cpf_cnpj data: ${data["data"]["cpf_cnpj"]}
+                        `)
+                        if (cpf_cnpj == data["data"]["cpf_cnpj"]) {
+
+                            element.style.borderColor = "red";
+                            console.log(" check -- não autorizar 01")
+                            // document.querySelector(".block-import-file form .block-cod-valid").classList.remove("active");
+
+                        } else {
+                            element.style.borderColor = "green";
+                            console.log(" check -- autorizar 01")
+                            // document.querySelector(".block-import-file form .block-cod-valid").classList.add("active");
+                        }
+                    }
+                    else {
+                        element.style.borderColor = "green";
+                        console.log(" check -- autorizar 02")
+                        // document.querySelector(".block-import-file form .block-cod-valid").classList.remove("active");
+                    }
+                });
+    }
+    
+    async function checkInputCPF(element){
+        let value = element.value.trim();
+
+        console.log(" ----------- value ----------- ")
+        console.log(value)
+
+        let url = "{% url 'post_query_by_cpf' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                "field_name": "cpf_cnpj",
+                "data_field": value
+            })
+        }).then((data) => {
+            return data.json();
+        }).then((data) => {
+            element.value = value;
+
+            console.log(" >>> finish check doc number | cpf_cnpj ")
+            console.log(data)
+
+            
+            if (data["check"]){
+
+                // let cod_sistema = data["data"]["cod_sistema"];
+                let cpf_cnpj = data["data"]["cpf_cnpj"];
+                let contribuinte = data["data"]["contribuinte"];
+                let telefone = data["data"]["telefone"];
+                let celular = data["data"]["celular"];
+
+                console.log(`
+                    ----------------------------------
+                    >> cpf_cnpj: ${cpf_cnpj}
+                    >> contribuinte: ${contribuinte}
+                    >> telefone: ${telefone}
+                    >> celular: ${celular}
+                `)
+
+                // document.getElementById("cod_sistema").value = cod_sistema;
+                document.getElementById("contribuinte").value = contribuinte;
+                document.getElementById("telefone").value = telefone;
+                document.getElementById("celular").value = celular;
+
+                if (contribuinte != "") {
+                    document.getElementById("contribuinte").style.borderColor = "var(--color-principal-cinza)";
+                    document.getElementById("btn-post-form").classList.add("active");
+                    document.getElementById("btn-post-form").disabled = false;
+                } else {
+                    document.getElementById("contribuinte").style.borderColor = "red";
+                    document.getElementById("btn-post-form").classList.remove("active");
+                    document.getElementById("btn-post-form").disabled = true;
+                }
+
+                document.getElementById("btn-post-form").value = "Editar cadastro";
+                document.getElementById("btn-post-form").classList.add("active");
+                document.getElementById("btn-post-form").disabled = false;
+            } else {
+
+                // document.getElementById("cod_sistema").value= "";
+                document.getElementById("contribuinte").value = "";
+                document.getElementById("telefone").value = "";
+                document.getElementById("celular").value = "";
+
+                document.getElementById("btn-post-form").value = "criar";
+                document.getElementById("btn-post-form").classList.remove("active");
+                document.getElementById("btn-post-form").disabled = true;
+
+            }
+
+        });
+    }
+
+
+    function checkInputFileValid(element){
+        let btn_id = element.id;
+        if(element.value == ""){
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).disabled = true;
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).classList.remove("active");
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).setAttribute("data-status-btn", "0");
+        } else {
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).disabled = false;
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).classList.add("active");
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).setAttribute("data-status-btn", "1");
+        }
+    }
+
+    async function postFormAddCLient(element){
+        let btn, form, attr, data;
+
+        data = {};
+        document.querySelectorAll("[data-check-input]").forEach((e)=>{
+            data[e.id] = e.value;
+        });
+
+        console.log(data)
+        
+
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+
+        let url = "{% url 'post_create_new_client' %}";
+        
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+        }).then((data)=>{
+            return data.json();
+        }).then((data)=>{
+
+            element.style.display = "flex";
+            document.querySelector(".block-animation-btn").classList.remove("active");
+
+            console.log(" -------------- data -------------- ")
+            console.log(data)
+            
+            if(data["code"] == 200){
+                element.value = data["msg"];
+            } else {
+                element.value = data["msg"];
+                element.style.background = "red";
+            }
+
+            setTimeout(()=>{
+
+                element.value = "criar";
+                element.disabled = true;
+                element.classList.remove("active");
+                element.style.background = "var(--color-background-white-02)";
+
+                setTimeout(()=>{
+                    if(data["code"] == 200){
+                        document.querySelectorAll("[data-check-input]").forEach((e)=>{
+                            e.value = "";
+                            e.style.borderColor = "var(--color-principal-cinza)";
+                        });
+                        document.querySelector(`[data-modal="add-new-IR"]`).classList.remove("active");  
+                    }
+                }, 300);
+            }, 3000);
+
+            updateTableInfo_JBClients();
+        });
+
+
+    }
+
+</script>

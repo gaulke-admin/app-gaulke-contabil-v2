@@ -1,0 +1,70 @@
+{% include 'snippets/modal_imports/model_config_account_code_JB.html' %}
+
+<div class="container-company-session">
+    <div class="block-inputs-company-session">
+        <input type="hidden" name="company_session_code" id="company_session_code">
+        <input type="text" name="company_session_name" id="company_session_name" onclick="displayDropdownAllCompanies(this);" oninput="filterCompanySession(null);">
+    </div>
+    <span class="message-select-a-company">
+        <p>selecione uma empresa</p>
+    </span>
+
+    <div class="block-dropdown-all-companies">
+        <div data-controller-dropdown-rows>
+            
+            <span data-block-btn-close-modal="all-companies">
+                <i class="fa-regular fa-circle-xmark" onclick="closeDropdownAllCompanies(this);"></i>
+            </span>
+        </div>
+        <ul>
+           
+        </ul>
+    </div>
+</div>
+
+<script>
+
+    async function displayDropdownAllCompanies(element){
+        document.querySelector(".block-dropdown-all-companies").classList.add("active");
+    }
+
+    async function closeDropdownAllCompanies(element){
+        document.querySelector(".block-dropdown-all-companies").classList.remove("active");
+    }
+
+    async function selectCompany(element){
+        
+        let row = element.id;
+        let session_company_code    = document.querySelector(`[data-code-generic="row_code_company_${row.split("_")[1]}"]`).querySelectorAll("span")[0].textContent.trim();
+        let session_company_cnpj    = document.querySelector(`[data-info-company="${row}"]`).querySelectorAll("span")[0].textContent.trim();
+        let session_company_name    = document.querySelector(`[data-info-company="${row}"]`).querySelectorAll("span")[1].textContent.trim();
+        let session_company_code_JB = document.querySelector(`[data-info-code-company="${row}"]`).querySelectorAll("span")[0].textContent.trim();
+        // data-info-code-company="row_${data[i]["id_acessorias"]}"
+        window.localStorage.setItem("session_company_info", JSON.stringify(
+            {
+                "company_session": {
+                    "session_company_code_JB": session_company_code_JB,
+                    "session_company_code": session_company_code,
+                    "session_company_cnpj": session_company_cnpj,
+                    "session_company_name": session_company_name,
+                }
+            })
+        );
+        updateDropdowCompanySessionActive();
+        document.querySelector(".message-select-a-company").classList.remove("active");
+        document.getElementById("company_session_name").style.border = "1px solid var(--color-principal-cinza)";
+        
+        if(session_company_code_JB == "-") {
+            document.querySelector(".container-config-account-code-JB").classList.add("active");
+            document.querySelector(`[data-info-company-session="id_acessorias"]`).textContent = session_company_code;
+            document.querySelector(`[data-info-company-session="razao_social"]`).textContent = session_company_name;
+            document.querySelector(`[data-info-company-session="cnpj"]`).textContent = session_company_cnpj;
+        }
+
+        closeDropdownAllCompanies("");
+
+    }
+
+    
+    
+</script>

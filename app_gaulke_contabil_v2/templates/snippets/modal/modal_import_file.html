@@ -1,0 +1,252 @@
+<div class="container-modal" data-modal="import-file-JB-SmartIR">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="import-file-JB-SmartIR" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Arquivo JB SmartIR</span>
+                <i class="fa-regular fa-file-excel" style="color: green;"></i>
+            </h3>
+            <span>Selecione ou arraste o arquivo</span>
+            <form action="" id="file-input-JB-SmartIR">
+                
+                <div class="block-input-file">
+                    <input type="file" accept=".xlsx" name="file-input-JB-SmartIR" id="file-input-JB-SmartIR" onchange="checkInputFileValid(this);">
+                </div>
+                
+                <div class="block-btn-send-file">
+                    <input type="button" value="enviar" data-status-btn="0" disabled btn-data-file-input="file-input-JB-SmartIR" onclick="sendFile(this)">
+                    
+                    <div class="block-animation-btn">
+                        <div class="loader"></div>
+                    </div>
+
+
+                </div>
+              
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function validFilter(text_filter, text_row){
+        
+        if( text_filter == "" ) {
+            return true;
+        }
+        else if( String(text_row).toUpperCase().indexOf(text_filter) > -1 ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function updateTable() {
+
+        let table = document.querySelector(".block-table-info").querySelector("table");
+        table.querySelector("tbody").remove();
+        table.innerHTML += "<tbody></tbody>";
+
+        let text_filter = document.getElementById("text_filter").value.toUpperCase();
+
+        
+        let data_table = [];
+        let tbody = table.querySelector("tbody");
+
+        for (let i in data_table_deliveries_IR["data"]) {
+            
+            let id_table = data_table_deliveries_IR["data"][i]["id_table"];
+            let cod_sistema = data_table_deliveries_IR["data"][i]["cod_sistema"];
+            let contribuinte = data_table_deliveries_IR["data"][i]["contribuinte"];
+            let cpf_cnpj = data_table_deliveries_IR["data"][i]["cpf_cnpj"];
+            let celular = data_table_deliveries_IR["data"][i]["celular"];
+            let telefone = data_table_deliveries_IR["data"][i]["telefone"];
+            let ano = data_table_deliveries_IR["data"][i]["ano"];
+            let status_smart_IR = data_table_deliveries_IR["data"][i]["status_smart_IR"];
+            let dificuldade = data_table_deliveries_IR["data"][i]["dificuldade"];
+            let valor_ano_anterior = data_table_deliveries_IR["data"][i]["valor_ano_anterior"];
+            let valor_ano_atual = data_table_deliveries_IR["data"][i]["valor_ano_atual"];
+            let situação_ano_anterior = data_table_deliveries_IR["data"][i]["situação_ano_anterior"];
+
+            let valid_id_table = validFilter(text_filter, id_table);
+            let valid_cod_sistema = validFilter(text_filter, cod_sistema);
+            let valid_contribuinte = validFilter(text_filter, contribuinte);
+            let valid_cpf_cnpj = validFilter(text_filter, cpf_cnpj);
+            let valid_celular = validFilter(text_filter, celular);
+            let valid_telefone = validFilter(text_filter, telefone);
+            let valid_ano = validFilter(text_filter, ano);
+            let valid_status_smart_IR = validFilter(text_filter, status_smart_IR);
+            let valid_dificuldade = validFilter(text_filter, dificuldade);
+            let valid_valor_ano_anterior = validFilter(text_filter, valor_ano_anterior);
+            let valid_valor_ano_atual = validFilter(text_filter, valor_ano_atual);
+            let valid_situação_ano_anterior = validFilter(text_filter, situação_ano_anterior);
+            
+            if(situação_ano_anterior == undefined){
+                situação_ano_anterior = "";
+            }
+            
+            if ( valid_cod_sistema
+                || valid_contribuinte
+                || valid_cpf_cnpj
+                || valid_celular
+                || valid_telefone
+                || valid_ano
+                || valid_status_smart_IR
+                || valid_dificuldade
+                || valid_valor_ano_anterior
+                || valid_valor_ano_atual
+                || valid_situação_ano_anterior ) {
+
+                
+                data_table.push(`
+                    <tr data-row-code="${id_table}">
+                        <td>
+                            <input type="checkbox" name="row-code-${id_table}" id="row-code-${id_table}" style="width: 45px">
+                        </td>
+                        <td>
+                            <input type="text" value="${cod_sistema}" maxlength="9">
+                        </td>
+                        <td>${contribuinte}</td>
+                        <td>${cpf_cnpj}</td>
+                        <td>${celular}</td>
+                        <td>${telefone}</td>
+                        <td>${ano}</td>
+                        <td>${status_smart_IR}</td>
+                        <td>${dificuldade}</td>
+                        <td>${valor_ano_anterior}</td>
+                        <td>${valor_ano_atual}</td>
+                        <td>${situação_ano_anterior}</td>
+                    </tr>
+                `); 
+            }
+
+        }
+        tbody.innerHTML += data_table.join("");
+    }
+
+    function updateTableInfo_JBSmartIR(){
+
+        let url = "{% url 'get_all_data_JB_smart_IR' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({"data": ""})
+        }).then((data)=>{
+            return data.json();
+        }).then((data)=>{
+            data_table_deliveries_IR = data;
+            console.log(" --------------- data_table_deliveries_IR / updateTableInfo_JBSmartIR--------------- ")
+            console.log(data_table_deliveries_IR)
+            updateTable(data_table_deliveries_IR);
+        });
+
+            
+
+    }
+
+    function checkInputFileValid(element){
+        let btn_id = element.id;
+        if(element.value == ""){
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).disabled = true;
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).classList.remove("active");
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).setAttribute("data-status-btn", "0");
+        } else {
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).disabled = false;
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).classList.add("active");
+            document.querySelector(`[btn-data-file-input="${btn_id}"]`).setAttribute("data-status-btn", "1");
+        }
+    }
+
+    async function sendFile(element){
+        let btn, form, attr, fileInput;
+
+        attr = element.getAttribute("btn-data-file-input");
+        form = document.getElementById(attr);
+        fileInput = form.querySelector(".block-input-file").querySelector("input");
+        
+        if (fileInput.files.length > 0){
+            
+            let selectData = fileInput.files[0];
+            const formData = new FormData();
+            await formData.append('file', selectData);
+            console.log("\n ---- formData ----- ")
+            console.log(formData)
+
+            let requestOptions = {
+                "data": formData,
+            };
+    
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}"
+            }
+    
+            let url = "{% url 'post_file_JB_smart_IR' %}";
+    
+            console.log(" ---- requestOptions ---- ")
+            console.log(requestOptions)
+            console.log(" ---- headers ---- ")
+            console.log(headers)
+            console.log(" ---- url ---- ")
+            console.log(url)
+
+            element.style.display = "none";
+            document.querySelector(".block-animation-btn").classList.add("active");
+    
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: formData
+            }).then((data)=>{
+                return data.json();
+            }).then((data)=>{
+
+                element.style.display = "flex";
+                document.querySelector(".block-animation-btn").classList.remove("active");
+
+                console.log(" -------------- data -------------- ")
+                console.log(data)
+
+
+
+                fileInput.value = "";
+                if(data["code"] == 200){
+                    element.value = "Base atualizada com sucesso";
+                    updateTableInfo_JBSmartIR();
+                } else {
+                    element.value = "Erro ao atualizar base JB SmartIF";
+                    element.style.background = "red";
+                }
+                setTimeout(()=>{
+                    element.value = "enviar";
+                    element.disabled = true;
+                    element.classList.remove("active");
+                    element.style.background = "var(--color-background-white-02)";
+
+                    setTimeout(()=>{
+                        if(data["code"] == 200){
+                            document.querySelector(".container-modal").classList.remove("active");
+                        }
+                    }, 1500);
+                }, 2500);
+
+
+
+            })
+
+        }
+
+    }
+
+</script>

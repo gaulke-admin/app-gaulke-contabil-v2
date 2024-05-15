@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Clientes {% endblock %}
+{% block content %}
+
+<div data-name-page="clients"></div>
+<main class="container-fluid container-main">
+
+    {% include 'snippets/menu/menu_superior_deliveries_IR.html' %}
+    {% include 'snippets/modal/modal_add_new_client.html' %}
+    {% include 'snippets/modal/modal_confirm_delete_Client.html' %}
+    
+    <div class="container-generic">
+
+        <div class="block-filter-table">
+
+            <span>
+                <input type="text" placeholder="digite para filtrar" name="text_filter" id="text_filter" data-name-btn="table-indo-JB-SMART-IR" oninput="filterDataTable(this)">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+
+            <ul>
+                <li data-modal-name="add-new-IR" onclick="displayModal(this);">
+                    <span>Cliente</span>
+                    <i class="fa-solid fa-plus"></i>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="block-table-info">
+            <table class="table table-striped" data-table-name="table-indo-JB-SMART-IR">
+                <thead>
+                    <tr>
+                        <th class="w-col-60"> Cód Sistema </th>
+                        <th class="w-col-200"> Contribuinte </th>
+                        <th class="w-col-150"> CPF </th>
+                        <th class="w-col-150"> Celular </th>
+                        <th class="w-col-150"> Telefone </th>
+                        <th class="w-col-60"> Ações </th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    updateTableInfo_JBClients();
+
+    // executado para quando o usuário for redirecionado.
+    // updateLinkMenu();
+
+    function filterDataTable(element){
+        let value_input, value_table, name_table, table, tbody;
+        let arr_data = [];
+
+        updateTableClients();
+    }
+
+    async function post_delete_client(element){
+        let id_table_client = element.getAttribute("data-row-delete");
+        let url = "{% url 'post_delete_client' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                "id_table_client": id_table_client,
+            })
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            updateTableInfo_JBClients();
+        });
+    }
+
+    async function post_edit_value_client(element){
+
+        let value = element.value;
+        let field_name = element.getAttribute("data-field-name");
+        let id_table_client = element.id;
+
+        console.log(`
+            id_table_client: ${id_table_client}
+            value: ${value}
+            field_name: ${field_name}
+        `)
+
+        let url = "{% url 'post_edit_value_client' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                "id_table_client": id_table_client,
+                "field_name": field_name,
+                "value": value,
+            })
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            for (let i = 0; i < arr_events_stOut.length; i++){
+                clearTimeout(arr_events_stOut[i]);
+            }
+            if(data["msg"] == "error update client"){
+                element.style.borderColor = "red";
+            }
+            else if(data["msg"] == "success edit client") {
+                element.style.borderColor = "green";
+                let stOut = setTimeout(()=>{
+                    element.style.borderColor = "var(--color-background-white)";
+                }, 500);
+                arr_events_stOut.push(stOut);
+            }
+            else {
+                element.style.borderColor = "var(--color-background-white)";
+            }
+        });
+    }
+
+    function updateTableInfo_JBClients(){
+
+        let url = "{% url 'get_all_clients' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({"data": ""})
+        }).then((data)=>{
+            return data.json();
+        }).then((data)=>{
+            data_all_clients_IR = data;
+            console.log(" --------------- data_table_clients --------------- ")
+            console.log(data_all_clients_IR)
+            updateTableClients(data_all_clients_IR);
+        });
+    }
+    
+    function updateTableClients() {
+
+        let table = document.querySelector(".block-table-info").querySelector("table");
+        table.querySelector("tbody").remove();
+        table.innerHTML += "<tbody></tbody>";
+
+        let text_filter = document.getElementById("text_filter").value.toUpperCase();
+
+
+        let data_table = [];
+        let tbody = table.querySelector("tbody");
+
+        for (let i in data_all_clients_IR["data"]) {
+            
+            let id_table_client = data_all_clients_IR["data"][i]["id_table_client"];
+            let cod_sistema = data_all_clients_IR["data"][i]["cod_sistema"];
+            let contribuinte = data_all_clients_IR["data"][i]["contribuinte"];
+            let cpf_cnpj = data_all_clients_IR["data"][i]["cpf_cnpj"];
+            let celular = data_all_clients_IR["data"][i]["celular"];
+            let telefone = data_all_clients_IR["data"][i]["telefone"];
+            
+
+            let valid_id_table_client = validFilter(text_filter, id_table_client);
+            let valid_cod_sistema = validFilter(text_filter, cod_sistema);
+            let valid_contribuinte = validFilter(text_filter, contribuinte);
+            let valid_cpf_cnpj = validFilter(text_filter, cpf_cnpj);
+            let valid_celular = validFilter(text_filter, celular);
+            let valid_telefone = validFilter(text_filter, telefone);
+            
+            if ( valid_cod_sistema
+                || valid_contribuinte
+                || valid_cpf_cnpj
+                || valid_celular
+                || valid_telefone ){
+
+                
+                data_table.push(`
+                    <tr data-row-code="${id_table_client}">
+                        <td>
+                            <input type="text" value="${cod_sistema}" maxlength="9" name="row-cod_sistema-${id_table_client}" id="row-cod_sistema-${id_table_client}" data-field-name="cod_sistema" oninput="post_edit_value_client(this);">
+                        </td>
+                        <td>
+                            <input type="text" value="${contribuinte}" maxlength="125" name="row-contribuinte-${id_table_client}" id="row-contribuinte-${id_table_client}" data-field-name="contribuinte" oninput="post_edit_value_client(this);">
+                        </td>
+                        <td>
+                            <input type="text" value="${cpf_cnpj}" maxlength="18" name="row-cpf_cnpj-${id_table_client}" id="row-cpf_cnpj-${id_table_client}" data-field-name="cpf_cnpj" oninput="post_edit_value_client(this);">
+                        </td>
+                        <td>
+                            <input type="text" value="${celular}" maxlength="15" name="row-celular-${id_table_client}" id="row-celular-${id_table_client}" data-field-name="celular" oninput="post_edit_value_client(this);">
+                        </td>
+                        <td>
+                            <input type="text" value="${telefone}" maxlength="15" name="row-telefone-${id_table_client}" id="row-telefone-${id_table_client}" data-field-name="telefone" oninput="post_edit_value_client(this);">
+                        </td>
+                        <td>
+                            <span>
+                                <i class="fa-solid fa-trash-can"
+
+                                    data-row-delete="${id_table_client}"
+                                    data-row-cpf="${cpf_cnpj}"
+                                    data-row-contribuinte="${contribuinte}"
+
+                                    data-modal-name="confitm-delete-client"
+                                    onclick="displayModalDeleteClient(this);" title="excluir">
+                                </i>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+                // <i class="fa-solid fa-trash-can" data-row-delete="${id_table_client}" onclick="post_delete_client(this);" title="excluir"></i>
+                // ----------------- DELETE CLIENT -----------------
+                
+            }
+
+        }
+        tbody.innerHTML += data_table.join("");
+    }
+
+</script>
+{% endblock %}

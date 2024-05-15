@@ -1,0 +1,134 @@
+<div class="container-modal" data-modal="import-file-input-consulta-declaracoes">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="import-file-input-consulta-declaracoes" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Arquivo Consulta Declarações</span>
+                <i class="fa-solid fa-file-csv" style="color: green;"></i>
+            </h3>
+            <span>Selecione ou arraste o arquivo</span>
+            <form action="" id="file-input-consulta-declaracoes">
+                
+                <div class="block-input-file">
+                    <input type="file" accept=".csv" name="file-input-consulta-declaracoes" id="file-input-consulta-declaracoes" onchange="checkInputFileValid(this);">
+                </div>
+                
+                <div class="block-btn-send-file">
+                    <input type="button" value="enviar" data-status-btn="0" disabled btn-data-file-input="file-input-consulta-declaracoes" onclick="sendFileConsultaDeclaracoes(this)">
+                    
+                    <div class="block-animation-btn">
+                        <div class="loader"></div>
+                    </div>
+
+
+                </div>
+              
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function validFilter(text_filter, text_row){
+        
+        if( text_filter == "" ) {
+            return true;
+        }
+        else if( String(text_row).toUpperCase().indexOf(text_filter) > -1 ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async function sendFileConsultaDeclaracoes(element){
+        let btn, form, attr, fileInput;
+
+        attr = element.getAttribute("btn-data-file-input");
+        form = document.getElementById(attr);
+        fileInput = form.querySelector(".block-input-file").querySelector("input");
+        
+        if (fileInput.files.length > 0){
+            
+            let selectData = fileInput.files[0];
+            const formData = new FormData();
+            await formData.append('file', selectData);
+            console.log("\n ---- formData ----- ")
+            console.log(formData)
+
+            let requestOptions = {
+                "data": formData,
+            };
+    
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}"
+            }
+            
+            let url = "{% url 'post_file_grid_declaracoes' %}";
+    
+            console.log(" ---- requestOptions ---- ")
+            console.log(requestOptions)
+            console.log(" ---- headers ---- ")
+            console.log(headers)
+            console.log(" ---- url ---- ")
+            console.log(url)
+
+            element.style.display = "none";
+            document.querySelector(".block-animation-btn").classList.add("active");
+    
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: formData
+            }).then((data)=>{
+                return data.json();
+            }).then((data)=>{
+
+                element.style.display = "flex";
+                document.querySelector(".block-animation-btn").classList.remove("active");
+
+                console.log(" -------------- data -------------- ")
+                console.log(data)
+
+
+
+                fileInput.value = "";
+                if(data["code"] == 200){
+                    element.value = "Base atualizada com sucesso";
+                    updateTableInfo_JBSmartIR();
+                } else {
+                    element.value = "Erro ao atualizar base JB SmartIF";
+                    element.style.background = "red";
+                }
+                setTimeout(()=>{
+
+                    element.value = "enviar";
+                    element.disabled = true;
+                    element.classList.remove("active");
+                    element.style.background = "var(--color-background-white-02)";
+
+                    setTimeout(()=>{
+                        if(data["code"] == 200){
+                            document.querySelector(".container-modal").classList.remove("active");
+                        }
+                    }, 1500);
+
+                }, 2500);
+
+
+
+            })
+
+        }
+
+    }
+
+</script>

@@ -1,0 +1,206 @@
+<div class="container-modal" data-modal="filter-superior">
+    <div class="modal-import-file" style="min-height: 40vh;">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="filter-superior" onclick="displayModal(this);"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span>Filtros</span>
+            </h3>
+                
+            <div class="dropdown-options-filter">
+
+                <div class="dropdown-filters">
+                    <div class="header-dropdown" data-filter-name="filter-status-smart-IR" onclick="displayDropdownFilter(this)">
+                        <span>Status Smart I.R</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                    <article id="filter-status-smart-IR">
+                                     
+                    </article>
+                </div>
+                
+                <div class="dropdown-filters">
+
+                    <div class="header-dropdown" data-filter-name="filter-status-pagamento" onclick="displayDropdownFilter(this)">
+                        <span>Status Pagamt. I.R</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    
+                    <article id="filter-status-pagamento">
+                                     
+                    </article>
+                </div>
+
+
+            </div>
+                
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    async function displayDropdownFilter(element){
+        let id = element.getAttribute("data-filter-name");
+        element.querySelector("i").classList.toggle("active");
+        document.getElementById(id).classList.toggle("active");
+    }
+
+    async function checkInputsValid(){
+        let cont = 0;
+        let btn = document.getElementById("btn-post-form");
+        btn.value = "enviar"; // aqui elimina a necessidade de resetar o valor original "enviar" após o POST.
+
+        document.querySelectorAll(`[data-check-input="1"]`).forEach((e)=>{
+            if(e.value == ""){
+                cont+=1;
+            }
+        });
+
+        if (cont == 0){
+            btn.classList.add("active");
+            btn.disabled = false;
+        }
+        else {
+            btn.classList.remove("active");
+            btn.disabled = true;
+        }
+    }
+
+    async function checkInputIR_CPF(element) {
+        let value = element.value.trim();
+        console.log(" ----------- value ----------- ")
+        console.log(value)
+
+        if (value == ""){
+            document.querySelector(".block-info-modal").style.display = "flex";
+            document.querySelector(".block-info-modal-redirect").style.display = "none";
+        } else {
+            let url = "{% url 'post_query_by_cpf' %}";
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}"
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({
+                    "field_name": "cpf_cnpj",
+                    "data_field": value
+                })
+            }).then((data) => {
+                return data.json();
+            }).then((data) => {
+                element.value = value;
+    
+                console.log(" >>> finish check doc number | cpf_cnpj ")
+                console.log(data)
+    
+                document.querySelectorAll("[data-check-input]").forEach((e)=>{
+                    let options = e.querySelectorAll("option");
+    
+                    if (e.id != "cpf_cnpj"){
+                        if(options.length > 0){
+                            options[0].selected = true;
+                        } else {
+                            e.value = "";
+                        }
+                    }
+                });
+    
+                
+                if (data["check"]){
+                    // let cod_sistema = data["data"]["cod_sistema"];
+                    let cpf_cnpj = data["data"]["cpf_cnpj"];
+                    let contribuinte = data["data"]["contribuinte"];
+    
+                    // document.getElementById("cod_sistema").value = cod_sistema;
+                    document.getElementById("contribuinte").value = contribuinte;
+                    document.querySelector(".block-cod-valid").classList.add("active");
+                    document.querySelector(".block-info-modal").style.display = "none";
+                    document.querySelector(".block-info-modal-redirect").style.display = "none";
+    
+                    
+                } else {
+                    document.querySelector(".block-cod-valid").classList.remove("active");
+    
+                    document.querySelector(".block-info-modal").style.display = "none";
+                    document.querySelector(".block-info-modal-redirect").style.display = "flex";
+                }
+            });
+        }
+
+
+    }
+
+    async function sendFormAddNewIR(element){
+
+        let data_form = {};
+        let inputs = document.querySelectorAll("[data-check-input]");
+        let btn = document.getElementById("btn-post-form");
+
+        inputs.forEach((e)=>{
+            data_form[e.id] = e.value;
+        });
+
+        console.log(" ------------- data_form | Form Add New IR ------------- ")
+        console.log(data_form)
+
+        let url = "{% url 'post_create_new_IR' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data_form)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            
+            console.log(" ------------ data response ------------ ")
+            console.log(data)
+
+            btn.value = data["msg"];
+            
+            
+            if (data["code"] == 200) {
+                
+                inputs.forEach((e)=>{
+                    let options = e.querySelectorAll("option");
+                    if (options.length > 0){
+                        options[0].selected;
+                    } else {
+                        e.value = "";
+                    }
+                });
+                
+                btn.value = "enviar";
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    setTimeout(()=>{
+                        btn.classList.remove("active");
+                        document.querySelector(".block-cod-valid").classList.remove("active");
+                        document.querySelector(`[data-modal="filter-superior"]`).classList.remove("active");
+                    }, 1500);
+                }, 2000);
+                
+            }
+            
+            get_data_to_table_IR();
+
+
+        });
+
+    }
+</script>

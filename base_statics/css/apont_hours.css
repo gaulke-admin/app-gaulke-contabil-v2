@@ -1,0 +1,527 @@
+[data-block-name] {
+    display: none !important;
+}
+[data-block-name].active {
+    display: flex !important;
+}
+.container-apont-hours  {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 90%;
+    overflow: scroll;
+    padding: 10px;
+    gap: 10px;
+}
+.container-apont-hours.active {
+    display: flex;
+}
+.block-filters-apont-hours {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    padding: 4px 20px;
+}
+.block-select-template-import {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+.block-select-template-import ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+.block-select-template-import ul li button {
+    background: white;
+    color: var(--color-principal-azul-claro);
+    border: 1px solid var(--color-principal-azul-claro);
+    border-radius: 3.5px;
+    padding: 4px 6px;
+    transition: .3s all;
+}
+.block-select-template-import ul li button.active,
+.block-select-template-import ul li button:hover {
+    color: white;
+    background: var(--color-principal-azul-claro);
+}
+.block-table-apont-hours  {
+    width: 100%;
+    height: 75%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    padding: 10px;
+    padding-top: 0;
+    overflow: scroll;
+    background: white;
+    /* height: 55vh; */
+    /* border: 1px solid; */
+}
+
+/* .block-table-apont-hours table {
+    z-index: 1;
+} */
+
+.block-table-apont-hours table thead {
+    top: -1px;
+    position: sticky;
+    background: white;
+    z-index: 1;
+}
+.razao-social {
+    max-width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+/* ----------------------------------------------------------------- FORM ADD NEW APONT HOURS ----------------------------------------------------------------- */
+.container-add-new-apont-hours,
+.container-add-new-apont-hours form,
+.container-add-new-apont-hours form div {
+    display: flex;
+}
+.container-add-new-apont-hours  {
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 2.5px;
+    border: 1px solid var(--color-principal-cinza);
+}
+.container-add-new-apont-hours form {
+    flex-wrap: wrap;
+    flex-direction: row;
+    max-width: 90%;
+    width: 100%;
+    gap: 10px;
+}
+.container-add-new-apont-hours form div  {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+.container-add-new-apont-hours form div input,
+.container-add-new-apont-hours form div select {
+    outline: none;
+    padding: 4px;
+    border-radius: 2.5px;
+    border: 1px solid var(--color-principal-cinza);
+}
+.block-button-create-new-apont-hour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: auto;
+}
+
+.block-button-create-new-apont-hour button {
+    width: 95px;
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-principal-azul-claro);
+    background: white;
+    padding: 0 12px;
+    border-radius: 2.5px;
+    border: 1px solid var(--color-principal-azul-claro);
+    /* transition: .2s all; */
+}
+.block-button-create-new-apont-hour button.active {
+    color: white;
+    background: var(--color-principal-azul-claro);
+}
+
+
+.block-dropdown-all-companies-create-new-apont-hours {
+    position: absolute;
+    transform: translate(0px, 100%);
+    width: 288px;
+    min-height: 5vh;
+    max-width: 90%;
+    max-height: 40%;
+    overflow-y: scroll;
+    display: none !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 10px;
+    padding-top: 0;
+    border-radius: 0px;
+    background: white;
+    border: 1px solid #cdcdcd;
+    box-shadow: var(--box-shadow-02);
+    z-index: 9;
+}
+.block-dropdown-all-companies-create-new-apont-hours.active {
+    display: flex !important;
+}
+.block-btn-close-modal {
+    width: 100%;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    background: white;
+}
+.block-btn-close-modal i {
+    color: #ef8181;
+    cursor: pointer;
+}
+.block-btn-close-modal i:hover {
+    color: red;
+}
+.block-dropdown-all-companies-create-new-apont-hours ul,
+.block-dropdown-all-companies-create-new-apont-hours li {
+    width: 100%;
+    display: flex;
+}
+.block-dropdown-all-companies-create-new-apont-hours ul {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.block-dropdown-all-companies-create-new-apont-hours li {
+    cursor: pointer;
+    font-size: 11.5px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 1px 0;
+    padding: 4px;
+    gap: 10px;
+    min-height: 38px;
+    border-bottom: 1px solid var(--color-background-white-02);
+}
+[data-row-company-apont-hours].active,
+[data-row-company-apont-hours]:hover {
+    color: white;
+    background: var(--color-principal-azul-claro);
+}
+
+
+/* ----------------------------------------------------------------- TABELA APONT HORAS ----------------------------------------------------------------- */
+.block-table-apont-hours table thead tr th {
+    min-width: 82px;
+    text-align: left;
+}
+.block-table-apont-hours table thead tr th,
+.block-table-apont-hours table tbody tr td {
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+    border: 1.8px solid white;
+}
+.td-bold {
+    font-weight: 400;
+}
+
+[data-input-apont-hour].input-invalid {
+    border: 1px solid #ff6a6a !important;
+    box-shadow: 
+    rgb(255 67 67 / 3%) 0px 1px 29px,
+    rgb(253 62 62 / 0%) 0px 0px 1px,
+    rgba(0, 0, 0, 0.12) 0px 1px 2px,
+    rgba(0, 0, 0, 0.17) 0px 1px 1px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px !important;
+    
+}
+.apont-pending {
+    color: #434040 !important;
+    background: #ffdcdc !important;
+}
+.fa-trash-can {
+    color: #ff5b5b;
+    font-size: 14px;
+    cursor: pointer;
+}
+.position-header-right {
+    position: sticky;
+    right: -12px;
+}
+.position-col-right {
+    position: sticky;
+    right: -12px;
+    background: white !important;
+    height: 36px !important;
+    transform: translate(0px, -0.9px);
+}
+
+.position-col-right-observations {
+    position: sticky;
+    right: -24px;
+    background: white !important;
+    min-width: 308px !important;
+}
+.input-time-edit input {
+    border: none;
+    padding: 4px;
+    background: transparent;
+    overflow: none;
+}
+
+[data-row-time-final].input-edit-invalid  {
+    color: white !important;
+    background: #eb6161 !important;
+    border-radius: 4px !important;
+}
+
+[data-text-align-center]{
+    text-align: center !important;
+}
+[data-text-align-center-500]{
+    text-align: center !important;
+    font-weight: 500;
+}
+
+[data-obs-row]{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    padding: 3px;
+    border: 1px solid var(--color-principal-branco-puro);
+    background: #f7f7ef;
+}
+
+.block-btn-actions-apont-hours {
+    width: 100%;
+    height: 100%;
+    background: white !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+}
+.block-btn-actions-apont-hours i {
+    cursor: pointer;
+}
+
+.block-pending-apont-hours {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.block-pending-apont-hours span {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 12px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    /* cursor: pointer; */
+}
+.block-pending-apont-hours span p {
+    margin: 0;
+}
+
+
+/* ----------------------------------------------------------------- TABELA PENDÊNCIAS EM APONT HORAS ----------------------------------------------------------------- */
+
+.col-160 {
+    min-width: 160px !important;
+    max-width: 160px !important;
+}
+.col-190 {
+    min-width: 190px !important;
+    max-width: 190px !important;
+}
+.block-pendency-columns span,
+.block-subpendency-columns span {
+    min-width: 101px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1px 8px;
+    border-radius: 4px;
+    background: #fefff3;
+}
+.block-pendency-columns span {
+    background: #efefef;
+}
+.block-pendency-columns span input[type="text"]  {
+    height: 84%;
+    border: 1px solid white;
+    padding: 0 6px;
+    outline: none;
+}
+.block-pendency-columns,
+.block-subpendency-columns {
+    font-weight: 400;
+}
+.block-subpendency-columns {
+    color: #7b7878;
+}
+.col-f-r {
+    position: sticky;
+    right: -30px;
+    background: white;
+}
+.block-subpendency-columns span:nth-child(1){
+    min-width: 59px !important;
+}
+
+.block-subpendency-columns span .fa-trash-can {
+    color: #ffffff;
+}
+.block-header-table span {
+    font-weight: 800;
+    background: white !important;
+}
+.block-pendencies-row:hover .block-subpendency-columns i{
+    color: #df5a5a !important;
+}
+
+.container-activity {
+    position: relative;
+    width: 186vh;
+    margin: 2px 0;
+    border: 1px solid transparent;
+}
+.container-activity:hover {
+    border-color: #dbe7ef;
+}
+
+.block-pendency-dropdown,
+.block-pendency-action {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.block-pendency-dropdown {
+    min-width: 6px;
+}
+.block-pendency-action {
+    gap: 10px;
+}
+.block-pendency-action .fa-plus,
+.block-pendency-action .fa-ellipsis-vertical {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    background: white;
+}
+.container-activity:hover .block-pendency-action .fa-plus,
+.container-activity:hover .block-pendency-action .fa-ellipsis-vertical {
+    color: #848791;
+    background: white;
+}
+.container-activity .block-pendency-action .fa-plus:hover,
+.container-activity .block-pendency-action .fa-ellipsis-vertical:hover {
+    color: #232427;
+}
+
+
+
+.block-header-table {
+    position: sticky;
+    top: 0;
+    background: white;
+    margin: 0 0 6px 0 !important;
+    font-weight: 600;
+    color: #56575b;
+    z-index: 1;
+}
+
+[data-btn-expend-row] {
+    cursor: pointer;
+}
+[data-btn-expend-row].active {
+    transform: rotate(90deg);
+}
+[data-pendency-row] {
+    display: none !important;
+}
+[data-pendency-row].active {
+    display: flex !important;
+}
+.block-pendencies-row  {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    /* padding: 8px; */
+    /* margin: 4px 0; */
+    border: 1px solid transparent;
+    font-size: 12px;
+}
+
+.block-pendency-columns {
+    padding: 4px 10px;
+    min-height: 40px;
+    background: #ffffff;
+    border: 1px solid transparent;
+}
+/* .block-pendency-columns:hover {
+    border-top-color: #cdcdcd;
+    border-bottom-color: #cdcdcd;
+} */
+
+.block-pendency-columns,
+.block-subpendency-columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+.block-pendency-action i {
+    width: 22px;
+    height: 22px;
+    font-size: 24px;
+    color: #ffffff;
+    background: #bfcdbf;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+}
+.block-pendency-action i:hover {
+    background: #6ec9a0;
+}
+.block-pendency-action i.active {
+    background: #20ad6d;
+}
+.block-pendencies-row input[type="time"] {
+    padding: 1px 6px;
+    border: 1px solid #afb2c7;
+    border-radius: 2.5px;
+    outline: none;
+}
+
+
+
+/* ----------------------------------------------------------------- TABELA PENDÊNCIAS EM APONT HORAS ----------------------------------------------------------------- */
+
+.block-form-add-new-subtask {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}

@@ -1,0 +1,233 @@
+<div class="container-modal" data-modal="import-files-to-JB">
+    <div class="modal-import-file">
+        <div class="block-action-modal">
+            <span>
+                <i class="fa-regular fa-circle-xmark" data-modal-name="import-files-to-JB" onclick="closeModalImportFileToJB()"></i>
+            </span>
+        </div>
+        <div class="block-import-file">
+            <h3>
+                <span class="title-form" data-tile-form="import-file-JB"></span>
+                <div class="block-info-company-session-modal-import-file-to-JB">
+                    <span id="session_company_name">Empresa: <b></b></span>
+                    <span id="session_company_code">Código JB: <b></b></span>
+                </div>
+            </h3>
+            <form id="form-import-file-to-JB">
+                
+                <div class="block-inputs-form-import-file-to-JB">
+                    
+                    <!-- ----------------- modelo de inputs para importação JB -----------------
+                    <div class="content-inputs-form">
+                        <label for="file_1">File 1</label>
+                        <input type="file" name="file_1", id="file_1" accept=".csv">
+                    </div>
+                    <div class="content-inputs-form" style="flex-direction: column;">
+                        <label for="modelo">Modelo</label>
+                        <select name="" id="">
+                            <option value="">Teste 1</option>
+                            <option value="">Teste 2</option>
+                        </select>
+                    </div>
+                    <div class="content-inputs-form">
+                        <label for="file_3">Label Text</label>
+                        <input type="text" name="file_3", id="file_3" placeholder="teste...">
+                    </div>
+                    ----------------------------------------------------------------------- -->
+
+                </div>
+
+                <div class="block-btn-post-file">
+                    <div class="button-post">
+                        <span id="btn-post-file-import-JB" onclick="sendFileToImportJB(this);" data-status-btn="disabled">enviar</span>
+                    </div>
+                    <div class="block-animation-loading-process-data">
+                        <div class="loader"></div>
+                    </div> 
+                </div>
+                <div class="block-message-error-files-JB">
+                    <h4>Falha ao processar arquivos</h4>
+                    <div>
+                        <span>ERROR:</span>
+                        <span id="message-error-import-file-JB"></span>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    async function checkInputsPostFileImportJB(element){
+        let btn = document.getElementById("btn-post-file-import-JB");
+        let inputs = document.querySelectorAll(`[data-content-import-JB]`);
+        let count = 0;
+        for(let i = 0; i < inputs.length; i++){
+            console.log(">>>>> ", inputs[i].value)
+            if(inputs[i].value == ""){
+                count += 1;
+            }
+        }
+        
+        if(count > 0){
+            btn.classList.remove("active");
+            btn.setAttribute("data-status-btn", "disabled");
+        }
+        else {
+            btn.classList.add("active");
+            btn.setAttribute("data-status-btn", "enabled");
+        }
+    }
+
+    async function sendFileToImportJB(element){
+        let status_btn_post_file_JB = document.getElementById("btn-post-file-import-JB").getAttribute("data-status-btn");
+
+        if(status_btn_post_file_JB == "enabled"){
+            // garante que o btn de download estará inativo no inicio do processo.
+            document.getElementById("btn-download-file-txt-import-JB").classList.remove("active");
+    
+            let company_session_info, grupo_lancamento, modelo, session_company_code, session_company_name;
+            let title_form, btn, input, input_id, form, contentInputs;
+            let arr_data_post = [];
+    
+            try {
+                grupo_lancamento = document.getElementById("grupo_lancamento").value;
+            } catch (error) {
+                grupo_lancamento = null;
+            }
+            try {
+                modelo = document.getElementById("modelo").value;
+            } catch (error) {
+                modelo = null;
+            }
+            title_form = document.querySelector(`[data-tile-form="import-file-JB"]`).textContent;
+            company_session_info = await get_info_session_company();
+            session_company_code = await company_session_info["company_session"]["session_company_code_JB"];
+            session_company_name = await company_session_info["company_session"]["session_company_name"];
+            
+            form = document.getElementById("form-import-file-to-JB");
+            fileInput = form.querySelectorAll("input");
+            console.log(fileInput)
+            
+            if (fileInput.length > 0){
+                
+                
+                const formData = new FormData();
+                await formData.append('import_model', title_form);
+                await formData.append('modelo', modelo);
+                await formData.append('grupo_lancamento', grupo_lancamento);
+                await formData.append('session_company_code', session_company_code);
+                await formData.append('session_company_name', session_company_name);
+                
+                for (let i = 0; i < fileInput.length; i++){
+                    
+                    for (let j in fileInput[i].files){
+                        let selectData = fileInput[i].files[j];
+                        await formData.append(`file_${i+1}`, selectData);
+                    
+                    }
+                }
+                
+                let requestOptions = {
+                    "data": formData,
+                };
+                let headers = {
+                    "X-CSRFToken": "{{csrf_token}}"
+                };
+                let url = "{% url 'post_file_to_import_JB' %}";
+                
+                document.querySelector(".button-post").style.display = "none";
+                document.querySelector(".block-animation-loading-process-data").style.display = "flex";
+        
+                fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: formData
+                }).then((data)=>{
+                    return data.json();
+                })
+                .then((data)=>{
+                    
+                    let block_error_import_file_JB = document.querySelector(".block-message-error-files-JB");
+                    
+                    data_table_import_txt_to_JB = null;
+                    let container_import_preview = document.querySelector(".container-import-preview");
+                    let table = ""
+                    let arr_rows_table = [];
+                    let valor;
+                    console.log(data)
+                    document.querySelector(".button-post").style.display = "flex";
+                    document.querySelector(".block-animation-loading-process-data").style.display = "none";
+    
+                    if(data["code"] == 200){
+                        block_error_import_file_JB.style.display = "none";
+    
+                        document.querySelectorAll("[data-field-update-table-import-jb]").forEach((e)=>{
+                            e.querySelector("input").value = "";
+                            e.classList.remove("active");
+                        });
+    
+                        inputs_visible = data["inputs_visible"];
+                        console.log("\n\n ---------------------- inputs_visible ---------------------- ")
+                        console.log(inputs_visible)
+                        if(inputs_visible.length > 0){
+                            for (let i in inputs_visible){
+                                try {
+                                    document.querySelector(`[data-field-update-table-import-JB="${inputs_visible[i]}"]`).classList.add("active");
+                                } catch (error) {1;}
+                            }
+                        }
+    
+                        data_table_import_txt_to_JB = data["data_import_JB"]["data"];
+    
+                        document.getElementById("title-modal-table-import-JB").querySelector("h4").textContent = title_form;
+                        container_import_preview.classList.add("active");
+    
+    
+                        for (let i in data_table_import_txt_to_JB){
+    
+                            let type_process = data_table_import_txt_to_JB[i]["TYPE_PROCESS"];
+                            arr_data_post.push(`
+                                <tr>
+                                    <td>${data_table_import_txt_to_JB[i]["TP_REGISTRO"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["NOME"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["COD_EMPRESA"]}</td>
+                                    <td data-tb-row-JB="row-filial">${data_table_import_txt_to_JB[i]["FILIAL"]}</td>
+                                    <td data-tb-row-JB="row-date_lanc">${data_table_import_txt_to_JB[i]["DATA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["NR_L_CTO_ERP"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["TP"]}</td>
+                                    <td data-tb-row-JB="row-${type_process}">${data_table_import_txt_to_JB[i]["CONTA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["SUBCONTA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["VALOR"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["ACAO"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["PRIMEIRO_HIST_CTA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["COD_HISTORICO"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["COMPL_HISTORICO"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["GRUPO_LCTO"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["CNPJ"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["IESTADUAL"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["TP_CNPJ"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["CONTA_ORIGEM"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["CNPJ_EMPRESA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["IE_EMPRESA"]}</td>
+                                    <td>${data_table_import_txt_to_JB[i]["TYPE_PROCESS"]}</td>
+                                </tr>
+                            `);
+                        }
+                        
+                        container_import_preview.querySelector("table").querySelector("tbody").innerHTML = arr_data_post.join("");
+                    }
+                    else {
+                        document.getElementById("message-error-import-file-JB").textContent = data["error"];
+                        block_error_import_file_JB.style.display = "flex";
+                    }
+                    
+                });
+            }
+        }
+
+    }
+</script>

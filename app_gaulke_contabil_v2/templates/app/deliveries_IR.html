@@ -1,0 +1,528 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Registros I.R. {% endblock %}
+{% block content %}
+
+<div data-name-page="deliveries_IR"></div>
+<main class="container-fluid container-main">
+
+    {% include 'snippets/menu/menu_superior_deliveries_IR.html' %}
+
+    {% include 'snippets/modal/modal_add_new_IR.html' %}
+    {% include 'snippets/modal/modal_confirm_delete_IR.html' %}
+    {% include 'snippets/modal/modal_add_new_comment.html' %}
+    {% include 'snippets/modal/modal_right_add_new_comment.html' %}
+    {% include 'snippets/modal/modal_filters_navbar_superior.html' %}
+    {% include 'snippets/modal/modal_alter_IR_lote.html' %}
+    {% include 'snippets/modal/modal_pendencies_deliveries_IR.html' %}
+    
+    <div class="container-generic">
+
+        <div class="block-filter-table">
+            <span>
+                <input type="text" placeholder="digite para filtrar" name="text_filter" id="text_filter" data-name-btn="table-indo-JB-SMART-IR" oninput="update_table_IR();">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+
+            <ul>
+                <li data-modal-name="add-new-IR" onclick="displayModal(this);">
+                    <span>Novo I.R.</span>
+                    <i class="fa-solid fa-plus"></i>
+                </li>
+                
+                <li data-modal-name="filter-superior" onclick="displayModal(this);">
+                    <span>+Filtros</span>
+                    <i class="fa-solid fa-filter"></i>
+                </li>
+                <li data-modal-name="pendencies-deliveries-IR" onclick="displayModal_PendenciesIR(this);">
+                    <span>Pendências I.R <b data-generic-info="tt-pendencies-IR">0</b></span>
+                </li>
+
+                <li data-modal-name="options-alter-lote" onclick="displayModal(this);">
+                    <span>Ações em Lote</span>
+                    <span></span>
+                    <i class="fa-solid fa-rotate"></i>
+                </li>
+                
+            </ul>
+
+        </div>
+
+        <div class="block-table-info">
+            <table class="table table-striped" data-table-name="table-indo-JB-SMART-IR">
+
+                <thead>
+                    <tr>
+                        <th style="width: 45px; text-align: center;">
+                            <input type="checkbox" id="brn-select-all-rows-deliveries" onclick="selectAllRowsTable();">
+                        </th>
+                        <th class="w-col-60"> Cód Sistema </th>
+                        <th class="w-col-200"> Contribuinte </th>
+                        <th class="w-col-150"> CPF </th>
+                        <th class="w-col-150"> Celular </th>
+                        <th class="w-col-150"> Telefone </th>
+                        <th class="w-col-100"> Ano </th>
+                        <th class="w-col-200"> Status Smart I.R </th>
+                        <th class="w-col-150"> Dificuldade </th>
+                        <th class="w-col-150"> Valor Ano Anterior </th>
+                        <th class="w-col-150"> Valor Ano Atual (Anterior + 10%) </th>
+                        <th class="w-col-200"> Situação Ano Anterior </th>
+                        <th class="w-col-150"> I.R Pago? </th>
+                        <th class="w-col-150"> Data Pagamento </th>
+                        <th class="w-col-100 option-sticky-right"> Ações </th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+    // updateTableInfo_JBSmartIR();
+
+    async function get_data_to_table_IR(){
+        let url = `{% url "get_all_data_JB_smart_IR" %}`;
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            data: JSON.stringify({"data": ""})
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            data_table_deliveries_IR = data;
+            data_filters_deliveries_IR = data["data_filters"];
+            data_pend_IR = data["data_pend_IR"];
+
+            document.querySelector(`[data-generic-info="tt-pendencies-IR"]`).textContent = data["tt_pend"];
+            console.log(data)
+
+            const update_filters = new Promise((resolve, reject)=>{
+                update_filters_deliveries_IR(data_filters_deliveries_IR);
+                return resolve();
+            })
+            .then(()=>{
+                update_table_IR();
+
+            });
+            
+        });
+    }
+
+    async function post_edit_value_IR(element){
+
+        let value = element.value;
+        let field_name = element.getAttribute("data-field-name");
+        let id_table_IR = element.id;
+
+        if( field_name == "status_pagamento_IR" ) {
+
+        }
+
+
+
+        console.log(`
+            id_table_IR: ${id_table_IR}
+            value: ${value}
+            field_name: ${field_name}
+        `)
+
+        let url = "{% url 'post_edit_value_IR' %}";
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+                "id_table_IR": id_table_IR,
+                "field_name": field_name,
+                "value": value,
+            })
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+
+            console.log(" --------- finish edit row --------- ")
+            console.log(data)
+        });
+
+
+    }
+    
+    async function postFormAddComment(element){
+        let btn, form, attr, data;
+
+        let input_modal_comment = document.getElementById("input_modal_comment");
+        let username = "leonardo_santos";
+        data = {
+            "username": username,
+            "id_table_IR": input_modal_comment.value,
+            "comment": input_modal_comment.getAttribute("data-id-table-IR"),
+        };
+
+        console.log(data)
+        
+
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}"
+        };
+
+        let url = "{% url 'post_create_new_comment' %}";
+        
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+        }).then((data)=>{
+            return data.json();
+        }).then((data)=>{
+
+            element.style.display = "flex";
+            document.querySelector(".block-animation-btn").classList.remove("active");
+
+            console.log(" -------------- data | post_create_new_comment -------------- ")
+            console.log(data)
+            
+            
+        });
+
+
+    }
+
+    // async function deleteDtPagamentoIR(element) {
+    //     let id_table_IR = element.getAttribute("data-id-delete-dt-pagamento");
+    //     let data_value = element.getAttribute("data-value");
+    //     console.log(id_table_IR)
+    // }
+
+    async function updateDtPagamentoIR(element, dafault_process){
+
+        console.log(element)
+        let id_table_IR = element.getAttribute("data-id-delete-dt-pagamento");
+        let status_pagamento_IR = element.getAttribute("data-value");
+        let info_dt_pagamento = document.getElementById("info_dt_pagamento").value;
+        let info_forma_pagamento = document.getElementById("info_forma_pagamento").value;
+
+        if( !dafault_process ){
+            if (info_dt_pagamento == ""){
+                status_pagamento_IR = "Não";
+            }
+        }
+        
+        console.log(`
+            -----------------------------------
+            id_table_IR: ${id_table_IR}
+            status_pagamento_IR: ${status_pagamento_IR}
+            info_dt_pagamento: ${info_dt_pagamento}
+            info_forma_pagamento: ${info_forma_pagamento}
+            dafault_process: ${dafault_process}
+        `)
+
+        let url = `{% url 'post_edit_value_data_pagamento' %}`;
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let body = {
+            "id_table_IR": id_table_IR,
+            "status_pagamento_IR": status_pagamento_IR,
+            "dt_pagamento_IR": info_dt_pagamento,
+            "info_forma_pagamento": info_forma_pagamento,
+            "dafault_process": dafault_process,
+        }
+        
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+
+            if( status_pagamento_IR == "Sim" && dafault_process == false){
+                document.getElementById("info_dt_pagamento").value = "";
+                document.querySelector(".block-options-confirm-action").classList.remove("active");
+
+            }
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            if(data["code"] == 200) {
+
+                console.log(body)
+                get_data_to_table_IR();
+
+            }
+        })
+
+    }
+
+    async function openModal_InfoIR(element){
+
+        // ativa modal
+        document.querySelector(`[data-modal="add-new-comment"]`).classList.add("active");
+
+        let id_table_IR = element.getAttribute("data-row-comment");
+        // document.getElementById("input_modal_comment").setAttribute("data-id-table-IR", id_table_IR);
+
+        let contribuinte = document.getElementById(`row-contribuinte-${id_table_IR}`).value;
+        let cpf_cnpj = document.getElementById(`row-cpf_cnpj-${id_table_IR}`).value;
+        let celular = document.getElementById(`row-celular-${id_table_IR}`).value;
+        let telefone = document.getElementById(`row-telefone-${id_table_IR}`).value;
+        let ano = document.getElementById(`row-ano-${id_table_IR}`).value;
+        let status_smart_IR = document.getElementById(`row-status_smart_IR-${id_table_IR}`).value;
+        let dificuldade = document.getElementById(`row-dificuldade-${id_table_IR}`).value;
+        let valor_ano_anterior = document.getElementById(`row-valor_ano_anterior-${id_table_IR}`).value;
+        let valor_ano_atual = document.getElementById(`row-valor_ano_atual-${id_table_IR}`).value;
+        let situacao_ano_anterior = document.getElementById(`row-situacao_ano_anterior-${id_table_IR}`).value;
+        let status_pagamento_IR = document.getElementById(`row-status_pagamento_IR-${id_table_IR}`).value;
+        let dt_pagamento_IR = document.getElementById(`row-dt_pagamento_IR-${id_table_IR}`).value;
+
+        document.getElementById("id-delete-dt-pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
+
+
+        document.getElementById("info_contribuinte").innerText = contribuinte;
+        document.getElementById("info_cpf_cnpj").innerText = cpf_cnpj;
+        document.getElementById("info_celular").innerText = celular;
+        document.getElementById("info_telefone").innerText = telefone;
+        document.getElementById("info_ano").innerText = ano;
+        document.getElementById("info_status_smart_IR").innerText = status_smart_IR;
+        document.getElementById("info_dificuldade").innerText = dificuldade;
+        document.getElementById("info_valor_ano_anterior").innerText = valor_ano_anterior;
+        document.getElementById("info_valor_ano_atual").innerText = valor_ano_atual;
+        document.getElementById("info_situacao_ano_anterior").innerText = situacao_ano_anterior;
+        document.getElementById("info_dt_pagamento").value = dt_pagamento_IR;
+        document.getElementById("info_dt_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
+        document.getElementById("info_forma_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
+        // ----
+        document.getElementById("btn_open_modal_add_new_comment").setAttribute("data-id-table-IR", id_table_IR);
+        document.getElementById("text_new_comment_IR").setAttribute("data-id-table-IR", id_table_IR);
+
+
+
+        document.querySelector(`[data-more-info="dt_pagamento"]`).classList.remove("active");
+        document.querySelector(`[data-more-info="forma_pagamento"]`).classList.remove("active");
+      
+        document.getElementById("info_status_pagamento_IR").querySelectorAll("option").forEach((e)=>{
+
+            
+            if(e.value == status_pagamento_IR){
+                e.selected = true;
+                if(status_pagamento_IR == "Sim") {
+                    document.querySelector(`[data-more-info="dt_pagamento"]`).classList.add("active");
+                    document.querySelector(`[data-more-info="forma_pagamento"]`).classList.add("active");
+                }
+
+            } else {
+                e.selected = false;
+            }
+        });
+
+    }
+
+
+    async function selectAllRowsTable(){
+
+        let btn_save_lote = document.getElementById("btn-save-lote");
+        let btn_select_all_rows, rows, td, state_checkbox_header, state_checkbox_row, table, block_content_update_lote, id_row_update;
+
+        btn_select_all_rows = document.getElementById("brn-select-all-rows-deliveries");
+        table = document.querySelector(`[data-table-name="table-indo-JB-SMART-IR"]`);
+        block_actions_lote = document.querySelector(`[data-modal-name="options-alter-lote"]`);
+        
+        let count_rows_checked = 0;
+        let elements_lote = [];
+        block_content_update_lote = document.querySelector(".bloco-content-update-lote").querySelector("article");
+        rows = table.querySelector("tbody").querySelectorAll("tr").forEach((row)=>{
+            td = row.querySelectorAll("td");
+            if (btn_select_all_rows.checked){
+                
+                td[0].querySelector("span").querySelector("input").checked = true;
+                id_row_update = td[0].querySelector("span").querySelector("input").id;
+                elements_lote.push(`
+                    <span data-update-lote="${id_row_update}">
+                        <div class="block-datails-row-update">
+                            <p>#${td[1].querySelector("span").querySelector("input").value}</p>
+                            <p>${td[3].querySelector("span").querySelector("input").value}</p>
+                            <p>${td[2].querySelector("span").querySelector("input").value}</p>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-xmark" title="remover" data-remove-row-to-update="${id_row_update}" onclick="removeRowToUpdate(this);"></i>
+                        </div>
+                    </span>
+                `);
+                count_rows_checked += 1;
+            } else {
+                
+                td[0].querySelector("span").querySelector("input").checked = false;
+            }
+            
+        });
+
+        block_content_update_lote.innerHTML = elements_lote.join("");
+        block_actions_lote.querySelectorAll("span")[1].textContent = `[${count_rows_checked}]`;
+
+        if (btn_select_all_rows.checked){
+            btn_save_lote.style.display = "flex";
+            document.querySelector(`[data-modal-name="options-alter-lote"]`).classList.add("active");
+        } else {
+            btn_save_lote.style.display = "none";
+            document.querySelector(`[data-modal-name="options-alter-lote"]`).classList.remove("active");
+        }
+
+    }
+    
+    async function selectRowTable(element){
+
+        let btn_save_lote = document.getElementById("btn-save-lote");
+        let rows, td, state_checkbox_header, state_checkbox_row, table, block_actions_lote, block_content_update_lote, id_row_update;
+
+        table = document.querySelector(`[data-table-name="table-indo-JB-SMART-IR"]`);
+        block_actions_lote = document.querySelector(`[data-modal-name="options-alter-lote"]`);
+
+        let elements_lote = [];
+        block_content_update_lote = document.querySelector(".bloco-content-update-lote").querySelector("article");
+        
+        let count_rows_checked = 0;
+        rows = table.querySelector("tbody").querySelectorAll("tr").forEach((row)=>{
+
+            td = row.querySelectorAll("td");
+            id_row_update = td[0].querySelector("span").querySelector("input").id;
+            if (td[0].querySelector("span").querySelector("input").checked){
+
+                elements_lote.push(`
+                    <span data-update-lote="${id_row_update}">
+                        <div class="block-datails-row-update">
+                            <p>#${td[1].querySelector("span").querySelector("input").value}</p>
+                            <p>${td[3].querySelector("span").querySelector("input").value}</p>
+                            <p>${td[2].querySelector("span").querySelector("input").value}</p>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-xmark" title="remover" data-remove-row-to-update="${id_row_update}" onclick="removeRowToUpdate(this);"></i>
+                        </div>
+                    </span>
+                `);
+                count_rows_checked += 1;
+            }
+        });
+        block_content_update_lote.innerHTML = elements_lote.join("");
+        block_actions_lote.querySelectorAll("span")[1].textContent = `[${count_rows_checked}]`;
+        if (count_rows_checked > 0){
+            btn_save_lote.style.display = "flex";
+            block_actions_lote.classList.add("active");
+        } else {
+            btn_save_lote.style.display = "none";
+            block_actions_lote.classList.remove("active");
+        }
+
+    }
+
+    function removeRowToUpdate(element){
+
+        let btn_save_lote = document.getElementById("btn-save-lote");
+        let rows, td, state_checkbox_header, state_checkbox_row,
+            table, block_actions_lote, block_content_update_lote,
+            id_row_update, id_row,
+            brn_select_all_rows_deliveries;
+        
+        id_row = element.getAttribute("data-remove-row-to-update");
+        brn_select_all_rows_deliveries = document.getElementById("brn-select-all-rows-deliveries");
+        document.getElementById(id_row).checked = false;
+        document.querySelector(`[data-update-lote="${id_row}"]`).remove();
+        
+
+        table = document.querySelector(`[data-table-name="table-indo-JB-SMART-IR"]`);
+        block_actions_lote = document.querySelector(`[data-modal-name="options-alter-lote"]`);
+
+        let elements_lote = [];
+        block_content_update_lote = document.querySelector(".bloco-content-update-lote").querySelector("article");
+        
+        let count_rows_checked = 0;
+        rows = table.querySelector("tbody").querySelectorAll("tr").forEach((row)=>{
+            td = row.querySelectorAll("td");
+            id_row_update = td[0].querySelector("span").querySelector("input").id;
+            if (td[0].querySelector("span").querySelector("input").checked){
+                count_rows_checked += 1;
+            }
+        });
+
+        block_actions_lote.querySelectorAll("span")[1].textContent = `[${count_rows_checked}]`;
+        if (count_rows_checked > 0){
+            block_actions_lote.classList.add("active");
+            brn_select_all_rows_deliveries.checked = true;
+            btn_save_lote.style.display = "flex";
+        } else {
+            btn_save_lote.style.display = "none";
+            block_actions_lote.classList.remove("active");
+            brn_select_all_rows_deliveries.checked = false;
+        }
+    }
+    
+    async function postSaveLote(){
+
+        let url = "{{url_update_lote_IR}}";
+        let data, arr_code_IR, data_row, id_row_table,
+            dificuldade_lote, status_smart_IR_lote, status_paymanet_lote, info_forma_pagamento, date_payment;
+
+        arr_code_IR = [];
+        dificuldade_lote = document.getElementById("dificuldade_lote").value;
+        status_smart_IR_lote = document.getElementById("status_smart_IR_lote").value;
+        status_paymanet_lote = document.getElementById("status_paymanet_lote").value;
+        info_forma_pagamento = document.getElementById("info_forma_pagamento_lote").value;
+        date_payment = document.getElementById("date_payment").value;
+
+        let rows = document.querySelectorAll(`[data-update-lote]`);
+        rows.forEach((row)=>{
+            
+            id_row_table = row.getAttribute("data-update-lote").split("-");
+            id_row_table = id_row_table[id_row_table.length -1];
+            console.log(` ------------------- row ------------------- | ${id_row_table} `)
+            console.log(row)
+            data_row = row.querySelector(".block-datails-row-update").querySelectorAll("p");
+            arr_code_IR.push(id_row_table);
+        });
+        data = {
+            "url": url,
+            "dificuldade_lote": dificuldade_lote,
+            "status_smart_IR_lote": status_smart_IR_lote,
+            "status_paymanet_lote": status_paymanet_lote,
+            "date_payment": date_payment,
+            "info_forma_pagamento": info_forma_pagamento,
+            "arr_code_IR": arr_code_IR
+        }
+        let headers = {
+            "Content-Type": "application/json",
+            "redirect": "follow",
+        };
+        console.log(data)
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            updateTableInfo_JBSmartIR();
+        })
+    }
+    
+    
+    get_data_to_table_IR();
+</script>
+{% endblock %}

@@ -1,0 +1,122 @@
+<article class="container-modal-generic" data-modal-name="add-note-apont-hour">
+    <div class="block-modal-generic">
+        <div class="block-close-modal">
+            <!-- <i class="fa-regular fa-circle-xmark" data-btn-name="add-note-apont-hour" onclick="closeModal(this);"></i> -->
+            <i class="fa-solid fa-arrow-left-long" data-btn-name="add-note-apont-hour" onclick="closeModal(this);"></i>
+        </div>
+        <div class="block-btns-superior-modal-generic">
+            <span style="color: red; border-color: red;" id="btn-delete-row-apont-hour" data-btn-delete-row-apont-hour="" title="excluir registro" onclick="deleteApontHour(this);">
+                <p>Excluir</p>
+                <i class="fa-solid fa-trash-can"></i>
+            </span>
+        </div>
+        <div class="block-info-modal-apont-hour">
+            <div flex-row style="gap: 4px;">
+                <span data-info-modal="username">username</span>
+                <span>/</span>
+                <span data-info-modal="setor">setor</span>
+            </div>
+            <div flex-row>
+                <span>
+                    <p>Cód. Acessórias</span>
+                    <p data-info-modal="codigo_empresa"></p>
+                </span>
+                <span>
+                    <p>Razão Social</span>
+                    <p data-info-modal="razao_social"></p>
+                </span>
+                <span>
+                    <p>Regime</span>
+                    <p data-info-modal="regime"></p>
+                </span>
+            </div> 
+            <div flex-row>
+                <span>
+                    <p>Data</p>
+                    <p data-info-modal="data_apont"></p>
+                </span>
+                <span>
+                    <p>Hora Início</p>
+                    <p data-info-modal="horario_inicio"></p>
+                </span>
+                <span>
+                    <p>Hora Fim</p>
+                    <!-- <p data-info-modal="horario_fim"></p> -->
+                    <input type="time" data-info-modal="horario_fim" name="modal_horario_fim" id="modal_horario_fim">
+                </span>
+                <span>
+                    <p>Atividade</p>
+                    <p data-info-modal="atividade"></p>
+                </span>
+                <span>
+                    <p>Competência</p>
+                    <p data-info-modal="competencia"></p>
+                </span>
+            </div> 
+            <div>
+                <span style="width: 100%;">
+                    <label for="field_modal_apont_observacao">Observação</label>
+                    <textarea type="text" data-info-modal="observacao" name="field_modal_apont_observacao" id="field_modal_apont_observacao" data-obs-row="" oninput="updateObservationApontHour(this);"></textarea>
+                        <!-- <textarea name="" id="" cols="30" rows="10"></textarea> -->
+                </span>
+            </div>  
+        </div>
+        <div class="block-pending-apont-hours ">
+            <span>
+                <p>Pendência</p>
+                <i class="fa-regular fa-flag"></i>
+            </span>
+            <div class="block-create-pendency-apont-hour">
+                <button>
+                    <i class="fa-solid fa-plus"></i>
+                    <p>Adicionar pendência</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</article>
+
+
+<script>
+    function openModal(element){
+        let id = element.getAttribute("data-btn-row");
+        let modalName = element.getAttribute("data-btn-name");
+        document.querySelector(`[data-modal-name="${modalName}"]`).classList.add("active");
+        document.getElementById(`btn-delete-row-apont-hour`).setAttribute("data-btn-delete-row-apont-hour", id);
+        
+        let data = {"id": id};
+        let url = `{% url 'get_info_apont_hour' %}`;
+        let headers = {"X-CSRFToken": "{{csrf_token}}"};
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data);
+            document.querySelector(`[data-info-modal="username"]`).textContent = data["data"]["username"];
+            document.querySelector(`[data-info-modal="setor"]`).textContent = data["data"]["setor"];
+            document.querySelector(`[data-info-modal="codigo_empresa"]`).textContent = data["data"]["codigo_empresa"];
+            document.querySelector(`[data-info-modal="razao_social"]`).textContent = data["data"]["razao_social"];
+            document.querySelector(`[data-info-modal="regime"]`).textContent = data["data"]["regime"];
+            document.querySelector(`[data-info-modal="data_apont"]`).textContent = data["data"]["data_apont"];
+            document.querySelector(`[data-info-modal="horario_inicio"]`).textContent = data["data"]["horario_inicio"];
+
+            document.querySelector(`[data-info-modal="horario_fim"]`).value = data["data"]["horario_fim"];
+
+            document.querySelector(`[data-info-modal="atividade"]`).textContent = data["data"]["atividade"];
+            document.querySelector(`[data-info-modal="competencia"]`).textContent = data["data"]["competencia"];
+            document.querySelector(`[data-info-modal="observacao"]`).value = data["data"]["observacao"];
+            document.querySelector(`[data-info-modal="observacao"]`).setAttribute("data-obs-row", id);
+        });
+    }
+    function closeModal(element){
+        let modalName = element.getAttribute("data-btn-name");
+        document.querySelector(`[data-modal-name="${modalName}"]`).classList.remove("active");
+        document.getElementById(`btn-delete-row-apont-hour`).setAttribute("data-btn-delete-row-apont-hour", "");
+    }
+</script>

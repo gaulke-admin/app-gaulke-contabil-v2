@@ -1,0 +1,219 @@
+<div class="container-modal-right ">
+
+
+    <div class="modal-right">
+        
+        <div class="block-header-modal">
+            <div class="control-modal">
+                <i class="fa-solid fa-chevron-right" onclick="closeModalAddComment();"></i>
+            </div>
+            <span>
+                <p id="header_cpf"></p>
+                <p id="header_contribuinte"></p>
+            </span>
+            <!-- <div class="separator-block"></div> -->
+        </div>
+
+        <div class="block-commments">
+            <ul>
+                <!-- <li>
+                    <article>
+                        <span data-type-text="options-comment">
+                            <i class="fa-regular fa-trash-can" data-id-table-IR=""></i>
+                        </span>
+                        <span data-type-text="comment">Texto do comentário 01</span>
+                        <div>
+                            <span data-type-text="username">leonardo_santos</span>
+                            <span data-type-text="datetime">02/04/2024 17:20:59</span>
+                        </div>
+                    </article>
+                </li> -->
+            </ul>
+        </div>
+        
+    
+        <div class="block-add-new-commment">
+            <input type="text" name="text_new_comment_IR" id="text_new_comment_IR" data-id-table-IR="" placeholder="escreva um comentário" maxlength="155" oninput="checkInputComment();">
+            <button id="btn_post_new_commment" onclick="postNewCommentIR();">enviar</button>
+        </div>
+    
+    
+    </div>
+</div>
+
+<script>
+    async function openModalAddComment(element, status_btn){
+        let info_cpf_cnpj = document.getElementById("info_cpf_cnpj").innerText;
+        let info_contribuinte = document.getElementById("info_contribuinte").innerText;
+
+        console.log(`
+            info_cpf_cnpj: ${info_cpf_cnpj}
+            info_contribuinte: ${info_contribuinte}
+        `)
+
+
+        document.getElementById("header_cpf").innerText = info_cpf_cnpj;
+        document.getElementById("header_contribuinte").innerText = info_contribuinte;
+        document.querySelector(".container-modal-right").classList.add("active");
+
+        getCommentsIR();
+        
+    }
+    async function closeModalAddComment(){
+        document.querySelector(".container-modal-right").classList.remove("active");
+    }
+    
+    async function checkInputComment(reset=false){
+
+        let text_new_comment_IR = document.getElementById("text_new_comment_IR");
+        if(reset){
+            text_new_comment_IR.value = "";
+            document.getElementById("btn_post_new_commment").classList.remove("active");
+            text_new_comment_IR.classList.remove("input_invalid");
+        } else {
+            if(text_new_comment_IR.value == ""){
+                text_new_comment_IR.classList.add("input_invalid");
+                document.getElementById("btn_post_new_commment").classList.remove("active");
+                return false;
+            } else {
+                text_new_comment_IR.classList.remove("input_invalid");
+                document.getElementById("btn_post_new_commment").classList.add("active");
+                return true;
+            }
+        }
+
+    }
+    async function postNewCommentIR(){
+
+        let username = "leonardo_santos";
+        let checkInput = await checkInputComment();
+        let text_new_comment_IR = document.getElementById("text_new_comment_IR");
+        
+        if (checkInput){
+            let url = `{% url "post_create_new_comment" %}`;
+            let headers = {
+                "X-CSRFToken": "{{csrf_token}}",
+            }
+            let body = {
+                "username": username,
+                "id_table_IR": text_new_comment_IR.getAttribute("data-id-table-IR"),
+                "comment": text_new_comment_IR.value,
+            };
+            console.log(headers)
+            console.log(body)
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(body)
+            })
+            .then((data)=>{
+                return data.json();
+            })
+            .then((data)=>{
+
+                console.log(data)
+                if(data["code"] == 200){
+                    checkInputComment(true);
+                    getCommentsIR();
+                }
+
+            });
+        }
+    }
+
+    async function deleteCommentIR(element){
+
+        let url = `{% url "post_delete_comment_IR" %}`;
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let body = {
+            "id_table_comment_IR": element.getAttribute("data-id-table-IR"),
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            if(data["code"] == 200){
+                getCommentsIR();
+            }
+        });
+    }
+    async function editCommentIR(element){
+
+        let url = `{% url "post_edit_comment_IR" %}`;
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let body = {
+            "id_table_comment_IR": element.getAttribute("data-id-table-IR"),
+            "comment": element.value
+        };
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
+            
+        });
+    }
+
+    async function getCommentsIR(){
+
+
+
+        let url = `{% url "get_comments" %}`;
+        let headers = {
+            "X-CSRFToken": "{{csrf_token}}",
+        }
+        let body = {
+            "id_table_IR": text_new_comment_IR.getAttribute("data-id-table-IR"),
+        };
+        console.log(headers)
+        console.log(body)
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+
+            console.log(data)
+            let ul = document.querySelector(".block-commments").querySelector("ul");
+            let arr_comments = new Array();
+            for (let i in data["data"]){
+                console.log(i, data["data"][i])
+                arr_comments.push(`
+                <li>
+                    <article>
+                        <span data-type-text="options-comment">
+                            <i class="fa-regular fa-trash-can" data-id-table-IR="${data["data"][i]["id_table_comment_IR"]}" onclick="deleteCommentIR(this);"></i>
+                        </span>
+                        <input type="text" value="${data["data"][i]["comment"]}" data-id-table-IR="${data["data"][i]["id_table_comment_IR"]}" data-type-text="comment" oninput="editCommentIR(this);">
+                        <div>
+                            <span data-type-text="username">${data["data"][i]["username"]}</span>
+                            <span data-type-text="datetime">${data["data"][i]["dt_comment"]}</span>
+                        </div>
+                    </article>
+                </li>
+                `);
+                // <span data-type-text="comment">${data["data"][i]["comment"]}</span>
+            }
+            ul.innerHTML = arr_comments.join("");
+        });
+    }
+</script>
