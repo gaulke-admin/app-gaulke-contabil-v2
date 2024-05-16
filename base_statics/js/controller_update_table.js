@@ -63,7 +63,6 @@ async function update_table_IR(){
 
     let cont_row = 0;
     let limit_rows = 40000;
-
     let filter_localStorage_status_pagamento = await JSON.parse(window.localStorage.getItem("status_pagamento")); //["filter"];
     let filter_localStorage_status_smart_IR = await JSON.parse(window.localStorage.getItem("status_smart_IR")); //["filter"];
 
@@ -97,7 +96,7 @@ async function update_table_IR(){
                 let check_telefone              = check_filter(telefone, text_filter);
                 let check_valor_ano_anterior    = check_filter(valor_ano_anterior, text_filter);
                 let check_valor_ano_atual       = check_filter(valor_ano_atual, text_filter);
-                let check_dt_pagamento_IR   = check_filter(dt_pagamento_IR, text_filter);
+                let check_dt_pagamento_IR       = check_filter(dt_pagamento_IR, text_filter);
                 
                 let check_status_smart_IR       = check_filter(status_smart_IR, text_filter);
                 let check_status_pagamento_IR   = check_filter(status_pagamento_IR, text_filter);
@@ -233,10 +232,6 @@ async function update_table_IR(){
         
 
         return resolve();
-    })
-    .then(()=>{
-
-        
     });
 
 }

@@ -16,191 +16,136 @@
                             <td style="min-width: 108px;" >Cód Sistema</td>
                             <td style="min-width: 150px;" >Contribuinte</td>
                             <td style="min-width: 150px;" >CPF</td>
-                            <td style="min-width: 130px;" >Celular</td>
-                            <td style="min-width: 130px;" >Telefone</td>
                             <td style="min-width: 90px;"  >Ano</td>
                             <td style="min-width: 105px;" >Valor Ano Anterior</td>
                             <td style="min-width: 105px;" >Valor Ano Atual (Anterior + 10%)</td>
-                            <td style="min-width: 90px;" >Ações</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
+            <div class="block-btn-actions-pendecies">
+                <button data-info-affected-records="pencedies-IR" onclick="post_update_values_IR();" disabled>
+                    <span>nenhuma alteração</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-
 <script>
 
-    async function checkInputsPostFileImportJB(element){
-        let btn = document.getElementById("btn-post-file-import-JB");
-        let inputs = document.querySelectorAll(`[data-content-import-JB]`);
-        let count = 0;
-        for(let i = 0; i < inputs.length; i++){
-            console.log(">>>>> ", inputs[i].value)
-            if(inputs[i].value == ""){
-                count += 1;
-            }
+    var object_edit_deliveries = {
+        "cod_sistema": {},
+        "valor_ano_atual": {},
+        "valor_ano_anterior": {},
+    };
+
+    function displayModal_PendenciesIR(){
+
+        let arr_rows_pendencies = [];
+        let modal_name = "pendencies-deliveries-IR";
+        // window.localStorage.setItem("modal_edit_pendencies_IR", 1);
+
+        document.querySelector(`[data-modal="${modal_name}"]`).classList.toggle("active");
+
+        for(let i in data_pend_IR){
+            
+            let cod_sistema = data_pend_IR[i]["id_table_CLIENT"];
+            let IR_code = data_pend_IR[i]["id_table_IR"];
+            let value_cod_sistema = data_pend_IR[i]["cod_sistema"];
+            let value_valor_ano_atual = data_pend_IR[i]["valor_ano_atual"];
+
+
+            arr_rows_pendencies.push(`
+                <tr data-client-id="${cod_sistema}" data-delivery-id="${IR_code}">
+                    <td>
+                        <input type="text" value="${value_cod_sistema}" data-field-name="cod_sistema" data-client-code="${cod_sistema}" oninput="update_object_edit_info(this);">
+                    </td>
+                    <td>${data_pend_IR[i]["contribuinte"]}</td>
+                    <td>${data_pend_IR[i]["cpf_cnpj"]}</td>
+                    <td>${data_pend_IR[i]["ano"]}</td>
+                    <td>${data_pend_IR[i]["valor_ano_anterior"]}</td>
+                    <td>
+                        <input type="text" value="${value_valor_ano_atual}" data-field-name="valor_ano_atual" data-client-code="${IR_code}" oninput="update_object_edit_info(this);">
+                    </td>
+                </tr>
+            `);
         }
+
+        document.querySelector("#table-pendencies-IR tbody").innerHTML = arr_rows_pendencies.join("");
+    }
+
+    function closeModal_PendenciesIR(element){
+        let modal_name = element.getAttribute("data-modal-name");
+        document.querySelector(`[data-modal="${modal_name}"]`).classList.remove("active");
+        // window.localStorage.setItem("modal_edit_pendencies_IR", 0);
+    }
+    
+    function update_object_edit_info(element){
+
+        let btn_save = document.querySelector(`[data-info-affected-records="pencedies-IR"]`);
+        btn_save.classList.remove("success");
+        btn_save.classList.remove("invalid");
+        btn_save.classList.add("active");
+        btn_save.disabled = false;
         
-        if(count > 0){
-            btn.classList.remove("active");
-            btn.setAttribute("data-status-btn", "disabled");
+        let tt_values = 0;
+        let data_cod_sistema = element.getAttribute("data-client-code");
+        let field_name = element.getAttribute("data-field-name");
+        element.value = element.value.trim();
+
+
+        object_edit_deliveries[field_name][data_cod_sistema] = element.value;
+
+        for (let i in object_edit_deliveries){
+            tt_values += Object.keys(object_edit_deliveries[i]).length;
         }
-        else {
-            btn.classList.add("active");
-            btn.setAttribute("data-status-btn", "enabled");
+
+        if(tt_values>0){
+            document.querySelector(`[data-info-affected-records="pencedies-IR"]`).innerHTML = `
+                <span>salvar e fechar</span>
+                <span>[<b>${tt_values}</b>]</span>
+            `;
+        } else {
+            document.querySelector(`[data-info-affected-records="pencedies-IR"]`).innerHTML = `
+                <span>nenhuma alteração</span>
+            `;
         }
     }
 
-    async function sendFileToImportJB(element){
-        let status_btn_post_file_JB = document.getElementById("btn-post-file-import-JB").getAttribute("data-status-btn");
+    async function post_update_values_IR(){
 
-        if(status_btn_post_file_JB == "enabled"){
-            // garante que o btn de download estará inativo no inicio do processo.
-            document.getElementById("btn-download-file-txt-import-JB").classList.remove("active");
-    
-            let company_session_info, grupo_lancamento, modelo, session_company_code, session_company_name;
-            let title_form, btn, input, input_id, form, contentInputs;
-            let arr_data_post = [];
-    
-            try {
-                grupo_lancamento = document.getElementById("grupo_lancamento").value;
-            } catch (error) {
-                grupo_lancamento = null;
-            }
-            try {
-                modelo = document.getElementById("modelo").value;
-            } catch (error) {
-                modelo = null;
-            }
-            title_form = document.querySelector(`[data-tile-form="import-file-JB"]`).textContent;
-            company_session_info = await get_info_session_company();
-            session_company_code = await company_session_info["company_session"]["session_company_code_JB"];
-            session_company_name = await company_session_info["company_session"]["session_company_name"];
-            
-            form = document.getElementById("form-import-file-to-JB");
-            fileInput = form.querySelectorAll("input");
-            console.log(fileInput)
-            
-            if (fileInput.length > 0){
-                
-                
-                const formData = new FormData();
-                await formData.append('import_model', title_form);
-                await formData.append('modelo', modelo);
-                await formData.append('grupo_lancamento', grupo_lancamento);
-                await formData.append('session_company_code', session_company_code);
-                await formData.append('session_company_name', session_company_name);
-                
-                for (let i = 0; i < fileInput.length; i++){
-                    
-                    for (let j in fileInput[i].files){
-                        let selectData = fileInput[i].files[j];
-                        await formData.append(`file_${i+1}`, selectData);
-                    
-                    }
-                }
-                
-                let requestOptions = {
-                    "data": formData,
-                };
-                let headers = {
-                    "X-CSRFToken": "{{csrf_token}}"
-                };
-                let url = "{% url 'post_file_to_import_JB' %}";
-                
-                document.querySelector(".button-post").style.display = "none";
-                document.querySelector(".block-animation-loading-process-data").style.display = "flex";
-        
-                fetch(url, {
-                    method: "POST",
-                    headers: headers,
-                    body: formData
-                }).then((data)=>{
-                    return data.json();
-                })
-                .then((data)=>{
-                    
-                    let block_error_import_file_JB = document.querySelector(".block-message-error-files-JB");
-                    
-                    data_table_import_txt_to_JB = null;
-                    let container_import_preview = document.querySelector(".container-import-preview");
-                    let table = ""
-                    let arr_rows_table = [];
-                    let valor;
-                    console.log(data)
-                    document.querySelector(".button-post").style.display = "flex";
-                    document.querySelector(".block-animation-loading-process-data").style.display = "none";
-    
-                    if(data["code"] == 200){
-                        block_error_import_file_JB.style.display = "none";
-    
-                        document.querySelectorAll("[data-field-update-table-import-jb]").forEach((e)=>{
-                            e.querySelector("input").value = "";
-                            e.classList.remove("active");
-                        });
-    
-                        inputs_visible = data["inputs_visible"];
-                        console.log("\n\n ---------------------- inputs_visible ---------------------- ")
-                        console.log(inputs_visible)
-                        if(inputs_visible.length > 0){
-                            for (let i in inputs_visible){
-                                try {
-                                    document.querySelector(`[data-field-update-table-import-JB="${inputs_visible[i]}"]`).classList.add("active");
-                                } catch (error) {1;}
-                            }
-                        }
-    
-                        data_table_import_txt_to_JB = data["data_import_JB"]["data"];
-    
-                        document.getElementById("title-modal-table-import-JB").querySelector("h4").textContent = title_form;
-                        container_import_preview.classList.add("active");
-    
-    
-                        for (let i in data_table_import_txt_to_JB){
-    
-                            let type_process = data_table_import_txt_to_JB[i]["TYPE_PROCESS"];
-                            arr_data_post.push(`
-                                <tr>
-                                    <td>${data_table_import_txt_to_JB[i]["TP_REGISTRO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["NOME"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COD_EMPRESA"]}</td>
-                                    <td data-tb-row-JB="row-filial">${data_table_import_txt_to_JB[i]["FILIAL"]}</td>
-                                    <td data-tb-row-JB="row-date_lanc">${data_table_import_txt_to_JB[i]["DATA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["NR_L_CTO_ERP"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TP"]}</td>
-                                    <td data-tb-row-JB="row-${type_process}">${data_table_import_txt_to_JB[i]["CONTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["SUBCONTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["VALOR"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["ACAO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["PRIMEIRO_HIST_CTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COD_HISTORICO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COMPL_HISTORICO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["GRUPO_LCTO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CNPJ"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["IESTADUAL"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TP_CNPJ"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CONTA_ORIGEM"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CNPJ_EMPRESA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["IE_EMPRESA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TYPE_PROCESS"]}</td>
-                                </tr>
-                            `);
-                        }
-                        
-                        container_import_preview.querySelector("table").querySelector("tbody").innerHTML = arr_data_post.join("");
-                    }
-                    else {
-                        document.getElementById("message-error-import-file-JB").textContent = data["error"];
-                        block_error_import_file_JB.style.display = "flex";
-                    }
-                    
-                });
-            }
-        }
+        let btn_save = document.querySelector(`[data-info-affected-records="pencedies-IR"]`);
+        fetch(`{% url "deliveries_IR" %}`, {
+            method: "POST",
+            headers: {"X-CSRFToken": "{{csrf_token}}"},
+            body: JSON.stringify(object_edit_deliveries)
+        })
+        .then((data)=>{
+            return data.json();
+        })
+        .then((data)=>{
+            console.log(data)
 
+            btn_save.classList.remove("success");
+            btn_save.classList.remove("invalid");
+
+            if(data["code"] == 200){
+                setTimeout(()=>{
+                    window.location.href = "{% url 'deliveries_IR' %}";
+                }, 2100);
+                btn_save.innerHTML = `
+                    <span>alterações salvas</span>
+                `;
+                btn_save.classList.add("success");
+            } else {
+                btn_save.innerHTML = `
+                    <span>erro ao salvar</span>
+                `;
+                btn_save.classList.add("invalid");
+            }
+        });
     }
+
 </script>

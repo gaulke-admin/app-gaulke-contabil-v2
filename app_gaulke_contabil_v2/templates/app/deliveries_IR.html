@@ -34,7 +34,7 @@
                     <span>+Filtros</span>
                     <i class="fa-solid fa-filter"></i>
                 </li>
-                <li data-modal-name="pendencies-deliveries-IR" onclick="displayModal_PendenciesIR(this);">
+                <li data-modal-name="pendencies-deliveries-IR" onclick="displayModal_PendenciesIR();">
                     <span>Pendências I.R <b data-generic-info="tt-pendencies-IR">0</b></span>
                 </li>
 
@@ -88,6 +88,8 @@
     // updateTableInfo_JBSmartIR();
 
     async function get_data_to_table_IR(){
+
+        
         let url = `{% url "get_all_data_JB_smart_IR" %}`;
         let headers = {
             "X-CSRFToken": "{{csrf_token}}"
@@ -113,6 +115,7 @@
                 return resolve();
             })
             .then(()=>{
+                
                 update_table_IR();
 
             });

@@ -127,14 +127,25 @@ class ConvertToDataFrame:
     #     self.api = ""
 
     def data_strip(data):
-        return data.strip()
+        """ return str: sem espaços no início e fim """
+        return str(data).strip()
     
     def create_data_randomic():
+        """ return int: valor para complemento do """
         number = random.randint(10**17, 10**18 - 1)
         return number
-    # ----
-
+    
     def create_text_compl_grupo_lancamento(model, dict_data_replace: dict, grupo_lancamento="-", value_generic=None):
+        """
+            return str: texto que será utilizado no complemento do grupo de lançamento
+                - saida esperada, exemplo "model_1":
+                - return: "Pgto. Nome do pagador/recebedor - Data Venc: 01/01/2024"
+            
+            __________________________________________________________________________________________________
+
+            > obtem o modelo (model) da importação e substitui [V 'n'] pelos valores do dict -> dict_data_replace
+            - formato esperado de exemplo para o objeto "dict_data_replace" do "model_1": {"v1": "Gaulke Contábil", "v2": "01/01/2024"}
+        """
         try:
             if model == "-":
                 return model
@@ -201,6 +212,7 @@ class ConvertToDataFrame:
                     # exemplo 21: [NOME] [NF]
                     "model_21": f"Recebimento Dupl [v1] NF [v2]",
                 }
+
                 text = data_model_text.get(model)
                 for k,v in dict_data_replace.items():
                     text = text.replace(k, str(v))
@@ -211,11 +223,18 @@ class ConvertToDataFrame:
             return None
         
     def create_dict_data_replace(dataframe, list_col_name, index):
-        """ return: texto alternativo para uso no complemento de histórico. """
+        """
+            return: texto temporário para utilizar com argumento na função "create_text_compl_grupo_lancamento"
+            - valor esperado do parâmetro "list_col_name": ["NF", "VALOR", "outros..."]
+            - valor esperado do parâmetro "index": posição do elemento do DataFrame com as informações das respectivas colunas "list_col_name"
+            _______________________________________________________________
+            exemplo:
+            - list_col_name = ["NF", "DATA"]
+            - DataFrame[ posição do item na list_col_name = "NF" ][posição do elemento do DataFrame = index]
+            - return: {"v1": "123456", "v2": "01/01/2024", ...}     
+        """
 
         dict_data_replace=dict()
-        print(">>>>>>>\n", dataframe, index)
-        print(dataframe.info())
         for i in range(len(list_col_name)):
             print(f" -----------> COLS: {list_col_name}")
             data_aux =  dataframe[list_col_name[i]][index]
@@ -226,7 +245,13 @@ class ConvertToDataFrame:
         return dict_data_replace
         
     def create_layout_JB(dataframe, model="-", grupo_lancamento="", value_generic=None, cod_empresa=""):
-        """ return: DataFrame Lançamentos Contábeis - Importação no Sistema JB. """
+        """
+            return: Objeto DataFrame com dados para os lançamentos contábeis no sistema JB Software, de acordo com o Layout 3703.
+            - esperado de "model" str: "model_1"
+            - esperado do "grupo_lancamento" str: mês e ano neste, recomendável neste formato "mm/yyyy" para manter o padrão
+            - esperado de "value_generic": qualquer valor para utilização no final do texto do complemento de histórico.
+            - esperado de "cod_empresa": código da empresa JB Software
+        """
         LIST_TP_REGISTRO = list()
         LIST_EMPRESA = list()
         LIST_COD_EMPRESA = list()
@@ -508,15 +533,25 @@ class ConvertToDataFrame:
     # ----
 
     def create_additional_columns(dataframe, column_name, default_value):
+        """
+            return: DataFrame com nova coluna e valor padrão para todas as linhas
+            exemplo:
+            - esperado de "column_name": "NOME DA NOVA COLUNA"
+            - esperado de "default_value": "VALOR PADRÃO PARA TODAS AS LINHAS DA NOVA COLUNA"
+        """
         dataframe[f"{column_name}"] = default_value
         return dataframe
         
     # ----
     
     def drop_columns_dataframe(dataframe, list_columns: list):
+        """" return: Deleta as colunas [list_columns] do DataFrame """
         if len(list_columns) > 0:
-            for col_name in list_columns:
-                dataframe = dataframe.drop(labels=col_name, axis=1)
+            try:
+                for col_name in list_columns:
+                    dataframe = dataframe.drop(labels=col_name, axis=1)
+            except:
+                pass
         return dataframe
     
     # ----
@@ -525,9 +560,10 @@ class ConvertToDataFrame:
         """
             return: Copia valores de uma coluna para outra.\n
             exemplo:\n
-                -- Coluna "CNPJ_ORIGIN" contém dados originais\n
-                -- Coluna "CNPJ" recebe os dados da coluna "CNPJ_ORIGIN"
-                -- {"CNPJ": "CNPJ_ORIGIN"}
+                - Coluna "CNPJ_ORIGIN" contém dados originais\n
+                - Coluna "CNPJ" recebe os dados da coluna "CNPJ_ORIGIN"
+                - objeto esperado de exemplo: {"CNPJ": "CNPJ_ORIGIN"}
+                - saída esperada: DataFrame["CNPJ"] --> recebe dados da coluna "CNPJ_ORIGIN"
         """
         if len(dict_cols_transpose.keys()) > 0:
             for k,v in dict_cols_transpose.items():
@@ -549,10 +585,10 @@ class ConvertToDataFrame:
     def duplicate_dataframe_rows(dataframe, TP_account="C"):
         """"
             return: DataFrame atualizado com linhas duplicadas.\n
-            Será atualizado apenas os valoes de "TP" de lançamento.\n
-            Exemplo de uso: criação de duplicatas para DÉBITO E CRÉDITO.
+            - será atualizado apenas os valoes de "TP" de lançamento.\n
+            - exemplo de uso: quando necessário criar duplicatas simples para DÉBITO E CRÉDITO.
         """
-
+        
         df_copy = dataframe.copy()
         df_copy.loc[:, 'TP'] = TP_account
         new_dataframe = pd.concat([dataframe, df_copy])
@@ -5337,8 +5373,6 @@ class ConvertToDataFrame:
                 value_calc = round( (value_calc * float(percentage)) / 100, 3)
                 value_calc = round( value_calc, 2)
                 value_calc = str(value_calc).replace(".", ",")
-
-                
                 
 
 

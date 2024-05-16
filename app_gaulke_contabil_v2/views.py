@@ -439,12 +439,59 @@ def home(request):
 
 @login_required
 def deliveries_IR(request):
-    context = {
-        "get_all_companies": False,
-        "url_get_all_companies": configs["base_url"]["url_get_all_companies"],
-        "url_update_lote_IR": configs["base_url"]["url_update_lote_IR"]
-    }
-    return render(request, "app/deliveries_IR.html", context=context)
+    if request.method == "GET":
+        context = {
+            "get_all_companies": False,
+            "url_get_all_companies": configs["base_url"]["url_get_all_companies"],
+            "url_update_lote_IR": configs["base_url"]["url_update_lote_IR"]
+        }
+        return render(request, "app/deliveries_IR.html", context=context)
+    elif request.method == "POST":
+        try:
+
+            print("\n\n -------------------- DATA UPDATE IR -------------------- ")
+            data = json.loads(request.body)
+            print(data)
+
+            data_cod_sistema = data["cod_sistema"]
+            data_valor_valor_ano_atual = data["valor_ano_atual"]
+
+            # ------------------- ATUALIZAÇÃO DOS VALORES DE cod_sistema NA TABELA DE CLIENTE DO IMPORTO DE RENDA -------------------
+
+            update_at = datetime.now() - timedelta(hours=3)
+            for k,v in data_cod_sistema.items():
+                db = Model_tb_clients.objects.get(pk=k)
+                db.cod_sistema = v
+                db.update_at = update_at
+                db.save()
+                print(f"""
+                    --------------- aletrações salvas ---------------
+                    {k}: {v}
+                """)
+
+            # ------------------- ATUALIZAÇÃO DOS VALORES DE valor_ano_atual NA TABELA DE IMPORTO DE RENDA -------------------
+
+            for k,v in data_valor_valor_ano_atual.items():
+                db = Model_tb_imposto_de_renda.objects.get(pk=k)
+                db.valor_ano_atual = v
+                db.update_at = update_at
+                db.save()
+                print(f"""
+                    --------------- aletrações salvas | {k} ---------------
+                    {k}: {v}
+                """)
+                
+
+            return JsonResponse({
+                "code": 200,
+                "mag": "success"
+            })
+        except Exception as e:
+            return JsonResponse({
+                "code": 400,
+                "error": str(e)
+            })
+
 
 @login_required
 def clients(request):
@@ -1175,7 +1222,7 @@ def get_all_data_JB_smart_IR(request):
             }
 
             pend_valor_atual = False
-            if valor_ano_anterior == "" and valor_ano_atual == "":
+            if valor_ano_anterior == "" or None and valor_ano_atual == "" or None:
                 pend_valor_atual = True
             
             if valor_ano_anterior != "" and valor_ano_atual == "":
@@ -1191,7 +1238,7 @@ def get_all_data_JB_smart_IR(request):
 
 
 
-            if dado.client.cod_sistema == "" or pend_valor_atual:
+            if dado.client.cod_sistema == "" or None or pend_valor_atual == True:
                 tt_pend += 1
                 data_pend_IR.update({tt_pend: value})
                 print(f"""

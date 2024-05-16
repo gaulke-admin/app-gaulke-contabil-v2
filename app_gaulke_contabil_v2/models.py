@@ -11,7 +11,7 @@ from django.contrib.auth.models import AbstractUser, Permission
 
 
 class Model_tb_clients(models.Model):
-    cod_sistema             = models.CharField(max_length=8)
+    cod_sistema             = models.CharField(max_length=8, default="", null=True)
     contribuinte            = models.CharField(max_length=125)
     cpf_cnpj                = models.CharField(max_length=18)
     celular                 = models.CharField(max_length=18)
@@ -24,8 +24,8 @@ class Model_tb_imposto_de_renda(models.Model):
     ano                     = models.CharField(max_length=4)
     status_smart_IR         = models.CharField(max_length=25)
     dificuldade             = models.CharField(max_length=25)
-    valor_ano_anterior      = models.CharField(max_length=25)
-    valor_ano_atual         = models.CharField(max_length=25)
+    valor_ano_anterior      = models.CharField(max_length=25, default="", null=True)
+    valor_ano_atual         = models.CharField(max_length=25, default="", null=True)
     situacao_ano_anterior   = models.CharField(max_length=55)
     status_pagamento_IR     = models.CharField(max_length=3)
     dt_pagamento_IR         = models.CharField(max_length=10)

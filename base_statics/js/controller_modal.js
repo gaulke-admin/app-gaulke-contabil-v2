@@ -4,40 +4,6 @@ function displayModal(element){
     document.querySelector(`[data-modal="${modal_name}"]`).classList.toggle("active");
 }
 
-function displayModal_PendenciesIR(element){
-
-    let arr_rows_pendencies = [];
-    let modal_name = element.getAttribute("data-modal-name");
-
-    console.log(modal_name)
-    console.log(data_pend_IR)
-    document.querySelector(`[data-modal="${modal_name}"]`).classList.toggle("active");
-
-    for(let i in data_pend_IR){
-        arr_rows_pendencies.push(`
-            <tr>
-                <td>${data_pend_IR[i]["cod_sistema"]}</td>
-                <td>${data_pend_IR[i]["contribuinte"]}</td>
-                <td>${data_pend_IR[i]["cpf_cnpj"]}</td>
-                <td>${data_pend_IR[i]["celular"]}</td>
-                <td>${data_pend_IR[i]["telefone"]}</td>
-                <td>${data_pend_IR[i]["ano"]}</td>
-                <td>${data_pend_IR[i]["valor_ano_anterior"]}</td>
-                <td>${data_pend_IR[i]["valor_ano_atual"]}</td>
-                <td>
-                    <i class="fa-regular fa-pen-to-square" data-client-id="${data_pend_IR[i]["id_table_CLIENT"]}" data-delivery-id="${data_pend_IR[i]["id_table_IR"]}"></i>
-                </td>
-            </tr>
-        `);
-    }
-
-    document.querySelector("#table-pendencies-IR tbody").innerHTML = arr_rows_pendencies.join("");
-}
-function closeModal_PendenciesIR(element){
-    let modal_name = element.getAttribute("data-modal-name");
-    document.querySelector(`[data-modal="${modal_name}"]`).classList.remove("active");
-}
-
 function displayModalByID(element){
     let modal_name = element.id
     document.querySelector(`[data-modal="${modal_name}"]`).classList.toggle("active");

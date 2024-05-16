@@ -382,9 +382,9 @@
     justify-content: flex-start;
 }
 .block-actions-modals {
-    margin: 11px 0 0 0;
+    margin: 10px 0 0 0;
     position: sticky;
-    top: 11px;
+    top: 10px;
     height: 40px;
     background: white;
     padding: 24px 0;

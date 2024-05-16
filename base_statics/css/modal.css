@@ -698,7 +698,7 @@
     justify-content: flex-start;
     align-items: center;
     max-height: 97%;
-    height: 90vh;
+    height: 93vh;
     width: 94%;
     border-radius: 8px;
     background: white;
@@ -718,7 +718,7 @@
     align-items: flex-start;
     width: 100%;
     max-width: 100%;
-    height: 75vh;
+    height: 74vh;
     max-height: 100%;
     overflow: scroll;
     padding: 0 10px 10px 10px;
@@ -749,3 +749,42 @@ table i {
     cursor: pointer;
 }
 
+.block-btn-actions-pendecies {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+}
+.block-btn-actions-pendecies button {
+    min-width: 140px;
+    height: 35px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #a9a9a9;
+    border: 1px solid #a9a9a9;
+    cursor: no-drop;
+}
+.block-btn-actions-pendecies button.active {
+    background: var(--color-principal-azul-claro);
+    border-color: var(--color-principal-azul-claro);
+    cursor: pointer;
+}
+.block-btn-actions-pendecies button.success {
+    background: green;
+    border-color: green;
+}
+.block-btn-actions-pendecies button.invalid {
+    background: red;
+    border-color: red;
+}
+.block-btn-actions-pendecies button.active,
+.block-btn-actions-pendecies button.success,
+.block-btn-actions-pendecies button.invalid {
+    color: white;
+}
+.block-btn-actions-pendecies button.active span b {
+    color: yellow;
+}
