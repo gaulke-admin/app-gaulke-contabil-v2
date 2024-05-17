@@ -38,6 +38,7 @@
                 </div>
 
                 <div class="block-btn-post-file">
+
                     <div class="button-post">
                         <span id="btn-post-file-import-JB" onclick="sendFileToImportJB(this);" data-status-btn="disabled">enviar</span>
                     </div>
@@ -90,9 +91,15 @@
             document.getElementById("btn-download-file-txt-import-JB").classList.remove("active");
     
             let company_session_info, grupo_lancamento, modelo, session_company_code, session_company_name;
+            let percentage;
             let title_form, btn, input, input_id, form, contentInputs;
             let arr_data_post = [];
     
+            try {
+                percentage = document.getElementById("percentage").value;
+            } catch (error) {
+                percentage = null;
+            }
             try {
                 grupo_lancamento = document.getElementById("grupo_lancamento").value;
             } catch (error) {
@@ -104,9 +111,14 @@
                 modelo = null;
             }
             title_form = document.querySelector(`[data-tile-form="import-file-JB"]`).textContent;
-            company_session_info = await get_info_session_company();
-            session_company_code = await company_session_info["company_session"]["session_company_code_JB"];
-            session_company_name = await company_session_info["company_session"]["session_company_name"];
+            try {
+                company_session_info = await get_info_session_company();
+                session_company_code = await company_session_info["company_session"]["session_company_code_JB"];
+                session_company_name = await company_session_info["company_session"]["session_company_name"];
+            } catch (error) {
+                session_company_code = "-";
+                session_company_name = "-";
+            }
             
             form = document.getElementById("form-import-file-to-JB");
             fileInput = form.querySelectorAll("input");
@@ -118,6 +130,7 @@
                 const formData = new FormData();
                 await formData.append('import_model', title_form);
                 await formData.append('modelo', modelo);
+                await formData.append('percentage', percentage);
                 await formData.append('grupo_lancamento', grupo_lancamento);
                 await formData.append('session_company_code', session_company_code);
                 await formData.append('session_company_name', session_company_name);

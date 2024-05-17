@@ -12,6 +12,7 @@
     {% include 'snippets/modal_imports/modal_confirm_download_file_txt_import_JB.html' %}
     
     <div class="container-options-imports-file active" data-block="imports">
+
         <div class="title-container">
             <h4>#01 Gerais/Utilitários</h4>
         </div>
@@ -34,7 +35,7 @@
                             data-element-input-text="
                             grupo_lancamento,Grupo de Lançamento,ex: mm/aaaa;
                             "
-                            onclick="selectImportFileImportJB(this, false, true)"
+                            onclick="selectImportFileImportJBContabil(this, false, true)"
                         >importar</button>
                     </span>
                 </div>
@@ -58,7 +59,7 @@
                             modelo_1:Modelo 1;
                             modelo_2:Modelo 2;
                             "
-                            onclick="selectImportFileImportJB(this, true)"
+                            onclick="selectImportFileImportJBContabil(this, true)"
                         >importar</button>
                     </span>
                 </div>
@@ -78,7 +79,7 @@
                             data-element-input="
                             .pdf,file,file_1,Entrada Títulos Desc. Sicoob;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -100,7 +101,7 @@
                             .pdf,file,file_1,Liquidação Tít. Desc. Sicoob;
                             .xlsx,file,file_2, Base S@T (.xlsx);
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -129,7 +130,7 @@
                             data-element-input="
                             .xlsx,file,file_1, Cobranças Pagas;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -152,7 +153,7 @@
                             data-element-input-text="
                             grupo_lancamento,Grupo de Lançamento,ex: mm/aaaa;
                             "
-                            onclick="selectImportFileImportJB(this, false, true)"
+                            onclick="selectImportFileImportJBContabil(this, false, true)"
                         >importar</button>
                     </span>
                 </div>
@@ -177,7 +178,7 @@
                             data-input-select="
                             modelo_fiscal:Modelo - Fiscal;
                             "
-                            onclick="selectImportFileImportJB(this, true, false)"
+                            onclick="selectImportFileImportJBContabil(this, true, false)"
                         >importar</button>
                     </span>
                 </div>
@@ -199,7 +200,7 @@
                             .xls,file,file_1,Base Fornecedores;
                             .xlsx,file,file_2,Base Pagamentos;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -221,7 +222,7 @@
                             .xlsx,file,file_1,Relatório Contas a Pagar;
                             .xlsx,file,file_2,Relatório Fornecedores;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -241,7 +242,7 @@
                             data-element-input="
                             .xlsx,file,file_1,Relatório Contas a Pagar;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -261,7 +262,7 @@
                             data-element-input="
                             .xls,file,file_1,Relatório de Pagamentos TELL;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -290,7 +291,7 @@
                             data-element-input="
                             .xlsx,file,file_1,Relatório Contas a Receber Inova;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -310,7 +311,7 @@
                             data-element-input="
                             .xls,file,file_1,Relatório de Recebimentos TELL;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -338,7 +339,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Pagamentos B. do Brasil;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -358,7 +359,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Pagamentos Bradesco;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -378,7 +379,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Pagamentos Sicredi;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -398,7 +399,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Pagamentos Sicoob;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -422,7 +423,7 @@
                             modelo_1:PDF;
                             modelo_2:XLS;
                             "
-                            onclick="selectImportFileImportJB(this, true, false, true)"
+                            onclick="selectImportFileImportJBContabil(this, true, false, true)"
                         >importar</button>
                     </span>
                 </div>
@@ -442,7 +443,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Pagamentos Civia;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -462,7 +463,7 @@
                             data-element-input="
                             .pdf,file,file_1,Comprovante de Recebimentos Abbraccio,multiple;
                             "
-                            onclick="selectImportFileImportJB(this)"
+                            onclick="selectImportFileImportJBContabil(this)"
                         >importar</button>
                     </span>
                 </div>
@@ -471,12 +472,46 @@
             
         </ul>
         
+
+        <!-- --------------------------------------------------------------------------------------------------------------------------------------- -->
+        
+        <div class="title-container">
+            <h4>#05 Impotações Fiscal</h4>
+        </div>
+        <ul>
+
+            <li>
+                <div class="block-card-info-import">
+                    <span class="title-import">#5.1 Calculo de Estoque - H020</span>
+                    <span class="info-content-import">Info content import #01</span>
+                    <span class="icons-import-file">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        <button
+                            data-import-name="#5.1 Calculo de Estoque - H020"
+                            data-element-input="
+                            .txt,file,file_1,Calculo de Estoque H020;
+                            "
+                            data-element-input-text="
+                            percentage,Percentual de ajuste,ex: 10;
+                            "
+                            onclick="selectImportFileImportJBContabilFiscal(this, false, true)"
+                        >importar</button>
+                    </span>
+                </div>
+            </li>
+            
+        </ul>
+        
     </div>
 </main>
 
 <script>
 
-    async function selectImportFileImportJB(element, input_select=false, input_text=false, extra_accept_xls=false){
+    async function selectImportFileImportJBContabil(element, input_select=false, input_text=false, extra_accept_xls=false){
         
         let btn_post_file_JB = document.getElementById("btn-post-file-import-JB");
         btn_post_file_JB.setAttribute("data-status-btn", "disabled");
@@ -503,6 +538,118 @@
         console.log(company_session_info)
         document.getElementById("session_company_name").querySelector("b").textContent = session_company_name;
         document.getElementById("session_company_code").querySelector("b").textContent = session_company_code;
+
+        formInputs = document.querySelector(".block-inputs-form-import-file-to-JB");
+
+        importName = element.getAttribute("data-import-name");
+        elementInput = element.getAttribute("data-element-input").split(";");
+        
+        for (let i = 0; i < elementInput.length; i++){
+
+            element_new_input = elementInput[i].trim().split(",");
+            accept      = element_new_input[0];
+            type        = element_new_input[1];
+            name        = element_new_input[2];
+            label       = element_new_input[3];
+
+            multiple = "";
+            if( element_new_input[4] == "multiple" ){
+                multiple = "multiple";
+            }
+
+            if(extra_accept_xls){
+                accept = `${accept}, .xls`;
+            }
+            if(label != undefined && label != null){
+                elementsinputForm.push(`
+                    <div class="content-inputs-form">
+                        <label for="${name}">${label}</label>
+                        <input type="${type}" name="${name}", id="${name}" accept="${accept}" data-content-import-JB ${multiple} onchange="checkInputsPostFileImportJB(this)">
+                    </div>
+                `);}
+        }
+        
+        if (input_select != false){
+            elementInput_Select = element.getAttribute("data-input-select").split(";");
+
+            console.log(" ---------------- elementInput_Select ---------------- ")
+            console.log(elementInput_Select)
+            
+            let arr_options = [];
+            for (let i = 0; i < elementInput_Select.length; i++){
+    
+                element_new_input = elementInput_Select[i].trim().split(":");
+                option          = element_new_input[0];
+                value_option    = element_new_input[1];
+                if(option != undefined && value_option != null)
+                arr_options.push(`
+                    <option value="${option}">${value_option}</option>
+                `);
+                
+            }
+            elementsinputForm.push(`
+            <div class="content-inputs-form" style="flex-direction: row;">
+                <label for="modelo">Modelo</label>
+                <select name="modelo" id="modelo" data-content-import-JB onchange="checkInputsPostFileImportJB(this)">
+                   ${arr_options.join("")}
+                </select>
+            </div>
+            `);
+            
+        }
+        
+        if (input_text != false){
+            elementInput_Text = element.getAttribute("data-element-input-text").split(";");
+            
+            let arr_options = [];
+            for (let i = 0; i < elementInput_Text.length; i++){
+    
+                element_new_input = elementInput_Text[i].trim().split(",");
+                console.log(element_new_input)
+
+                name        = element_new_input[0];
+                label       = element_new_input[1];
+                placeholder = element_new_input[2];
+                
+                if(name != undefined && label != null && label != "" && name != "") {
+                    elementsinputForm.push(`
+                        <div class="content-inputs-form-text">
+                            <label for="${name}">${label}</label>
+                            <input type="text" name="${name}", id="${name}" placeholder="${placeholder}" data-content-import-JB  oninput="checkInputsPostFileImportJB(this)">
+                        </div>
+                    `.replace(",", ""));
+                }
+            }
+        }
+
+        formInputs.innerHTML = elementsinputForm.join("");
+        document.querySelector(`[data-tile-form="import-file-JB"]`).textContent = importName;
+        document.querySelector(`[data-modal="import-files-to-JB"]`).classList.add("active");
+    }
+    
+    async function selectImportFileImportJBContabilFiscal(element, input_select=false, input_text=false, extra_accept_xls=false){
+        
+        let btn_post_file_JB = document.getElementById("btn-post-file-import-JB");
+        btn_post_file_JB.setAttribute("data-status-btn", "disabled");
+        btn_post_file_JB.classList.remove("active");
+
+        let company_session_info, session_company_name, session_company_code;
+        let importName, elementInput, elementInput_Select, elementInput_Text,
+            element_new_input, element_new_input_select,
+            accept, type, name, label, placeholder,
+            option, value_option;
+        
+        let elementsinputForm = [];
+        company_session_info = await get_info_session_company();
+        // if (company_session_info == null) {
+        //     document.getElementById("company_session_name").style.border = "1px solid red";
+        //     document.querySelector(".message-select-a-company").classList.add("active");
+        //     return;
+        // }
+        document.querySelector(".message-select-a-company").classList.remove("active");
+        document.getElementById("company_session_name").style.border = "1px solid var(--color-principal-cinza)";
+        document.getElementById("session_company_name").querySelector("b").textContent = "";
+        document.getElementById("session_company_code").querySelector("b").textContent = "";
 
         formInputs = document.querySelector(".block-inputs-form-import-file-to-JB");
 

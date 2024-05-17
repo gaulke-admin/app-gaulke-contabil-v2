@@ -10,7 +10,11 @@ import tabula
 from PyPDF2 import PdfReader
 
 
-class PrepareData:
+
+class PrepareDataApontHours:
+    """
+        Classe para preparação de dados do apontamento de horas.
+    """
     def __init__(self):
         self.api = ""
         self.list_months = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
@@ -122,7 +126,11 @@ class PrepareData:
             return None
 
 
-class ConvertToDataFrame:
+class PrepareDataToImportPackage3703:
+    """
+        Classe para preparação de dados do Pacote 3703 no sistema JB Software.
+    """
+    
     # def __init__(self):
     #     self.api = ""
 
@@ -289,7 +297,7 @@ class ConvertToDataFrame:
             LIST_SUBCONTA.append("0")
             LIST_VALOR.append("-")
             LIST_ACAO.append("0")
-            LIST_COD_HISTORICO.append(grupo_lancamento)
+            LIST_COD_HISTORICO.append("0")
             # LIST_PRIMEIRO_HIST_CTA.append("2")
             
             filial = ""
@@ -301,44 +309,44 @@ class ConvertToDataFrame:
                 if model == "model_1":
                     # modelo: ?
                     value_primeiro_hist_cta = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
 
                 elif model == "model_2":
                     # modelo: ?
                     value_primeiro_hist_cta = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["NOME_TEMP"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, grupo_lancamento=grupo_lancamento)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["NOME_TEMP"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, grupo_lancamento=grupo_lancamento)
 
                 elif model == "model_3":
                     # modelo: ?
                     value_primeiro_hist_cta = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["CTE"], index=i)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["CTE"], index=i)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
 
                 elif model == "model_4":
                     # modelo: ?
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "1"
                     value_cnpj = dataframe["CNPJ"][i]
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Nome Cliente", "Vencimento"], index=i)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Nome Cliente", "Vencimento"], index=i)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace)
 
                 elif model == "model_5":
                     # modelo: SICOOB
                     value_primeiro_hist_cta = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["SEU_NUMERO", "NOME", "DATA_VENCIMENTO"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["SEU_NUMERO", "NOME", "DATA_VENCIMENTO"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
 
                 elif model == "model_6":
                     # modelo: DECORISE
                     value_primeiro_hist_cta = "2"
-                    # dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Conf. Gateway", "DATA_TEMP"], index=i)
-                    # text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, grupo_lancamento=grupo_lancamento, value_generic=value_generic)
+                    # dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Conf. Gateway", "DATA_TEMP"], index=i)
+                    # text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, grupo_lancamento=grupo_lancamento, value_generic=value_generic)
                     text = "Recebimento ref. e-commerce Megapay"
                     # print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
@@ -348,8 +356,8 @@ class ConvertToDataFrame:
 
                     filial = dataframe["Filial"][i]
                     value_primeiro_hist_cta = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Nº NF", "Nome Cliente"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Nº NF", "Nome Cliente"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -358,8 +366,9 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
                     
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    grupo_lancamento = "0"
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -367,8 +376,8 @@ class ConvertToDataFrame:
                     # modelo: Extrato Grupo DAB RN
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["NOME_ORIGIN", "NOTA_FISCAL", "DATA_VENC"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["NOME_ORIGIN", "NOTA_FISCAL", "DATA_VENC"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -377,8 +386,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -387,8 +396,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_pagador", "data_de_pagamento"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_pagador", "data_de_pagamento"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -397,8 +406,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -407,8 +416,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "1"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Título-Dpl.", "nome_pagador"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Título-Dpl.", "nome_pagador"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -416,9 +425,9 @@ class ConvertToDataFrame:
                     # modelo: Importação contas a pagar - PONTO CERTO
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
-
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_pagador"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_pagador"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -427,8 +436,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["NF-e", "nome_pagador"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["NF-e", "nome_pagador"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -437,8 +446,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "1"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Número", "nome_pagador", "Descrição"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Número", "nome_pagador", "Descrição"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
 
@@ -447,8 +456,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "2"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["Número", "nome_pagador", "Descrição"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["Número", "nome_pagador", "Descrição"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
 
@@ -457,8 +466,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "1"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento", "N_Documento"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_vencimento", "N_Documento"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -467,8 +476,8 @@ class ConvertToDataFrame:
                     value_primeiro_hist_cta = "2"
                     value_tp_cnpj = "1"
 
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_debito"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "data_de_debito"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -476,8 +485,8 @@ class ConvertToDataFrame:
                     # modelo: Importação Liquidação Títulos Descontados Sicoob
                     value_primeiro_hist_cta = "2"
                     
-                    dict_data_replace = ConvertToDataFrame.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "seu_numero_original"], index=i)
-                    text = ConvertToDataFrame.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
+                    dict_data_replace = PrepareDataToImportPackage3703.create_dict_data_replace(dataframe=dataframe, list_col_name=["nome_beneficiario", "seu_numero_original"], index=i)
+                    text = PrepareDataToImportPackage3703.create_text_compl_grupo_lancamento(model=model, dict_data_replace=dict_data_replace, value_generic=value_generic)
                     print("\n\n >>>>>>> DICT DATA TO REPLACE:  ", dict_data_replace)
                     print(f">>>>>>>>>>>>>>>> TEXT: {text}")
                 
@@ -492,7 +501,7 @@ class ConvertToDataFrame:
             LIST_COMPL_HISTORICO.append(text) # TEXTO ALTERNATIVO --> CONCATENAR COM?
 
             # ----
-            LIST_GRUPO_LCTO.append(ConvertToDataFrame.create_data_randomic()) # CÓDIGO ÚNICO DE ATÉ 18 CARACTERES
+            LIST_GRUPO_LCTO.append(PrepareDataToImportPackage3703.create_data_randomic()) # CÓDIGO ÚNICO DE ATÉ 18 CARACTERES
             LIST_CNPJ.append(value_cnpj)
             LIST_IESTADUAL.append("")
             LIST_TP_CNPJ.append(value_tp_cnpj)
@@ -933,20 +942,20 @@ class ConvertToDataFrame:
                             data_extract["data_vencimento"]["text"] = data_page[i+38: i+48]
                             data_extract["data_pagamento"]["text"]  = data_page[i+87: i+97]
                             # ----
-                            valor_documento = ConvertToDataFrame.data_strip(data_page[i+130: i+146])
-                            valor_cobrado = ConvertToDataFrame.data_strip(data_page[i+170: i+195])
+                            valor_documento = PrepareDataToImportPackage3703.data_strip(data_page[i+130: i+146])
+                            valor_cobrado = PrepareDataToImportPackage3703.data_strip(data_page[i+170: i+195])
 
                             if valor_documento != valor_cobrado:
                                 
-                                data_extract["valor_dif"]["text"] = ConvertToDataFrame.data_strip(data_page[i+170: i+195])
+                                data_extract["valor_dif"]["text"] = PrepareDataToImportPackage3703.data_strip(data_page[i+170: i+195])
                                 # ----
-                                valor_cobrado = ConvertToDataFrame.data_strip(data_page[i+230: i+245])
-                                data_extract["tipo_registro"]["text"] = ConvertToDataFrame.check_discount_or_fees(
+                                valor_cobrado = PrepareDataToImportPackage3703.data_strip(data_page[i+230: i+245])
+                                data_extract["tipo_registro"]["text"] = PrepareDataToImportPackage3703.check_discount_or_fees(
                                     document_value=valor_documento,
                                     amount_paid=valor_cobrado)
 
-                            data_extract["valor_documento"]["text"] = ConvertToDataFrame.data_strip(valor_documento)
-                            data_extract["valor_cobrado"]["text"] = ConvertToDataFrame.data_strip(valor_cobrado)
+                            data_extract["valor_documento"]["text"] = PrepareDataToImportPackage3703.data_strip(valor_documento)
+                            data_extract["valor_cobrado"]["text"] = PrepareDataToImportPackage3703.data_strip(valor_cobrado)
 
                             list_data_pages.append(data_extract)
                             print(f"\n\n\n ---------------- { index_page }")
@@ -979,20 +988,20 @@ class ConvertToDataFrame:
         # -------------- CRIAÇÃO DA BASE EM DATAFRAME --------------
         df = pd.DataFrame(data_to_dataframe)
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_1", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_1", cod_empresa=company_session)
 
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "CNPJ": "cnpj",
             "NOME": "beneficiario_final",
             "DATA": "data_pagamento",
             })
-        df = ConvertToDataFrame.drop_columns_dataframe(dataframe=df, list_columns=["cnpj", "beneficiario_final", "data_pagamento"])
-        df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
+        df = PrepareDataToImportPackage3703.drop_columns_dataframe(dataframe=df, list_columns=["cnpj", "beneficiario_final", "data_pagamento"])
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
 
         df.to_excel("comprovante_banco_do_brasil.xlsx")
 
 
-        df = ConvertToDataFrame.create_dataframe_discount_and_fees(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_dataframe_discount_and_fees(dataframe=df)
 
         print(df)
         print(f"\n\n\ {list_page_erros}")
@@ -1000,7 +1009,7 @@ class ConvertToDataFrame:
         df = df.sort_values(by=[ "NOME", "GRUPO_LCTO", "TP" ])
         df.index = list(range(0, len(df.index)))
 
-        df = ConvertToDataFrame.readjust_values_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.readjust_values_dataframe(dataframe=df)
         
         tt_rows = len(df)
         tt_debit    = len(df[df["TP"] == "D"])
@@ -1008,7 +1017,7 @@ class ConvertToDataFrame:
 
         
         # file_name = r"I:\\1. Gaulke Contábil\\Administrativo\\9. TI\\1. Projetos\\7.  Importação Comp. - Banco do Brasil\\base_extrato_banco_do_brasil.xlsx"
-        # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
+        # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
         data_json = json.loads(df.to_json(orient="table"))
         print(data_json)
 
@@ -1069,7 +1078,7 @@ class ConvertToDataFrame:
                 print(f"\n\n\n ---- INDEX PAGE: {index_page}")
                 
 
-                # dict_tags_to_text = ConvertToDataFrame.check_text_to_tag(data=data_page, dict_tags_to_text=dict_tags_to_text)
+                # dict_tags_to_text = PrepareDataToImportPackage3703.check_text_to_tag(data=data_page, dict_tags_to_text=dict_tags_to_text)
                 # print(dict_tags_to_text)
 
                 check_cnpj = 1
@@ -1179,8 +1188,8 @@ class ConvertToDataFrame:
         print(df)
         print(df.info())
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_8", value_generic="Banco do Brasil", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_8", value_generic="Banco do Brasil", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_beneficiario",
@@ -1191,7 +1200,7 @@ class ConvertToDataFrame:
         # desconto
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "C", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -1221,10 +1230,10 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
 
-        df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
 
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print("\n\n\n ------------ DF LAYOUT JB ------------ ")
         print(df)
@@ -1308,32 +1317,32 @@ class ConvertToDataFrame:
             df[['ID', 'NOME_TEMP']] = df['Código Nome do empregado'].str.split(' ', n=1, expand=True)
 
             # ----
-            df = ConvertToDataFrame.drop_columns_dataframe(dataframe=df, list_columns=["Unnamed: 0", "Código Nome do empregado"])
+            df = PrepareDataToImportPackage3703.drop_columns_dataframe(dataframe=df, list_columns=["Unnamed: 0", "Código Nome do empregado"])
             print("\n\n ******************************************** ")
             print(df)
             
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_2", grupo_lancamento=grupo_lancamento, cod_empresa=company_session)
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_2", grupo_lancamento=grupo_lancamento, cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "VALOR": "Líquido",
                 })
 
-            df = ConvertToDataFrame.filter_data_dataframe(
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(
                 daraframe=df,
                 name_column="VALOR",
                 list_remove_values=["0.00", "0,00"])
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "NOME": "NOME_TEMP",
             })
             
-            # df = ConvertToDataFrame.drop_columns_dataframe(dataframe=df, list_columns=["NOME_TEMP"])
+            # df = PrepareDataToImportPackage3703.drop_columns_dataframe(dataframe=df, list_columns=["NOME_TEMP"])
 
-            df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
             df = df.sort_values(by=[ "NOME", "GRUPO_LCTO", "TP" ])
             print(" ***** ---------------------------- ***** ")
 
             df.index = list(range(0, len(df.index)))
             df = df.dropna(subset=["VALOR"])
-            df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+            df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
             count = 0
             for i in df.index:
@@ -1427,7 +1436,7 @@ class ConvertToDataFrame:
         print("\n\n ---------------------------------------------- DF READ - STEP 6 ")
 
 
-        df = ConvertToDataFrame.filter_columns_dataframe(daraframe=df, list_columns=["CTE", "DATA_EMISSÃO","VALOR_ICMS", "UF_INÍCIO", "UF_FIM"])
+        df = PrepareDataToImportPackage3703.filter_columns_dataframe(daraframe=df, list_columns=["CTE", "DATA_EMISSÃO","VALOR_ICMS", "UF_INÍCIO", "UF_FIM"])
 
         print("\n\n ---------------------------------------------- DF READ - STEP 7 ")
 
@@ -1461,23 +1470,23 @@ class ConvertToDataFrame:
         file.close()
 
         print(" <<<< --------- GNRE --------- >>>> ")
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_3", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_3", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "VALOR": "VALOR_ICMS",
             "DATA": "DATA_EMISSÃO",
             })
         # ----
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
         # ----
-        df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
-        df = ConvertToDataFrame.create_additional_columns(dataframe=df, column_name="NUMERO_CONTA_CONTABIL", default_value="-")
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df, column_name="NUMERO_CONTA_CONTABIL", default_value="-")
 
         df = df.sort_values(by=[ "CTE", "TP" ])
         print(" <<<< ---------------------------- >>>> ")
 
         df.index = list(range(0, len(df.index)))
 
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         for i in range(len(df.index)):
 
@@ -1499,7 +1508,7 @@ class ConvertToDataFrame:
             elif df["TP"][i] == "D":
                 df["NUMERO_CONTA_CONTABIL"][i] = conta_debito
 
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "CONTA": "NUMERO_CONTA_CONTABIL",
         })
 
@@ -1517,7 +1526,7 @@ class ConvertToDataFrame:
         """)
 
         # file_name = r"I:\\1. Gaulke Contábil\\Administrativo\\9. TI\\1. Projetos\\2. Importação GNRE\NOVO MODELO AUTOMACAO\\base_GNRE.xlsx"
-        # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
+        # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
         print(" <<<< ----------------- >>>> ")
 
         data_json = json.loads(df.to_json(orient="table"))
@@ -1554,7 +1563,7 @@ class ConvertToDataFrame:
 
             print(df)
 
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "NOME": "Sacado",
                 "VALOR": "Valor (R$)",
                 "DATA_VENCIMENTO": "Vencimento",
@@ -1562,14 +1571,14 @@ class ConvertToDataFrame:
                 "NOSSO_NUMERO": "Nosso Número",
                 "SEU_NUMERO": "Seu Número",
                 })
-            df = ConvertToDataFrame.readjust_values_dataframe_decimal(dataframe=df, list_cols_name=["VALOR"], replace_values_list=False)
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_5", value_generic="Sicoob", cod_empresa=company_session)
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.readjust_values_dataframe_decimal(dataframe=df, list_cols_name=["VALOR"], replace_values_list=False)
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_5", value_generic="Sicoob", cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "DATA": "Entrada",
                 "VALOR": "Valor (R$)",
                 })
             
-            df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
             df.index = list(range(0, len(df.index)))
             for i in df.index:
                 if df["TP"][i] == "C":
@@ -1583,8 +1592,8 @@ class ConvertToDataFrame:
             df = df.sort_values(by=[ "NOME", "NOSSO_NUMERO", "TP" ])
 
             # file_name = "base_entrada_titulos_desc_sicoob.xlsx"
-            # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
-            df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+            # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
+            df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
             
             tt_rows = len(df)
             tt_debit    = len(df[df["TP"] == "D"])
@@ -1690,14 +1699,14 @@ class ConvertToDataFrame:
             
             print(" -------------------------------------- df | FINAL -------------------------------------- ")
             
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_21", value_generic="Sicoob", cod_empresa=company_session)
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_21", value_generic="Sicoob", cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "DATA": "dt_liquidacao",
                 "VALOR": "valor",
                 "NOME": "nome_beneficiario",
                 })
             
-            df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
                 {"TP": "D", "TYPE_PROCESS": "comum"},
                 {"TP": "C", "TYPE_PROCESS": "mora"},
                 {"TP": "C", "TYPE_PROCESS": "juros"},
@@ -1766,8 +1775,8 @@ class ConvertToDataFrame:
             # print(df.info())
             # return{}
                         
-            df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-            df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+            df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
             # df.to_excel("base_liquidacao_titulos_desc_sicoob - consolidado.xlsx")
             # df.sort_values(by=["NOME", "GRUPO_LCTO", "TP"], inplace=True)
@@ -1963,8 +1972,8 @@ class ConvertToDataFrame:
         # return {}
     
         try:
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_17", value_generic="Civia", cod_empresa=company_session)
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_17", value_generic="Civia", cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "DATA": "data_de_debito",
                 "CNPJ": "cnpj_beneficiario",
                 "NOME": "nome_beneficiario",
@@ -1976,7 +1985,7 @@ class ConvertToDataFrame:
 
 
         try:
-            df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
                 {"TP": "C", "TYPE_PROCESS": "comum"},
                 {"TP": "C", "TYPE_PROCESS": "desconto"},
                 {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -2014,16 +2023,16 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
 
-        # df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        # df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         # df.to_excel("teste.xlsx")
 
 
         print("\n\n\n ------------ DF LAYOUT JB ------------ ")
         try:
-            df = ConvertToDataFrame.check_date_business_day(dataframe=df, column_date="DATA", addition=0)
+            df = PrepareDataToImportPackage3703.check_date_business_day(dataframe=df, column_date="DATA", addition=0)
             print(df)
             print(df.info())
         except Exception as e:
@@ -2106,21 +2115,21 @@ class ConvertToDataFrame:
             df = df.rename(columns=df.iloc[0]).drop(df.index[0])
             df.index = list(range(0, len(df.index)))
 
-            df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+            df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
                 "CPF/CNPJ": "CNPJ",
                 })
-            df = ConvertToDataFrame.readjust_values_dataframe_decimal(dataframe=df, list_cols_name=["Valor", "Valor pago"])
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_4", cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.readjust_values_dataframe_decimal(dataframe=df, list_cols_name=["Valor", "Valor pago"])
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_4", cod_empresa=company_session)
 
 
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "VALOR": "Valor",
                 "VALOR_PAGO": "Valor pago",
                 })
             
-            df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
                        
-            df = ConvertToDataFrame.create_dataframe_discount_and_fees_cobrancas_pagas(dataframe=df)
+            df = PrepareDataToImportPackage3703.create_dataframe_discount_and_fees_cobrancas_pagas(dataframe=df)
 
             df.index = list(range(0, len(df.index)))
 
@@ -2140,8 +2149,8 @@ class ConvertToDataFrame:
                     
                     df["VALOR"][i]  = value_aux
             
-            df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "DATA": "Vencimento",
                 "NOME": "Nome Cliente",
             })
@@ -2212,7 +2221,7 @@ class ConvertToDataFrame:
             sheet_name = file.sheet_names[-1]
             df = file.parse(sheet_name=sheet_name)
             print(df.columns)
-            df = ConvertToDataFrame.filter_columns_dataframe(daraframe=df, list_columns=[
+            df = PrepareDataToImportPackage3703.filter_columns_dataframe(daraframe=df, list_columns=[
                 "Conf. Gateway",
                 "Id",
                 "Valor Recebível",
@@ -2224,19 +2233,19 @@ class ConvertToDataFrame:
 
             # df["Data/Hora"] = pd.to_datetime(df["Data/Hora"].values, errors="raise", format="%d/%m/%Y %H:%M:%S")
             df["Data/Hora"] = list(map(lambda x: x.split()[0], df["Data/Hora"].values ))
-            df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+            df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
                 "Data/Hora": "DATA_TEMP"
             })
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_6", grupo_lancamento=grupo_lancamento, cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_6", grupo_lancamento=grupo_lancamento, cod_empresa=company_session)
 
             #  ----------------------- necessário para criar o Dataframe de Commissões -----------------------
             df_commission  = df.copy()
             df_commission = df_commission[ df_commission["TP"] == "D" ]
-            df = ConvertToDataFrame.duplicate_dataframe_rows(dataframe=df)
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows(dataframe=df)
             df = pd.concat([df, df_commission])
             # ------------------------------------------------------------------------------------------------
 
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "DATA": "DATA_TEMP",
                 "VALOR": "Valor Recebível",
             })
@@ -2245,10 +2254,10 @@ class ConvertToDataFrame:
             df.sort_values(by=["Id", "VALOR", "TP"], inplace=True)
             df.index = list( range(0, len(df.index)) )
 
-            # df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+            # df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
             #  REAJUSTE DO VALOR DE COD_HISTORICO, necessário para não ser enviado com o valor de grupo_lancamento.
-            df = ConvertToDataFrame.create_additional_columns(dataframe=df, column_name="COD_HISTORICO", default_value="")
+            df = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df, column_name="COD_HISTORICO", default_value="")
 
             cont_aux = 0
             for i in df.index:
@@ -2285,7 +2294,7 @@ class ConvertToDataFrame:
 
 
             # file_name = r"I:\\1. Gaulke Contábil\\Administrativo\\9. TI\\1. Projetos\\6. Importação DECORISE\\base_test_Leonardo.xlsx"
-            # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
+            # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
 
             print(df.info())
             print(df)
@@ -2342,12 +2351,12 @@ class ConvertToDataFrame:
             # file = pd.ExcelFile(xlsx_bytes)
             # sheet_name = file.sheet_names[-1]
             # df = file.parse(sheet_name=sheet_name)
-            # df_temp_consulta = ConvertToDataFrame.read_Excel_File(contents=file_consulta)
-            # df_temp_contabil = ConvertToDataFrame.read_Excel_File(contents=file_contabil)
+            # df_temp_consulta = PrepareDataToImportPackage3703.read_Excel_File(contents=file_consulta)
+            # df_temp_contabil = PrepareDataToImportPackage3703.read_Excel_File(contents=file_contabil)
 
             contents = file_consulta.read()
             
-            df_temp_consulta = ConvertToDataFrame.read_Excel_File(contents=contents)
+            df_temp_consulta = PrepareDataToImportPackage3703.read_Excel_File(contents=contents)
             df_temp_consulta["index_aux"] = list(range(0, len(df_temp_consulta.index)))
             df_temp_consulta_copy = df_temp_consulta.copy()
             try:
@@ -2368,7 +2377,7 @@ class ConvertToDataFrame:
 
 
             contents = file_contabil.read()
-            df_temp_contabil = ConvertToDataFrame.read_Excel_File(contents=contents)
+            df_temp_contabil = PrepareDataToImportPackage3703.read_Excel_File(contents=contents)
             df_temp_contabil["NAME_AUX"] = "-"
             print("\n\n ------------------------ df_temp_contabil ------------------------ ")
             print(df_temp_contabil)
@@ -2425,11 +2434,11 @@ class ConvertToDataFrame:
             
 
             
-            df_temp_contabil = ConvertToDataFrame.rename_columns_dataframe(dataframe=df_temp_contabil, dict_replace_names={
+            df_temp_contabil = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df_temp_contabil, dict_replace_names={
                 "CNPJ": "CNPJ_ORIGIN"
             })
 
-            df = ConvertToDataFrame.create_layout_JB(dataframe=df_temp_contabil, model="model_7", cod_empresa=company_session)
+            df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df_temp_contabil, model="model_7", cod_empresa=company_session)
 
             print("\n\n\n -------------------------- DATAFRAME ")
             print(df)
@@ -2440,7 +2449,7 @@ class ConvertToDataFrame:
 
             # -------------------------------------------------------------- REPLACE NAMES COLS
             # if modelo == "modelo_email":
-            #     df = ConvertToDataFrame.rename_columns_dataframe(
+            #     df = PrepareDataToImportPackage3703.rename_columns_dataframe(
             #         dataframe=df, dict_replace_names={
             #             "CNPJ"
             #             "Valor Serviço": "Valor Bruto NF",
@@ -2456,7 +2465,7 @@ class ConvertToDataFrame:
             df["VALOR_NF_LIQ"] = df["Valor Bruto NF"] - df["IRPJ Retido"]
             df["VLR_LIQUIDO"] = df["VALOR_NF_LIQ"] - df["CSLL Retida"] - df["Cofins Retido"] - df["PIS Retido"]
 
-            df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+            df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
                 {"TP": "C", "TYPE_PROCESS": "comum"},
                 {"TP": "D", "TYPE_PROCESS": "debit_PIS"},
                 {"TP": "D", "TYPE_PROCESS": "debit_CSLL"},
@@ -2520,14 +2529,14 @@ class ConvertToDataFrame:
                         
             print(" \n\n ---------------------- TRANSPOSE VALUES DATAFRAME ---------------------- ")
 
-            df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+            df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
                 "CNPJ": "CNPJ_ORIGIN",
                 "DATA": "Data Recebim. NF",
                 "NOME": "Nome Cliente",
 
             })
 
-            df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+            df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
             print(df)
             print(df.info())
@@ -2546,7 +2555,7 @@ class ConvertToDataFrame:
             df_tp_registro_03 = df_tp_registro_03[  df_tp_registro_03["TYPE_PROCESS"] != "comum"  ]
             df_tp_registro_03["TP_REGISTRO"] = "03"
 
-            df_tp_registro_03 = ConvertToDataFrame.create_additional_columns(dataframe=df_tp_registro_03, column_name="IMPOSTO", default_value="")
+            df_tp_registro_03 = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_tp_registro_03, column_name="IMPOSTO", default_value="")
             df_tp_registro_03["CODIGO_IMPOSTO"] = "5952"
             df_tp_registro_03["BC_IMPOSTO"] = df_tp_registro_03["Valor Bruto NF"]
             df_tp_registro_03["ALIQUOTA"] = "-"
@@ -2578,10 +2587,10 @@ class ConvertToDataFrame:
 
             #  --------------------------------------
 
-            df_tp_registro_03 = ConvertToDataFrame.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__18", default_value="")
-            df_tp_registro_03 = ConvertToDataFrame.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__19", default_value="")
-            df_tp_registro_03 = ConvertToDataFrame.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__20", default_value="")
-            df_tp_registro_03 = ConvertToDataFrame.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__21", default_value="")
+            df_tp_registro_03 = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__18", default_value="")
+            df_tp_registro_03 = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__19", default_value="")
+            df_tp_registro_03 = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__20", default_value="")
+            df_tp_registro_03 = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_tp_registro_03, column_name="COL_AUX__21", default_value="")
             
             # df_tp_registro_03 = df_tp_registro_03[[
                 
@@ -2617,7 +2626,7 @@ class ConvertToDataFrame:
             tt_index_00 = len(df.index)
             tt_index_03 = len(df_tp_registro_03.index)
 
-            # df_tp_registro_03["NR_L_CTO_ERP"] = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df_tp_registro_03, index_default=tt_index_00)
+            # df_tp_registro_03["NR_L_CTO_ERP"] = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df_tp_registro_03, index_default=tt_index_00)
 
             print(df_tp_registro_03)
 
@@ -2668,10 +2677,10 @@ class ConvertToDataFrame:
             """)
 
             # file_name = r"I:\\1. Gaulke Contábil\\Administrativo\\9. TI\\1. Projetos\\8. Importação Arão dos Santos Recebimentos\\00_base_tratada_arao_dos_santos.xlsx"
-            # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
+            # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df, file_name=file_name)
 
             # file_name = r"I:\\1. Gaulke Contábil\\Administrativo\\9. TI\\1. Projetos\\8. Importação Arão dos Santos Recebimentos\\03_base_tratada_arao_dos_santos.xlsx"
-            # ConvertToDataFrame.convert_dataframe_to_excel(dataframe=df_tp_registro_03, file_name=file_name)
+            # PrepareDataToImportPackage3703.convert_dataframe_to_excel(dataframe=df_tp_registro_03, file_name=file_name)
 
 
             #
@@ -2693,7 +2702,7 @@ class ConvertToDataFrame:
             
 
             # df_pendencias.to_excel("df_pendencias_araos_dos_santos.xlsx")
-            df_pendencias = ConvertToDataFrame.rename_columns_dataframe(dataframe=df_pendencias, dict_replace_names={
+            df_pendencias = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df_pendencias, dict_replace_names={
                 "Data": "DATA",
                 "Compet.": "COMPET",
                 "Origem": "ORIGEM",
@@ -2786,7 +2795,7 @@ class ConvertToDataFrame:
                 print("\n\n ----------------------- DATA EXTRACT ----------------------- ")
                 print(data_page)
 
-                dict_tags_to_text = ConvertToDataFrame.check_text_to_tag(data=data_page, dict_tags_to_text=dict_tags_to_text)
+                dict_tags_to_text = PrepareDataToImportPackage3703.check_text_to_tag(data=data_page, dict_tags_to_text=dict_tags_to_text)
                 print(dict_tags_to_text)
                 
                 for i in range(len(data_page)):
@@ -2889,8 +2898,8 @@ class ConvertToDataFrame:
     
         print(data_to_table)
         df = pd.DataFrame.from_dict(data_to_table)
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_8", value_generic="Bradesco", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_8", value_generic="Bradesco", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_pagador",
@@ -2904,7 +2913,7 @@ class ConvertToDataFrame:
         # multa
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "abatimento"},
@@ -2948,8 +2957,8 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print(df.info())
         print(df)
@@ -3133,8 +3142,8 @@ class ConvertToDataFrame:
         
         df = pd.DataFrame.from_dict(data_to_table)
         
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_8", value_generic="Sicredi", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_8", value_generic="Sicredi", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_pagador",
@@ -3147,7 +3156,7 @@ class ConvertToDataFrame:
         # # multa
         # # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "abatimento"},
@@ -3188,8 +3197,8 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print("\n\n ---------------------------- DF LAYOUT JB ---------------------------- ")
         print(df.info())
@@ -3346,8 +3355,8 @@ class ConvertToDataFrame:
         print(df)
 
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_8", value_generic="Sicoob", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_8", value_generic="Sicoob", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_beneficiario",
@@ -3361,7 +3370,7 @@ class ConvertToDataFrame:
         # # multa       | neste caso não possui
         # # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             # {"TP": "D", "TYPE_PROCESS": "abatimento"},
@@ -3402,8 +3411,8 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         df = df.drop_duplicates(subset=["cnpj_beneficiario", "COMPL_HISTORICO", "DATA", "VALOR", "TP"], keep="last")
         df.to_excel("comprovantes_bancario_sicoob.xlsx")
@@ -3561,9 +3570,9 @@ class ConvertToDataFrame:
         df = pd.DataFrame.from_dict(data_to_table)
         # print(df)
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_10", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_10", cod_empresa=company_session)
 
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_beneficiario",
@@ -3578,7 +3587,7 @@ class ConvertToDataFrame:
         # # # multa
         # # # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -3611,10 +3620,10 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
 
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print("\n\n ---------------------------- DF LAYOUT JB ---------------------------- ")
         print(df.info())
@@ -3663,7 +3672,7 @@ class ConvertToDataFrame:
         df.index = list(range(0, len(df.index)))
         df = df[1:]
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "Unnamed: 0": "nome_pagador",
             "Unnamed: 1": "CNPJ_ORIGIN",
             "Unnamed: 2": "TIPO_PAGAMENTO",
@@ -3685,8 +3694,8 @@ class ConvertToDataFrame:
         print("\n ----------------------------------------------------- \n")
 
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_10.2", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_10.2", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_pagamento",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -3700,7 +3709,7 @@ class ConvertToDataFrame:
         # # multa       | neste caso não possui
         # # juros       | neste caso não possui
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             # {"TP": "D", "TYPE_PROCESS": "desconto"},
             # {"TP": "D", "TYPE_PROCESS": "abatimento"},
@@ -3733,7 +3742,7 @@ class ConvertToDataFrame:
 
 
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
         
         print(df)
         # df.to_excel("data_itau.xlsx")
@@ -3889,9 +3898,9 @@ class ConvertToDataFrame:
         # print(df)
 
         # return {}
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_11", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_11", cod_empresa=company_session)
         
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             # "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_beneficiario",
@@ -3904,7 +3913,7 @@ class ConvertToDataFrame:
         # # multa       | neste caso não possui
         # # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             # {"TP": "D", "TYPE_PROCESS": "abatimento"},
@@ -3938,8 +3947,8 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         list_names = list(df.drop_duplicates(subset=["NOME"], keep="last")["NOME"].values)
         print(list_names)
@@ -3990,7 +3999,7 @@ class ConvertToDataFrame:
         sheet_name = file.sheet_names[0]
         print(f"\n ---> sheet_name: {sheet_name}")
         df_suppliers = file.parse(sheet_name=sheet_name, dtype='str')[["Código", "C.N.P.J", "Descrição"]]
-        df_suppliers = ConvertToDataFrame.rename_columns_dataframe(dataframe=df_suppliers, dict_replace_names={
+        df_suppliers = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df_suppliers, dict_replace_names={
             "Código": "CODIGO",
             "C.N.P.J": "CNPJ",
             "Descrição": "NOME",
@@ -4002,7 +4011,7 @@ class ConvertToDataFrame:
         sheet_name = file.sheet_names[0]
         print(f"\n ---> sheet_name: {sheet_name}")
         df_payments = file.parse(sheet_name=sheet_name, dtype='str')
-        df_payments = ConvertToDataFrame.rename_columns_dataframe(dataframe=df_payments, dict_replace_names={
+        df_payments = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df_payments, dict_replace_names={
             "Código": "CODIGO",
             "Fornecedor": "NOME",
             "N.F": "NOTA_FISCAL",
@@ -4014,7 +4023,7 @@ class ConvertToDataFrame:
             "Valor Pago": "VALOR_PAGO",
             "Loja": "LOTE",
         })
-        df_payments = ConvertToDataFrame.create_additional_columns(dataframe=df_payments, column_name="CNPJ", default_value="-")
+        df_payments = PrepareDataToImportPackage3703.create_additional_columns(dataframe=df_payments, column_name="CNPJ", default_value="-")
         df_payments = df_payments[~df_payments["CODIGO"].isin(["0", "Código"])]
         print("\n\n ------------------ df_suppliers ------------------ ")
         print(df_suppliers)
@@ -4046,19 +4055,19 @@ class ConvertToDataFrame:
         df_payments = df_payments.sort_values(by=["CNPJ"])
         df_payments.index = list(range(0, len(df_payments)))
 
-        df_payments = ConvertToDataFrame.rename_columns_dataframe(dataframe=df_payments, dict_replace_names={
+        df_payments = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df_payments, dict_replace_names={
             "NOME": "NOME_ORIGIN",
             "CNPJ": "CNPJ_ORIGIN",
         })
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df_payments, model="model_9", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df_payments, model="model_9", cod_empresa=company_session)
 
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "NOME": "NOME_ORIGIN",
             "CNPJ": "CNPJ_ORIGIN",
             "DATA": "DATA_PAG",
         })
 
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
                 {"TP": "C", "TYPE_PROCESS": "comum"},
                 {"TP": "C", "TYPE_PROCESS": "DESCONTO"},
                 {"TP": "C", "TYPE_PROCESS": "DEVOLUCAO"},
@@ -4110,7 +4119,7 @@ class ConvertToDataFrame:
         
         df = df[~df["VALOR"].isin( ["0,00", "0.00"] )]
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
         
 
         tt_rows = len(df)
@@ -4152,7 +4161,7 @@ class ConvertToDataFrame:
         sheet_name = file.sheet_names[0]
 
         df = file.parse(sheet_name=sheet_name, dtype='str')
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "Cliente": "CNPJ_ORIGIN",
             "Nome": "nome_pagador",
             "Valor pagamento": "VALOR_PAGAMENTO",
@@ -4164,8 +4173,8 @@ class ConvertToDataFrame:
         })
         print(df)
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_12", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_12", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "DATA_PAGAMENTO",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -4178,7 +4187,7 @@ class ConvertToDataFrame:
         # desconto
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -4226,11 +4235,11 @@ class ConvertToDataFrame:
                 count_aux = 0
         
    
-        df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR")
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+        df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR")
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
 
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print("\n\n ------- DataFrame contas a receber INOVA ------- ")
         print(df.info())
@@ -4311,22 +4320,22 @@ class ConvertToDataFrame:
         print(df_pendencia)
 
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "CNPJ": "CNPJ_ORIGIN",
             "FORNECEDOR": "nome_pagador",
             "VALOR PGTO": "VALOR_PAGAMENTO",
             "DATA PGTO": "DATA_PAGAMENTO",
         })
-        df = ConvertToDataFrame.calculate_discount_or_fees(dataframe=df, col_name_valor_pago="VALOR_PAGAMENTO", col_name_valor_doc="VALOR")
+        df = PrepareDataToImportPackage3703.calculate_discount_or_fees(dataframe=df, col_name_valor_pago="VALOR_PAGAMENTO", col_name_valor_doc="VALOR")
 
         print("\n\n -------------------------- df - rename columns | calculate values fees and discount -------------------------- ")
         print(df)
         # df.to_excel("contas_a_pagar_ponto_certo.xlsx")
         
-        # df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="Filial", list_remove_values=["1"])
+        # df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="Filial", list_remove_values=["1"])
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_13", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_13", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "DATA_PAGAMENTO",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -4341,7 +4350,7 @@ class ConvertToDataFrame:
 
 
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -4413,13 +4422,13 @@ class ConvertToDataFrame:
         print("\n\n DF IMPORTAÇÃO COM DE-PARA DE CONTAS ")
         print(df)
         try:
-            df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
-            df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+            df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True)
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
         except Exception as e:
             print(f" ### ERROR ADJUST TO DECIMAL STRING | ERROR: {e}")
             return {}
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
 
         print("\n\n ------- DataFrame contas a pagar PONTO CERTO ------- ")
@@ -4459,17 +4468,17 @@ class ConvertToDataFrame:
 
         df = pd.read_excel(file_bytes, dtype="str")
         df = df.rename(columns=df.iloc[0]).drop(df.index[0])
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="CPF/CNPJ", list_remove_values=[
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="CPF/CNPJ", list_remove_values=[
             "-----", ""
         ])
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="Data de confirmação", list_remove_values=[
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="Data de confirmação", list_remove_values=[
             "------", ""
         ])
         df = df.dropna(subset=["CPF/CNPJ"])
 
 
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "CPF/CNPJ": "CNPJ_ORIGIN",
             "Destinado à": "nome_pagador",
             "Valor total": "VALOR_PAGAMENTO",
@@ -4481,8 +4490,8 @@ class ConvertToDataFrame:
         print("\n\n -------------------- DF -------------------- ")
         print(df)
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_14", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_14", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "DATA_PAGAMENTO",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -4495,7 +4504,7 @@ class ConvertToDataFrame:
         # desconto
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -4588,13 +4597,13 @@ class ConvertToDataFrame:
         print(df)
 
         try:
-            df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
-            df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+            df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
         except Exception as e:
             print(f" ### ERROR ADJUST TO DECIMAL STRING | ERROR: {e}")
             return {}
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
 
         print("\n\n ------- DataFrame contas a pagar PONTO CERTO ------- ")
@@ -4640,7 +4649,7 @@ class ConvertToDataFrame:
         print(f"\n ---> sheet_name: {sheet_name}")
         df = file.parse(sheet_name=sheet_name, dtype='str')
         
-        # df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="Situação", list_remove_values=[
+        # df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="Situação", list_remove_values=[
         #     "------", ""
         # ])
 
@@ -4648,7 +4657,7 @@ class ConvertToDataFrame:
         df =  df[ df["Situação"].str.contains("Pago") ]
 
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "CPF/CNPJ": "CNPJ_ORIGIN",
             "Nome": "nome_pagador",
             "Valor": "VALOR_PAGAMENTO",
@@ -4663,8 +4672,8 @@ class ConvertToDataFrame:
         print(df)
 
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_15", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_15", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "DATA_PAGAMENTO",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -4677,7 +4686,7 @@ class ConvertToDataFrame:
         # desconto
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -4772,13 +4781,13 @@ class ConvertToDataFrame:
         print(df)
 
         try:
-            df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
-            df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+            df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
         except Exception as e:
             print(f" ### ERROR ADJUST TO DECIMAL STRING | ERROR: {e}")
             return {}
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
 
         print("\n\n ------- DataFrame contas a receber TELL ------- ")
@@ -4820,7 +4829,7 @@ class ConvertToDataFrame:
         print(f"\n ---> sheet_name: {sheet_name}")
         df = file.parse(sheet_name=sheet_name, dtype='str')
         
-        # df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="Situação", list_remove_values=[
+        # df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="Situação", list_remove_values=[
         #     "------", ""
         # ])
 
@@ -4828,10 +4837,10 @@ class ConvertToDataFrame:
         df =  df[ df["Situação"].str.contains("Pago") ]
 
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "CPF/CNPJ": "CNPJ_ORIGIN",
             "Nome": "nome_pagador",
-            "Valor": "VALOR_PAGAMENTO",
+            "Pago": "VALOR_PAGAMENTO",
             "Recebido": "VALOR_RECEBIDO",
             "Liquidação": "DATA_PAGAMENTO",
             # "Data de vencimento original": "DATA_VENCIMENTO",
@@ -4843,8 +4852,8 @@ class ConvertToDataFrame:
         print(df)
 
 
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_16", cod_empresa=company_session)
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_16", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "DATA_PAGAMENTO",
             "CNPJ": "CNPJ_ORIGIN",
             "NOME": "nome_pagador",
@@ -4853,11 +4862,12 @@ class ConvertToDataFrame:
         # df = df.dropna(subset=['CNPJ_ORIGIN'])
         print("\n\n ------- DF IMPORTAÇÃO JB ------- ")
         print(df)
+        df["DATA_PAGAMENTO"] = list(map(lambda x: datetime.datetime.strptime(x, "%d/%m/%Y"), df["DATA_PAGAMENTO"].values))
 
         # desconto
         # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "desconto"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
@@ -4947,13 +4957,13 @@ class ConvertToDataFrame:
                 count_aux = 0
         
         try:
-            df = ConvertToDataFrame.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
-            df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
+            df = PrepareDataToImportPackage3703.adjust_value_to_decimal_string(dataframe=df, column_name="VALOR", replace_caract=True, replace_from_format_BRL=True)
+            df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00"])
         except Exception as e:
             print(f" ### ERROR ADJUST TO DECIMAL STRING | ERROR: {e}")
             return {}
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
 
         print("\n\n ------- DataFrame contas a pagar TELL ------- ")
@@ -5106,9 +5116,9 @@ class ConvertToDataFrame:
         print(list_page_erros)
 
         
-        df = ConvertToDataFrame.create_layout_JB(dataframe=df, model="model_18", cod_empresa=company_session)
+        df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_18", cod_empresa=company_session)
 
-        df = ConvertToDataFrame.transpose_values(dataframe=df, dict_cols_transpose={
+        df = PrepareDataToImportPackage3703.transpose_values(dataframe=df, dict_cols_transpose={
             "DATA": "data_de_debito",
             "CNPJ": "cnpj_beneficiario",
             "NOME": "nome_beneficiario",
@@ -5123,7 +5133,7 @@ class ConvertToDataFrame:
         # # # # multa
         # # # # juros
         
-        df = ConvertToDataFrame.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
+        df = PrepareDataToImportPackage3703.duplicate_dataframe_rows_lote(dataframe=df, list_update_cols=[
             {"TP": "C", "TYPE_PROCESS": "comum"},
             {"TP": "D", "TYPE_PROCESS": "juros"},
             {"TP": "D", "TYPE_PROCESS": "multa"},
@@ -5175,10 +5185,10 @@ class ConvertToDataFrame:
                 df["CONTA"][i] = ""
                 count_aux = 0
         
-        df = ConvertToDataFrame.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
+        df = PrepareDataToImportPackage3703.filter_data_dataframe(daraframe=df, name_column="VALOR", list_remove_values=["0.00", "0,00"])
 
         df.index = list(range(0, len(df.index)))
-        df = ConvertToDataFrame.create_cod_erp_to_dataframe(dataframe=df)
+        df = PrepareDataToImportPackage3703.create_cod_erp_to_dataframe(dataframe=df)
 
         print("\n\n ---------------------------- DF LAYOUT JB ---------------------------- ")
         print(df.info())
@@ -5223,7 +5233,7 @@ class ConvertToDataFrame:
 
             df = df[ df["Cta. título"].isin(["2-Não"]) ][ ["Classificação", "Conta", "Nome da conta contábil/C. Custo", "Tipo conta"] ]
             df["NEW_CODE"] = ""
-            df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+            df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
                 "Classificação": "CLASSIFICACAO",
                 "Conta": "CONTA",
                 "Nome da conta contábil/C. Custo": "NOME_CONTA_CENTRO_CUSTO",
@@ -5283,7 +5293,7 @@ class ConvertToDataFrame:
         df = df[~ df["TITULO"].isin(["1-Sintética "]) ][ ["CODIGO", "DESCRICAO", "CLASSIFICACAO", "TITULO", "TIPO", "NATUREZA"] ]
         df["NEW_CODE"] = ""
 
-        df = ConvertToDataFrame.rename_columns_dataframe(dataframe=df, dict_replace_names={
+        df = PrepareDataToImportPackage3703.rename_columns_dataframe(dataframe=df, dict_replace_names={
             "CLASSIFICACAO": "CLASSIFICACAO",
             "CODIGO": "CONTA",
             "DESCRICAO": "NOME_CONTA_CENTRO_CUSTO",
@@ -5392,26 +5402,6 @@ class ConvertToDataFrame:
                 """)
         
         print(data_new_file)
-        # list_errors = list()
-        # with open("process_data_fiscal/dataTest - 02.txt", "w", encoding='utf-8-sig') as f:
-
-        #     for item in data_new_file:
-        #         print("--> ", item)
-        #         try:
-
-        #             if "H020" in item:
-        #                 f.write(f"{item}")
-        #             else:
-        #                 f.write(f"{item}")
-
-        #         except Exception as e:
-        #             print("\n -------------------------------------")
-        #             print(f" ### ERROR POPULATE FILE | ERROR: {e}")
-        #             print(f">> data row: {item}")
-        #             list_errors.append(item)
-        
-        # print(f" --------------------- list_errors --------------------- ")
-        # print(list_errors)
         return {
             "data_new_file": data_new_file,
             "file_name": file_dir,

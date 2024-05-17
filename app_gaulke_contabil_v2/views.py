@@ -25,7 +25,7 @@ User = get_user_model()
 
 
 
-from prepare_data.prepare_data import PrepareData, ConvertToDataFrame
+from prepare_data.prepare_data import PrepareDataApontHours, PrepareDataToImportPackage3703
 import pandas as pd
 
 with open("config.json", "r") as f:
@@ -640,7 +640,7 @@ def apont_hours(request):
             cursor.execute(comand_query)
             rows = cursor.fetchall()
 
-            df_company = PrepareData().convert_query_to_dataframe(data=rows, cols_name=cols_name)
+            df_company = PrepareDataApontHours().convert_query_to_dataframe(data=rows, cols_name=cols_name)
             print(df_company)
             print(df_company.info())
 
@@ -652,7 +652,7 @@ def apont_hours(request):
         username_name = user_info[0].full_name
         setor = user_info[0].sector
 
-        data_create_apont = PrepareData().prepare_data_to_create_new_apont_hour(
+        data_create_apont = PrepareDataApontHours().prepare_data_to_create_new_apont_hour(
             username_pk,
             date_init=date_init, hour_init=hour_init, hour_final=hour_final,
             atividade=activity, setor=setor, competencia=competencia, username=username_name,
@@ -752,7 +752,7 @@ def apont_hours(request):
                 
                 if _dt_final >= _dt_init:
                     calc_apont_hour = _dt_final - _dt_init
-                    calc_apont_hour = PrepareData().segundos_para_tempo(calc_apont_hour.seconds)
+                    calc_apont_hour = PrepareDataApontHours().segundos_para_tempo(calc_apont_hour.seconds)
                     db.horario_fim = final_hour
                     db.tempo = calc_apont_hour
                     db.save()
@@ -940,7 +940,7 @@ def post_file_to_import_JB(request):
             code_process = 400
             if import_model == "#1.1 Folha de Pagamento":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_relacao_folha_por_empregado(file=file, grupo_lancamento=grupo_lancamento, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_relacao_folha_por_empregado(file=file, grupo_lancamento=grupo_lancamento, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "date_lancamento", "account_code_credit", "account_code_debit"]
                 code_process = 200
@@ -963,7 +963,7 @@ def post_file_to_import_JB(request):
                             }
                         })
 
-                data_import_JB = ConvertToDataFrame.read_xlsx_relacao_gnre(file=file, data_contas=data_contas, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_relacao_gnre(file=file, data_contas=data_contas, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial"]
                 code_process = 200
@@ -971,7 +971,7 @@ def post_file_to_import_JB(request):
             elif import_model == "#1.3 Entrada Tít. Desc. Sicoob":
                 file = request.FILES.get("file_1")
                 
-                data_import_JB = ConvertToDataFrame.read_pdf_relacao_entrada_titulos_desc_sicoob(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_relacao_entrada_titulos_desc_sicoob(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial"]
                 code_process = 200
@@ -980,7 +980,7 @@ def post_file_to_import_JB(request):
                 file = request.FILES.get("file_1")
                 file_2 = request.FILES.get("file_2")
                 
-                data_import_JB = ConvertToDataFrame.read_pdf_relacao_liquidacao_titulos_desc_sicoob(file=file, file_2=file_2, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_relacao_liquidacao_titulos_desc_sicoob(file=file, file_2=file_2, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_debit"]
                 code_process = 200
@@ -992,7 +992,7 @@ def post_file_to_import_JB(request):
             elif import_model == "#2.1 Cobranças Pagas (WBTelecom)":
                 file = request.FILES.get("file_1")
                 
-                data_import_JB = ConvertToDataFrame.read_xlsx_relacao_cobrancas_pagas(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_relacao_cobrancas_pagas(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial","account_code_debit","account_code_credit","account_code_debit_juros","account_code_credit_desconto"]
                 code_process = 200
@@ -1000,7 +1000,7 @@ def post_file_to_import_JB(request):
             elif import_model == "#2.2 Relação Decorise":
                 file = request.FILES.get("file_1")
                 
-                data_import_JB = ConvertToDataFrame.read_xlsx_decorise(file=file, grupo_lancamento=grupo_lancamento, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_decorise(file=file, grupo_lancamento=grupo_lancamento, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit", "code_debit_recebivel", "code_debit_comissao"]
                 code_process = 200
@@ -1010,7 +1010,7 @@ def post_file_to_import_JB(request):
                 file_2 = request.FILES.get("file_2")
                 modelo = request.POST.get("modelo")
                 
-                data_import_JB = ConvertToDataFrame.read_xlsx_arao_dos_santos(file_consulta=file, file_contabil=file_2, modelo=modelo, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_arao_dos_santos(file_consulta=file, file_contabil=file_2, modelo=modelo, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_debit"]
                 code_process = 200
@@ -1019,7 +1019,7 @@ def post_file_to_import_JB(request):
                 file = request.FILES.get("file_1")
                 file_2 = request.FILES.get("file_2")
                 
-                data_import_JB = ConvertToDataFrame.read_xls_comprovante_grupo_DAB(file_suppliers=file, file_payments=file_2, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xls_comprovante_grupo_DAB(file_suppliers=file, file_payments=file_2, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
@@ -1028,14 +1028,14 @@ def post_file_to_import_JB(request):
                 file = request.FILES.get("file_1")
                 file_2 = request.FILES.get("file_2")
                 
-                data_import_JB = ConvertToDataFrame.read_xlsx_contas_a_pagar_PONTO_CERTO(file=file, file_2=file_2, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_contas_a_pagar_PONTO_CERTO(file=file, file_2=file_2, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
             # ----
             elif import_model == "#2.6 Grupo Garra":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_xlsx_contas_a_pagar_GARRA(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_contas_a_pagar_GARRA(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
@@ -1043,7 +1043,7 @@ def post_file_to_import_JB(request):
             elif import_model == "#2.7 TELL":
                 file = request.FILES.get("file_1")
                 
-                data_import_JB = ConvertToDataFrame.read_xlsx_contas_a_pagar_TELL(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_contas_a_pagar_TELL(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
@@ -1054,14 +1054,14 @@ def post_file_to_import_JB(request):
 
             elif import_model == "#3.1 Inova":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_xlsx_contas_a_receber_INOVA(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_contas_a_receber_INOVA(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_debit"]
                 code_process = 200
             # ----
             elif import_model == "#3.2 TELL":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_xlsx_contas_a_receber_TELL(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_xlsx_contas_a_receber_TELL(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_debit"]
                 code_process = 200
@@ -1072,27 +1072,27 @@ def post_file_to_import_JB(request):
 
             elif import_model == "#4.1 Banco do Brasil":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_do_brasil_v2(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_do_brasil_v2(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit", "account_code_debit"]
                 code_process = 200
             elif import_model == "#4.2 Bradesco":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_bradesco(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_bradesco(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
             # ----
             elif import_model == "#4.3 Sicredi":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_sicredi(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_sicredi(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
             # ----
             elif import_model == "#4.4 Sicoob":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_sicoob(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_sicoob(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
@@ -1102,9 +1102,9 @@ def post_file_to_import_JB(request):
                 modelo = request.POST.get("modelo")
                 
                 if modelo == "modelo_1":
-                    data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_itau(file=file, company_session=session_company_code)
+                    data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_itau(file=file, company_session=session_company_code)
                 elif modelo == "modelo_2":
-                    data_import_JB = ConvertToDataFrame.read_xls_comprovante_banco_itau(file=file, company_session=session_company_code)
+                    data_import_JB = PrepareDataToImportPackage3703.read_xls_comprovante_banco_itau(file=file, company_session=session_company_code)
 
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
@@ -1112,7 +1112,7 @@ def post_file_to_import_JB(request):
             # ----
             elif import_model == "#4.6 Civia":
                 file = request.FILES.get("file_1")
-                data_import_JB = ConvertToDataFrame.read_pdf_comprovante_banco_civia(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_comprovante_banco_civia(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
@@ -1122,13 +1122,28 @@ def post_file_to_import_JB(request):
                 print("\n\n ------------------- file ------------------- ")
                 print(file)
                 print(" ------------------------------------------------ \n\n")
-                data_import_JB = ConvertToDataFrame.read_pdf_contas_a_pagar_ABBRACCIO(file=file, company_session=session_company_code)
+                data_import_JB = PrepareDataToImportPackage3703.read_pdf_contas_a_pagar_ABBRACCIO(file=file, company_session=session_company_code)
                 data_import_JB = data_import_JB["data_table"]
                 inputs_visible = ["filial", "account_code_credit"]
                 code_process = 200
-
-
             
+            # ------------------------------------------------------------------------------------------------------------------------------------
+            # -------------------------------------------------------- CALCULO DE ESTOQUE --------------------------------------------------------
+            # ------------------------------------------------------------------------------------------------------------------------------------
+            # ----
+            elif import_model == "#5.1 Calculo de Estoque - H020":
+                file = request.FILES.get("file_1")
+                percentage = request.FILES.get("percentage")
+                data_import_JB  = PrepareDataToImportPackage3703.calculate_file_stock_H020(file_dir=file, percentage=percentage)
+                data_new_file   = data_import_JB["data_new_file"]
+                file_name       = data_import_JB["file_name"]
+                return JsonResponse({
+                    "code": 200,
+                    "data_new_file": data_new_file,
+                    "file_name": file_name,
+                })
+                
+
             print(f"""
                 --------------------------------------------------------------------------------------------
                 >>>> import_model (model import): {import_model}
@@ -1317,7 +1332,7 @@ def post_file_JB_smart_IR(request):
     print(file)
     ano_base_migracao_IR = 2023
     try:
-        df = PrepareData().convert_xlsx_to_DataFrame(file=file)
+        df = PrepareDataApontHours().convert_xlsx_to_DataFrame(file=file)
         df["Ano"] = list(map(lambda x: int(x), df["Ano"].values))
         df = df[df["Ano"] >= ano_base_migracao_IR]
         print(df)
@@ -1352,7 +1367,7 @@ def post_file_JB_smart_IR(request):
 def post_file_grid_declaracoes(request):
     file = request.FILES.get("file")
     try:
-        df = PrepareData().convert_csv_to_DataFrame(file=file)
+        df = PrepareDataApontHours().convert_csv_to_DataFrame(file=file)
         print(df)
         if df is not None:
 
