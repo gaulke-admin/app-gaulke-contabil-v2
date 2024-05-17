@@ -5403,8 +5403,8 @@ class PrepareDataToImportPackage3703:
         
         print(data_new_file)
         return {
-            "data_new_file": data_new_file,
-            "file_name": file_dir,
+            "data_download": json.dumps(data_new_file),
+            "file_name": str(file_dir),
         }
 
 

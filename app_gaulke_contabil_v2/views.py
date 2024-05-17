@@ -621,6 +621,7 @@ def apont_hours(request):
 
 
         body = json.loads(request.body)
+        print(body)
         username_pk = body["username_pk"]
         username_name = body["username_name"]
         date_init = body["date_init"]
@@ -629,7 +630,7 @@ def apont_hours(request):
         competencia = body["competencia"]
         company_name = body["company_name"]
         activity = body["activity"]
-        username_db = User.objects.all().filter(pk=username_pk)[0].email
+        username_db = customuser.objects.all().filter(pk=username_pk)[0].email
         id_acessorias = company_name.split("] -")[0].replace("[", "").strip()
 
         db_temp = connections["db_gaulke_contabil"]
@@ -644,12 +645,12 @@ def apont_hours(request):
             print(df_company)
             print(df_company.info())
 
-        user_info = Model_tb_users.objects.all().filter(
-            email = int(username_pk)
+        user_info = customuser.objects.all().filter(
+            pk = int(username_pk)
         )
         print(" ---------------------- user_info ---------------------- ")
         print(user_info)
-        username_name = user_info[0].full_name
+        username_name = f"{user_info[0].first_name} {user_info[0].last_name}"
         setor = user_info[0].sector
 
         data_create_apont = PrepareDataApontHours().prepare_data_to_create_new_apont_hour(
@@ -938,6 +939,7 @@ def post_file_to_import_JB(request):
             print(request.FILES)
 
             code_process = 400
+            direct_download = False
             if import_model == "#1.1 Folha de Pagamento":
                 file = request.FILES.get("file_1")
                 data_import_JB = PrepareDataToImportPackage3703.read_pdf_relacao_folha_por_empregado(file=file, grupo_lancamento=grupo_lancamento, company_session=session_company_code)
@@ -1132,14 +1134,23 @@ def post_file_to_import_JB(request):
             # ------------------------------------------------------------------------------------------------------------------------------------
             # ----
             elif import_model == "#5.1 Calculo de Estoque - H020":
+
                 file = request.FILES.get("file_1")
-                percentage = request.FILES.get("percentage")
+                percentage = request.POST.get("percentage")
+
+                print(f"""
+                    file: {file}
+                    percentage: {percentage}
+                """)
+
                 data_import_JB  = PrepareDataToImportPackage3703.calculate_file_stock_H020(file_dir=file, percentage=percentage)
-                data_new_file   = data_import_JB["data_new_file"]
+                data_download   = data_import_JB["data_download"]
                 file_name       = data_import_JB["file_name"]
+
                 return JsonResponse({
+                    "direct_download": True,
                     "code": 200,
-                    "data_new_file": data_new_file,
+                    "data_download": data_download,
                     "file_name": file_name,
                 })
                 
@@ -1154,6 +1165,7 @@ def post_file_to_import_JB(request):
             """)
 
             return JsonResponse({
+                "direct_download": direct_download,
                 "code": code_process,
                 "msg": "success",
                 "data_import_JB": data_import_JB,
@@ -1162,6 +1174,7 @@ def post_file_to_import_JB(request):
 
         else:
             return JsonResponse({
+                "direct_download": direct_download,
                 "code": 501,
                 "msg": "unsupported request",
                 "error": "501 - unsupported request",

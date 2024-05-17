@@ -100,11 +100,13 @@
             } catch (error) {
                 percentage = null;
             }
+            // ----
             try {
                 grupo_lancamento = document.getElementById("grupo_lancamento").value;
             } catch (error) {
                 grupo_lancamento = null;
             }
+            // ----
             try {
                 modelo = document.getElementById("modelo").value;
             } catch (error) {
@@ -174,64 +176,98 @@
                     console.log(data)
                     document.querySelector(".button-post").style.display = "flex";
                     document.querySelector(".block-animation-loading-process-data").style.display = "none";
-    
+                    
                     if(data["code"] == 200){
-                        block_error_import_file_JB.style.display = "none";
-    
-                        document.querySelectorAll("[data-field-update-table-import-jb]").forEach((e)=>{
-                            e.querySelector("input").value = "";
-                            e.classList.remove("active");
-                        });
-    
-                        inputs_visible = data["inputs_visible"];
-                        console.log("\n\n ---------------------- inputs_visible ---------------------- ")
-                        console.log(inputs_visible)
-                        if(inputs_visible.length > 0){
-                            for (let i in inputs_visible){
-                                try {
-                                    document.querySelector(`[data-field-update-table-import-JB="${inputs_visible[i]}"]`).classList.add("active");
-                                } catch (error) {1;}
+
+                        if(data["direct_download"] == true){
+                            var data_table_rows = JSON.parse(data["data_download"]);
+                            
+                            for (let i in data_table_rows){
+                                console.log(data_table_rows[i])
                             }
+
+                            var csv = '';
+                            for(var i=0; i<data_table_rows.length; i++){
+                                var values = data_table_rows[i];
+                                if (values.includes("|H020|")){
+                                    values = `${values}\n`;
+                                }
+                                csv += values
+                                // .join(';') + '\n';
+                            }
+                            
+                            var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                            var url = URL.createObjectURL(blob);
+                            var link = document.createElement("a");
+                            link.setAttribute("href", url);
+
+                            var file_name = data["file_name"];
+                            link.setAttribute("download", `Estoque H020 - ${file_name}`);
+                            link.style.visibility = "hidden";
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
                         }
-    
-                        data_table_import_txt_to_JB = data["data_import_JB"]["data"];
-    
-                        document.getElementById("title-modal-table-import-JB").querySelector("h4").textContent = title_form;
-                        container_import_preview.classList.add("active");
-    
-    
-                        for (let i in data_table_import_txt_to_JB){
-    
-                            let type_process = data_table_import_txt_to_JB[i]["TYPE_PROCESS"];
-                            arr_data_post.push(`
-                                <tr>
-                                    <td>${data_table_import_txt_to_JB[i]["TP_REGISTRO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["NOME"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COD_EMPRESA"]}</td>
-                                    <td data-tb-row-JB="row-filial">${data_table_import_txt_to_JB[i]["FILIAL"]}</td>
-                                    <td data-tb-row-JB="row-date_lanc">${data_table_import_txt_to_JB[i]["DATA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["NR_L_CTO_ERP"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TP"]}</td>
-                                    <td data-tb-row-JB="row-${type_process}">${data_table_import_txt_to_JB[i]["CONTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["SUBCONTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["VALOR"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["ACAO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["PRIMEIRO_HIST_CTA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COD_HISTORICO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["COMPL_HISTORICO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["GRUPO_LCTO"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CNPJ"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["IESTADUAL"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TP_CNPJ"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CONTA_ORIGEM"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["CNPJ_EMPRESA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["IE_EMPRESA"]}</td>
-                                    <td>${data_table_import_txt_to_JB[i]["TYPE_PROCESS"]}</td>
-                                </tr>
-                            `);
+                        else {
+                            block_error_import_file_JB.style.display = "none";
+        
+                            document.querySelectorAll("[data-field-update-table-import-jb]").forEach((e)=>{
+                                e.querySelector("input").value = "";
+                                e.classList.remove("active");
+                            });
+        
+                            inputs_visible = data["inputs_visible"];
+                            console.log("\n\n ---------------------- inputs_visible ---------------------- ")
+                            console.log(inputs_visible)
+                            if(inputs_visible.length > 0){
+                                for (let i in inputs_visible){
+                                    try {
+                                        document.querySelector(`[data-field-update-table-import-JB="${inputs_visible[i]}"]`).classList.add("active");
+                                    } catch (error) {1;}
+                                }
+                            }
+        
+                            data_table_import_txt_to_JB = data["data_import_JB"]["data"];
+        
+                            document.getElementById("title-modal-table-import-JB").querySelector("h4").textContent = title_form;
+                            container_import_preview.classList.add("active");
+        
+        
+                            for (let i in data_table_import_txt_to_JB){
+        
+                                let type_process = data_table_import_txt_to_JB[i]["TYPE_PROCESS"];
+                                arr_data_post.push(`
+                                    <tr>
+                                        <td>${data_table_import_txt_to_JB[i]["TP_REGISTRO"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["NOME"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["COD_EMPRESA"]}</td>
+                                        <td data-tb-row-JB="row-filial">${data_table_import_txt_to_JB[i]["FILIAL"]}</td>
+                                        <td data-tb-row-JB="row-date_lanc">${data_table_import_txt_to_JB[i]["DATA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["NR_L_CTO_ERP"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["TP"]}</td>
+                                        <td data-tb-row-JB="row-${type_process}">${data_table_import_txt_to_JB[i]["CONTA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["SUBCONTA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["VALOR"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["ACAO"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["PRIMEIRO_HIST_CTA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["COD_HISTORICO"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["COMPL_HISTORICO"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["GRUPO_LCTO"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["CNPJ"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["IESTADUAL"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["TP_CNPJ"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["CONTA_ORIGEM"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["CNPJ_EMPRESA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["IE_EMPRESA"]}</td>
+                                        <td>${data_table_import_txt_to_JB[i]["TYPE_PROCESS"]}</td>
+                                    </tr>
+                                `);
+                            }
+                            
+                            container_import_preview.querySelector("table").querySelector("tbody").innerHTML = arr_data_post.join("");
                         }
                         
-                        container_import_preview.querySelector("table").querySelector("tbody").innerHTML = arr_data_post.join("");
                     }
                     else {
                         document.getElementById("message-error-import-file-JB").textContent = data["error"];
