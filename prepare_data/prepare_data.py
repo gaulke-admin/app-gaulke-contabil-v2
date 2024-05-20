@@ -5114,7 +5114,7 @@ class PrepareDataToImportPackage3703:
 
         print("\n\n ---------- list_page_erros ---------- ")
         print(list_page_erros)
-
+        
         
         df = PrepareDataToImportPackage3703.create_layout_JB(dataframe=df, model="model_18", cod_empresa=company_session)
 

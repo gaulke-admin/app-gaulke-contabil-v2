@@ -153,7 +153,8 @@
 
 .modal-import-file {
     width: 600px;
-    max-height: 85vh;
+    height: 90%;
+    max-height: 90%;
     max-width: 85%;
     position: absolute;
     top: 50%;
@@ -163,7 +164,6 @@
     background: var(--color-principal-branco-puro);
     border-radius: 14px;
     padding: 20px 10px;
-    /* overflow: scroll; */
 }
 
 .block-action-modal {
@@ -494,7 +494,7 @@
 /* ------------------- MODAL ALTER DATA LOTE ------------------- */
 .bloco-content-update-lote {
     width: 100%;
-    height: 100%;
+    height: 98%;
     max-width: 100%;
     display: flex;
     flex-direction: column;
@@ -512,27 +512,35 @@
 }
 
 .bloco-content-update-lote ul {
-    padding: 0 24px;
     display: flex;
     flex-direction: row;
     gap: 39px;
-    padding: 24px;
+    padding: 24px 54px;
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: wrap;
 }
 .bloco-content-update-lote ul li {
-    /* width: 100%; */
+    width: 180px;
+    max-width: 100%;
+    min-height: 82px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: flex-start;
     flex-wrap: wrap;
 }
+[data-check-input-lote="1"] {
+    display: none !important;
+}
+[data-check-input-lote="0"] {
+    display: flex !important;
+}
+
 
 .bloco-content-update-lote ul li input,
 .bloco-content-update-lote ul li select {
-    width: 20vh;
+    width: 100%;
     max-width: 100%;
     border-radius: 6px;
     padding: 4px;
@@ -553,13 +561,25 @@
     border: none !important;
 }
 
+.block-option-input-lote {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
+}
+.block-option-input-lote input {
+    width: auto !important;
+    margin: 6px !important;
+}
 
 .bloco-content-update-lote article {
     display: flex;
     flex-direction: column;
     padding-top: 24px;
     gap: 3px;
-    max-height: 35vh;
+    max-height: 80%;
     overflow: scroll;
     align-items: center;
     justify-content: flex-start;

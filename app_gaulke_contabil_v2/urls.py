@@ -25,23 +25,40 @@ urlpatterns = [
     path('apontamentos-de-horas/info/', views.get_info_apont_hour, name="get_info_apont_hour"),
 
 
-    # ------------------- GET DATA -------------------
-    path('get-all-data-JB-smart-IR', views.get_all_data_JB_smart_IR, name="get_all_data_JB_smart_IR"),
-    path('get-all-clients', views.get_all_clients, name="get_all_clients"),
 
-    # ------------------- POST FILE -------------------
+    # -------------------- POST FILE UPDATE I.R --------------------
+    # >> arquivo das declarações cadastradas no JB Software Smart <<
+
     path('post-file-JB-smart-IR/', views.post_file_JB_smart_IR, name="post_file_JB_smart_IR"),
     path('post-file-drid-declaracoes/', views.post_file_grid_declaracoes, name="post_file_grid_declaracoes"),
 
 
-    # ------------------- CREATE NEW CLIENT AND I.R  -------------------
+    # ------------------- CREATE CLIENT I.R -------------------
+
     path('post-create-new-client/', views.post_create_new_client, name="post_create_new_client"),
+
+    # ------------------- CREATE I.R -------------------
+
     path('post-create-new-IR/', views.post_create_new_IR, name="post_create_new_IR"),
     path('post-create-new-comment/', views.post_create_new_comment, name="post_create_new_comment"),
+
+
+    # ------------------- GET INFO I.R -------------------
+
+    path('get-all-data-JB-smart-IR', views.get_all_data_JB_smart_IR, name="get_all_data_JB_smart_IR"),
+    path('get-all-clients', views.get_all_clients, name="get_all_clients"),
+
+    # ------------------- UPDATE INFO I.R -------------------
+
+    path('update-values-lote-IR', views.post_edit_lote_IR, name="post_edit_lote_IR"),
+
+    # ------------------- CREATE DETELE I.R, CLIENT AND COMMENT I.R  -------------------
 
     path('post-delete-IR/', views.post_delete_iR, name="post_delete_iR"),
     path('post-delete-client/', views.post_delete_client, name="post_delete_client"),
     path('post-delete-comment-IR/', views.post_delete_comment_IR, name="post_delete_comment_IR"),
+
+    # ----
 
     path('post-edit-value-data-pagamento/', views.post_edit_value_data_pagamento, name="post_edit_value_data_pagamento"),
     path('post-edit-value-IR/', views.post_edit_value_IR, name="post_edit_value_IR"),

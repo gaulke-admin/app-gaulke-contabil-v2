@@ -866,7 +866,6 @@ def apont_hours_new_subtask(request):
         "msg": "success"
     })
 
-
 @login_required    
 def get_info_apont_hour(request):
     if request.method == "POST":
@@ -1269,11 +1268,11 @@ def get_all_data_JB_smart_IR(request):
             if dado.client.cod_sistema == "" or None or pend_valor_atual == True:
                 tt_pend += 1
                 data_pend_IR.update({tt_pend: value})
-                print(f"""
-                ----------------------------------
-                >>>> pendência identificada: {dado.pk} | {dado.client.contribuinte}
+                # print(f"""
+                # ----------------------------------
+                # >>>> pendência identificada: {dado.pk} | {dado.client.contribuinte}
 
-                """)
+                # """)
               
             data.update({cont: value})
             cont += 1
@@ -1907,6 +1906,48 @@ def post_edit_comment_IR(request):
             "code": 400,
             "msg": "error edit"
         })
+
+@login_required
+def post_edit_lote_IR(request):
+    try:
+        if request.method == "POST":
+            body = json.loads(request.body)
+            fields = body["fields"]
+            fields.update({"update_at": datetime.now(tz=tz.gettz("America/Sao Paulo"))})
+            codes_IR = body["codes_IR"]
+
+            print("\n\n ----------------- fields -----------------  ")
+            print(fields)       
+            print("\n\n ----------------- codes_IR -----------------  ")
+            print(codes_IR)
+            
+
+            data = Model_tb_imposto_de_renda.objects.all()
+            for code in codes_IR:
+                if fields.get("status_pagamento_IR"):
+                    if fields.get("status_pagamento_IR") == "Não":
+                        fields["dt_pagamento_IR"] = ""
+                        fields["info_forma_pagamento"] = ""
+                data.filter(pk=code).update(**fields)
+                
+                print(">>>>> SUCCESS UPDATE ID: ", code)
+
+            return JsonResponse({
+                "code": 200,
+                "msg": "success edit lote IR"
+            })
+        else:
+            return JsonResponse({
+                "code": 400,
+                "erro": "no-content"
+            })
+    except Exception as e:
+        print(f"\n\n ### ERROR EDIT LOTE I.R| ERROR: {e}")
+        return JsonResponse({
+            "code": 400,
+            "msg": "error edit lote"
+        })
+
 
 @login_required  
 def post_edit_value_data_pagamento(request):

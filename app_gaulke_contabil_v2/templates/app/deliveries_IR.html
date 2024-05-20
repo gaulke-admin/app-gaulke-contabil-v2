@@ -472,60 +472,10 @@
             block_actions_lote.classList.remove("active");
             brn_select_all_rows_deliveries.checked = false;
         }
+        
+
     }
-    
-    async function postSaveLote(){
-
-        let url = "{{url_update_lote_IR}}";
-        let data, arr_code_IR, data_row, id_row_table,
-            dificuldade_lote, status_smart_IR_lote, status_paymanet_lote, info_forma_pagamento, date_payment;
-
-        arr_code_IR = [];
-        dificuldade_lote = document.getElementById("dificuldade_lote").value;
-        status_smart_IR_lote = document.getElementById("status_smart_IR_lote").value;
-        status_paymanet_lote = document.getElementById("status_paymanet_lote").value;
-        info_forma_pagamento = document.getElementById("info_forma_pagamento_lote").value;
-        date_payment = document.getElementById("date_payment").value;
-
-        let rows = document.querySelectorAll(`[data-update-lote]`);
-        rows.forEach((row)=>{
-            
-            id_row_table = row.getAttribute("data-update-lote").split("-");
-            id_row_table = id_row_table[id_row_table.length -1];
-            console.log(` ------------------- row ------------------- | ${id_row_table} `)
-            console.log(row)
-            data_row = row.querySelector(".block-datails-row-update").querySelectorAll("p");
-            arr_code_IR.push(id_row_table);
-        });
-        data = {
-            "url": url,
-            "dificuldade_lote": dificuldade_lote,
-            "status_smart_IR_lote": status_smart_IR_lote,
-            "status_paymanet_lote": status_paymanet_lote,
-            "date_payment": date_payment,
-            "info_forma_pagamento": info_forma_pagamento,
-            "arr_code_IR": arr_code_IR
-        }
-        let headers = {
-            "Content-Type": "application/json",
-            "redirect": "follow",
-        };
-        console.log(data)
-        fetch(url, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data)
-        })
-        .then((data)=>{
-            return data.json();
-        })
-        .then((data)=>{
-            console.log(data)
-            updateTableInfo_JBSmartIR();
-        })
-    }
-    
-    
+        
     get_data_to_table_IR();
 </script>
 {% endblock %}

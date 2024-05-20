@@ -1,5 +1,5 @@
 <div class="container-modal" data-modal="options-alter-lote">
-    <div class="modal-import-file" style="width: 760px; max-width: 90%;">
+    <div class="modal-import-file" style="width: 95%; max-width: 95%;">
         <div class="block-action-modal">
             <span>
                 <i class="fa-regular fa-circle-xmark" id="options-alter-lote" onclick="displayModalByID(this);" > </i> <!-- data-modal-name="options-alter-lote" onclick="displayModal(this);" -->
@@ -9,8 +9,11 @@
         <div class="bloco-content-update-lote">
             <ul>
                 <li>
-                    <label for="dificuldade_lote">Dificuldade</label>
-                    <select name="dificuldade_lote" id="dificuldade_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                    <div class="block-option-input-lote">
+                        <input type="checkbox" data-input-name="dificuldade_lote" onclick="displayFieldUpdateLote(this);">
+                        <label for="dificuldade_lote">Dificuldade</label>
+                    </div>
+                    <select name="dificuldade_lote" id="dificuldade_lote" data-check-input-lote="1" data-field-name="dificuldade" onchange="displayBTNSaveLote(this)">
                         <option value="Muito simples">Muito simples</option>
                         <option value="Fácil">Fácil</option>
                         <option value="Média">Média</option>
@@ -19,8 +22,11 @@
                     </select>
                 </li>
                 <li>
-                    <label for="status_smart_IR_lote">Status SmartIR</label>
-                    <select name="status_smart_IR_lote" id="status_smart_IR_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                    <div class="block-option-input-lote">
+                        <input type="checkbox" data-input-name="status_smart_IR_lote" onclick="displayFieldUpdateLote(this);">
+                        <label for="status_smart_IR_lote">Status SmartIR</label>
+                    </div>
+                    <select name="status_smart_IR_lote" id="status_smart_IR_lote" data-check-input-lote="1" data-field-name="status_smart_IR" onchange="displayBTNSaveLote(this)">
     
                         <option value="Pronta para digitar"> Pronta para digitar </option>
                         <option value="Documentos pendentes"> Documentos pendentes </option>
@@ -35,15 +41,18 @@
                     </select>
                 </li>
                 <li>
-                    <label for="status_paymanet_lote">Pago</label>
-                    <select name="status_paymanet_lote" id="status_paymanet_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                    <div class="block-option-input-lote">
+                        <input type="checkbox" data-input-name="status_paymanet_lote" onclick="displayFieldUpdateLote(this);">
+                        <label for="status_paymanet_lote">Pago</label>
+                    </div>
+                    <select name="status_paymanet_lote" id="status_paymanet_lote" data-check-input-lote="1" data-field-name="status_pagamento_IR" onchange="displayBTNSaveLote(this)">
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
                     </select>
                 </li>
                 <li data-block-input="info_forma_pagamento_lote" style="display: none;">
                     <label for="info_forma_pagamento_lote">Forma de Pagamento</label>
-                    <select name="info_forma_pagamento_lote" id="info_forma_pagamento_lote" data-check-input="0" onchange="displayBTNSaveLote(this)">
+                    <select name="info_forma_pagamento_lote" id="info_forma_pagamento_lote" data-check-input-lote="0" data-field-name="info_forma_pagamento" onchange="displayBTNSaveLote(this)">
                         <option value="Pix">Pix</option>
                         <option value="Boleto">Boleto</option>
                         <option value="Caixa">Caixa</option>
@@ -51,11 +60,11 @@
                 </li>
                 <li data-block-input="date_payment" style="display: none;">
                     <label for="date_payment">Data Pagamento</label>
-                    <input type="date" name="date_payment" id="date_payment" onchange="displayBTNSaveLote(this)">
+                    <input type="date" name="date_payment" id="date_payment" data-check-input-lote="0" data-field-name="dt_pagamento_IR" onchange="displayBTNSaveLote(this)">
                 </li>
             </ul>
 
-            <article>
+            <article id="rows-update-lote-IR">
                 
             </article>
             <div id="btn-save-lote" class="block-btn-save-rows-lote">
@@ -67,6 +76,7 @@
 </div>
 
 <script>
+
     async function displayBTNSaveLote(element){
         
         let btn_save_lote = document.getElementById("btn-save-lote");
@@ -93,5 +103,71 @@
                 btn_save_lote.style.display = "none";
             }
         }
+    }
+
+    async function displayFieldUpdateLote(element){
+        let id = element.getAttribute("data-input-name");
+
+        document.querySelector(`[data-block-input="date_payment"]`).style.display = "none";
+        document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "none";
+
+        let el = document.getElementById(id);
+        if(element.checked){
+            el.setAttribute("data-check-input-lote", "0");
+            if (id == "status_paymanet_lote" && el.value == "Sim"){
+                document.querySelector(`[data-block-input="date_payment"]`).style.display = "flex";
+                document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "flex";
+            }
+        } else {
+            document.getElementById(id).setAttribute("data-check-input-lote", "1");
+            if (id == "status_paymanet_lote"){
+                el.querySelectorAll("option")[0].selected = true;
+            }
+
+        }
+    }
+
+
+    async function postSaveLote(){
+
+        let url = "{% url 'post_edit_lote_IR' %}";
+        
+        let update_lote = {
+            "fields": {},
+            "codes_IR": []
+        };
+
+        let field_to_update = document.querySelectorAll(`[data-check-input-lote]`).forEach((e)=>{
+            console.log(e.id)
+            if(e.getAttribute("data-check-input-lote") == "0" ){
+                update_lote["fields"][e.getAttribute("data-field-name")] = e.value;
+            }
+        });
+
+        let rows_update_lote_IR = document.getElementById("rows-update-lote-IR").querySelectorAll("[data-update-lote]").forEach((e)=>{
+            update_lote["codes_IR"].push( e.getAttribute("data-update-lote").split("row-id-table-IR-")[1] );
+        });
+
+        // ----
+        
+        let headers = {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{csrf_token}}",
+        };
+        console.log(update_lote)
+        fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(update_lote)
+        })
+        .then((response)=>{
+            return response.json();
+        })
+        .then((response)=>{
+            console.log("\n\n --------------------- inicio update_lote --------------------- ")
+            console.log(response)
+            console.log("\n\n --------------------- fim update_lote --------------------- ")
+            get_data_to_table_IR();
+        });
     }
 </script>
