@@ -1413,8 +1413,9 @@ def update_cliente_dataframe(dataframe):
             dificuldade             = str(dataframe["Dificuldade"][i])
 
             q_client = Model_tb_clients.objects.filter(cpf_cnpj=cpf)
-            dt = datetime.now(tz=tz.gettz("America/Sao Paulo"))
-            dt = timezone.make_aware(dt)
+            dt = datetime.now(tz=tz.gettz("America/Sao Paulo")).strftime("%Y-%m-%d %H:%M:%S")
+            # dt = datetime.now(tz=tz.gettz("America/Sao Paulo"))
+            # dt = timezone.make_aware(dt)
             print(f"""
                 ----------------------------
                 tt: {len(q_client)}
