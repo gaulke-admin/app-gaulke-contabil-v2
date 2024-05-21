@@ -1511,8 +1511,8 @@ def update_IR_consulta_declaracoes_dataframe(dataframe):
                     client_id=q_client[0].pk,
                     # ano=ano # ----------------------------------------------------------------------->>  verificar o impacto de manter ano no query. Fazer backup e restore.
                     )
-                dt = datetime.now(tz=tz.gettz("America/Sao Paulo"))
-                dt = timezone.make_aware(dt)
+                dt = datetime.now(tz=tz.gettz("America/Sao Paulo")).strftime("%Y-%m-%d %H:%M:%S")
+                # dt = timezone.make_aware(dt)
                 # print(f"""
                 #     ----------------------------
                 #     tt: {len(q_IR)}
