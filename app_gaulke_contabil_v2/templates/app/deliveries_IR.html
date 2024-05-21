@@ -8,13 +8,13 @@
 
     {% include 'snippets/menu/menu_superior_deliveries_IR.html' %}
 
-    {% include 'snippets/modal/modal_add_new_IR.html' %}
-    {% include 'snippets/modal/modal_confirm_delete_IR.html' %}
-    {% include 'snippets/modal/modal_add_new_comment.html' %}
-    {% include 'snippets/modal/modal_right_add_new_comment.html' %}
-    {% include 'snippets/modal/modal_filters_navbar_superior.html' %}
-    {% include 'snippets/modal/modal_alter_IR_lote.html' %}
-    {% include 'snippets/modal/modal_pendencies_deliveries_IR.html' %}
+    {% include 'snippets/modal_IR/modal_add_new_IR.html' %}
+    {% include 'snippets/modal_IR/modal_confirm_delete_IR.html' %}
+    {% include 'snippets/modal_IR/modal_add_new_comment.html' %}
+    {% include 'snippets/modal_IR/modal_right_add_new_comment.html' %}
+    {% include 'snippets/modal_IR/modal_filters_navbar_superior.html' %}
+    {% include 'snippets/modal_IR/modal_alter_IR_lote.html' %}
+    {% include 'snippets/modal_IR/modal_pendencies_deliveries_IR.html' %}
     
     <div class="container-generic">
 
@@ -68,6 +68,7 @@
                         <th class="w-col-150"> Valor Ano Atual (Anterior + 10%) </th>
                         <th class="w-col-200"> Situação Ano Anterior </th>
                         <th class="w-col-150"> I.R Pago? </th>
+                        <th class="w-col-150"> Forma Pagt. </th>
                         <th class="w-col-150"> Data Pagamento </th>
                         <th class="w-col-100 option-sticky-right"> Ações </th>
                     </tr>
@@ -211,131 +212,7 @@
     //     let data_value = element.getAttribute("data-value");
     //     console.log(id_table_IR)
     // }
-
-    async function updateDtPagamentoIR(element, dafault_process){
-
-        console.log(element)
-        let id_table_IR = element.getAttribute("data-id-delete-dt-pagamento");
-        let status_pagamento_IR = element.getAttribute("data-value");
-        let info_dt_pagamento = document.getElementById("info_dt_pagamento").value;
-        let info_forma_pagamento = document.getElementById("info_forma_pagamento").value;
-
-        if( !dafault_process ){
-            if (info_dt_pagamento == ""){
-                status_pagamento_IR = "Não";
-            }
-        }
-        
-        console.log(`
-            -----------------------------------
-            id_table_IR: ${id_table_IR}
-            status_pagamento_IR: ${status_pagamento_IR}
-            info_dt_pagamento: ${info_dt_pagamento}
-            info_forma_pagamento: ${info_forma_pagamento}
-            dafault_process: ${dafault_process}
-        `)
-
-        let url = `{% url 'post_edit_value_data_pagamento' %}`;
-        let headers = {
-            "X-CSRFToken": "{{csrf_token}}",
-        }
-        let body = {
-            "id_table_IR": id_table_IR,
-            "status_pagamento_IR": status_pagamento_IR,
-            "dt_pagamento_IR": info_dt_pagamento,
-            "info_forma_pagamento": info_forma_pagamento,
-            "dafault_process": dafault_process,
-        }
-        
-        fetch(url, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(body)
-        })
-        .then((data)=>{
-
-            if( status_pagamento_IR == "Sim" && dafault_process == false){
-                document.getElementById("info_dt_pagamento").value = "";
-                document.querySelector(".block-options-confirm-action").classList.remove("active");
-
-            }
-            return data.json();
-        })
-        .then((data)=>{
-            console.log(data)
-            if(data["code"] == 200) {
-
-                console.log(body)
-                get_data_to_table_IR();
-
-            }
-        })
-
-    }
-
-    async function openModal_InfoIR(element){
-
-        // ativa modal
-        document.querySelector(`[data-modal="add-new-comment"]`).classList.add("active");
-
-        let id_table_IR = element.getAttribute("data-row-comment");
-        // document.getElementById("input_modal_comment").setAttribute("data-id-table-IR", id_table_IR);
-
-        let contribuinte = document.getElementById(`row-contribuinte-${id_table_IR}`).value;
-        let cpf_cnpj = document.getElementById(`row-cpf_cnpj-${id_table_IR}`).value;
-        let celular = document.getElementById(`row-celular-${id_table_IR}`).value;
-        let telefone = document.getElementById(`row-telefone-${id_table_IR}`).value;
-        let ano = document.getElementById(`row-ano-${id_table_IR}`).value;
-        let status_smart_IR = document.getElementById(`row-status_smart_IR-${id_table_IR}`).value;
-        let dificuldade = document.getElementById(`row-dificuldade-${id_table_IR}`).value;
-        let valor_ano_anterior = document.getElementById(`row-valor_ano_anterior-${id_table_IR}`).value;
-        let valor_ano_atual = document.getElementById(`row-valor_ano_atual-${id_table_IR}`).value;
-        let situacao_ano_anterior = document.getElementById(`row-situacao_ano_anterior-${id_table_IR}`).value;
-        let status_pagamento_IR = document.getElementById(`row-status_pagamento_IR-${id_table_IR}`).value;
-        let dt_pagamento_IR = document.getElementById(`row-dt_pagamento_IR-${id_table_IR}`).value;
-
-        document.getElementById("id-delete-dt-pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
-
-
-        document.getElementById("info_contribuinte").innerText = contribuinte;
-        document.getElementById("info_cpf_cnpj").innerText = cpf_cnpj;
-        document.getElementById("info_celular").innerText = celular;
-        document.getElementById("info_telefone").innerText = telefone;
-        document.getElementById("info_ano").innerText = ano;
-        document.getElementById("info_status_smart_IR").innerText = status_smart_IR;
-        document.getElementById("info_dificuldade").innerText = dificuldade;
-        document.getElementById("info_valor_ano_anterior").innerText = valor_ano_anterior;
-        document.getElementById("info_valor_ano_atual").innerText = valor_ano_atual;
-        document.getElementById("info_situacao_ano_anterior").innerText = situacao_ano_anterior;
-        document.getElementById("info_dt_pagamento").value = dt_pagamento_IR;
-        document.getElementById("info_dt_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
-        document.getElementById("info_forma_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
-        // ----
-        document.getElementById("btn_open_modal_add_new_comment").setAttribute("data-id-table-IR", id_table_IR);
-        document.getElementById("text_new_comment_IR").setAttribute("data-id-table-IR", id_table_IR);
-
-
-
-        document.querySelector(`[data-more-info="dt_pagamento"]`).classList.remove("active");
-        document.querySelector(`[data-more-info="forma_pagamento"]`).classList.remove("active");
-      
-        document.getElementById("info_status_pagamento_IR").querySelectorAll("option").forEach((e)=>{
-
-            
-            if(e.value == status_pagamento_IR){
-                e.selected = true;
-                if(status_pagamento_IR == "Sim") {
-                    document.querySelector(`[data-more-info="dt_pagamento"]`).classList.add("active");
-                    document.querySelector(`[data-more-info="forma_pagamento"]`).classList.add("active");
-                }
-
-            } else {
-                e.selected = false;
-            }
-        });
-
-    }
-
+    
 
     async function selectAllRowsTable(){
 
@@ -472,10 +349,9 @@
             block_actions_lote.classList.remove("active");
             brn_select_all_rows_deliveries.checked = false;
         }
-        
-
     }
-        
+       
+    
     get_data_to_table_IR();
 </script>
 {% endblock %}

@@ -5,7 +5,7 @@
         
         <div class="block-header-modal">
             <div class="control-modal">
-                <i class="fa-solid fa-chevron-right" onclick="closeModalAddComment();"></i>
+                <i class="fa-solid fa-arrow-left-long" onclick="closeModalAddComment();"></i>
             </div>
             <span>
                 <p id="header_cpf"></p>
@@ -85,7 +85,8 @@
     }
     async function postNewCommentIR(){
 
-        let username = "leonardo_santos";
+        let first_name = "{{user.first_name}}";
+        let last_name = "{{user.last_name}}";
         let checkInput = await checkInputComment();
         let text_new_comment_IR = document.getElementById("text_new_comment_IR");
         
@@ -95,7 +96,8 @@
                 "X-CSRFToken": "{{csrf_token}}",
             }
             let body = {
-                "username": username,
+                "first_name": first_name,
+                "last_name": last_name,
                 "id_table_IR": text_new_comment_IR.getAttribute("data-id-table-IR"),
                 "comment": text_new_comment_IR.value,
             };

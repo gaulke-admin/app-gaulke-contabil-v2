@@ -70,6 +70,9 @@
             <div id="btn-save-lote" class="block-btn-save-rows-lote">
                 <button onclick="postSaveLote();">Salvar</button>
             </div>
+            <div class="block-msg-update-lote">
+                <span></span>
+            </div>
         </div>
 
     </div>
@@ -108,8 +111,10 @@
     async function displayFieldUpdateLote(element){
         let id = element.getAttribute("data-input-name");
 
-        document.querySelector(`[data-block-input="date_payment"]`).style.display = "none";
-        document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "none";
+        if (id == "status_paymanet_lote"){
+            document.querySelector(`[data-block-input="date_payment"]`).style.display = "none";
+            document.querySelector(`[data-block-input="info_forma_pagamento_lote"]`).style.display = "none";
+        }
 
         let el = document.getElementById(id);
         if(element.checked){
@@ -154,7 +159,8 @@
             "Content-Type": "application/json",
             "X-CSRFToken": "{{csrf_token}}",
         };
-        console.log(update_lote)
+        
+
         fetch(url, {
             method: "POST",
             headers: headers,
@@ -164,9 +170,21 @@
             return response.json();
         })
         .then((response)=>{
-            console.log("\n\n --------------------- inicio update_lote --------------------- ")
-            console.log(response)
-            console.log("\n\n --------------------- fim update_lote --------------------- ")
+            let block_msg_update = document.querySelector(".block-msg-update-lote span");
+            block_msg_update.classList.add("active");
+            setTimeout(()=>{
+                block_msg_update.classList.remove("active");
+                block_msg_update.textContent = "";
+            }, 2200);
+
+            if(response["code"]==200){
+                block_msg_update.textContent = "Alterações salvas.";
+                block_msg_update.style.color = "green";
+            } else {
+                block_msg_update.textContent = "Erro ao atualizar I.R.";
+                block_msg_update.style.color = "red";
+            }
+
             get_data_to_table_IR();
         });
     }

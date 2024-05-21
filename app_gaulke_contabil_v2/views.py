@@ -1245,6 +1245,7 @@ def get_all_data_JB_smart_IR(request):
                 "valor_ano_atual": valor_ano_atual,
                 "situacao_ano_anterior": dado.situacao_ano_anterior,
                 "status_pagamento_IR": dado.status_pagamento_IR,
+                "info_forma_pagamento": dado.info_forma_pagamento,
                 "dt_pagamento_IR": dado.dt_pagamento_IR,
             }
 
@@ -1698,7 +1699,10 @@ def post_create_new_comment(request):
     try:
         body = json.loads(request.body)
 
-        username    = body["username"]
+        first_name  = body["first_name"]
+        last_name   = body["last_name"]
+        username    = f"{first_name} {last_name}"
+
         id_table_IR = body["id_table_IR"]
         comment     = body["comment"]
 
@@ -1907,6 +1911,9 @@ def post_edit_comment_IR(request):
             "msg": "error edit"
         })
 
+
+# -------------------------------------------------- ALTERAÇÕES EM LOTE DO IMPOSTO DE RENDA --------------------------------------------------
+
 @login_required
 def post_edit_lote_IR(request):
     try:
@@ -1942,12 +1949,13 @@ def post_edit_lote_IR(request):
                 "erro": "no-content"
             })
     except Exception as e:
-        print(f"\n\n ### ERROR EDIT LOTE I.R| ERROR: {e}")
+        print(f"\n\n ### ERROR EDIT LOTE I.R | ERROR: {e}")
         return JsonResponse({
             "code": 400,
             "msg": "error edit lote"
         })
 
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @login_required  
 def post_edit_value_data_pagamento(request):

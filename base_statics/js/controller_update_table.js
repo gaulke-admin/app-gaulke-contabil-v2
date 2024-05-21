@@ -84,6 +84,7 @@ async function update_table_IR(){
                 
                 let status_smart_IR         = data[i]["status_smart_IR"];
                 let status_pagamento_IR     = data[i]["status_pagamento_IR"];
+                let info_forma_pagamento    = data[i]["info_forma_pagamento"];
 
                 let check_id_table_IR           = check_filter(id_table_IR, text_filter);
                 let check_ano                   = check_filter(ano, text_filter);
@@ -192,6 +193,12 @@ async function update_table_IR(){
                                     <td>
                                         <span>
                                             <input class="input-readonly" type="text" name="row-status_pagamento_IR-${id_table_IR}" id="row-status_pagamento_IR-${id_table_IR}" value="${status_pagamento_IR}" maxlength="55" data-field-name="status_pagamento_IR" oninput="post_edit_value_IR(this);" readonly>
+                                        </span>
+                                    </td>
+                                    
+                                    <td>
+                                        <span>
+                                            <input class="input-readonly" type="text" name="row-status_pagamento_IR-${id_table_IR}" id="row-info_forma_pagamento-${id_table_IR}" value="${info_forma_pagamento}" maxlength="55" data-field-name="info_forma_pagamento" oninput="post_edit_value_IR(this);" readonly>
                                         </span>
                                     </td>
         
