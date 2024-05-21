@@ -15,6 +15,7 @@
                 <span id="btn_open_modal_add_new_comment" data-name-block="add-new-comment" data-btn-generic="add-new-comment" data-id-table-IR="" onclick="openModalAddComment(this, 'none')">
                     <p> Comentários </p>
                     <i class="fa-solid fa-comment-dots"></i>
+                    <p><b id="card_tt_comment">0</b></p>
                 </span>
             </div>
 
@@ -77,13 +78,13 @@
                                     </div>
                                 </div>
                             </span>
-                            <span>
-                                <div>
-                                    <p>Situação Ano Anterior</p>
-                                    <p id="info_situacao_ano_anterior"></p>
-                                </div>
 
-                            </span>
+                            <!-- <span>
+                                <div>
+                                    <p>Comentários</p>
+                                    <p id="info_tt_comment"></p>
+                                </div>
+                            </span> -->
 
                             <div class="block-input-file block-row-info-generic" style="width: 100%;">
                                 <div>
@@ -151,20 +152,21 @@
 
         let id_table_IR = element.getAttribute("data-row-comment");
         // document.getElementById("input_modal_comment").setAttribute("data-id-table-IR", id_table_IR);
-
-        let contribuinte = document.getElementById(`row-contribuinte-${id_table_IR}`).value;
-        let cpf_cnpj = document.getElementById(`row-cpf_cnpj-${id_table_IR}`).value;
-        let celular = document.getElementById(`row-celular-${id_table_IR}`).value;
-        let telefone = document.getElementById(`row-telefone-${id_table_IR}`).value;
-        let ano = document.getElementById(`row-ano-${id_table_IR}`).value;
-        let status_smart_IR = document.getElementById(`row-status_smart_IR-${id_table_IR}`).value;
-        let dificuldade = document.getElementById(`row-dificuldade-${id_table_IR}`).value;
+        
+        let contribuinte = document.getElementById(`row-contribuinte-${id_table_IR}`).textContent;
+        let cpf_cnpj = document.getElementById(`row-cpf_cnpj-${id_table_IR}`).textContent;
+        let celular = document.getElementById(`row-celular-${id_table_IR}`).textContent;
+        let telefone = document.getElementById(`row-telefone-${id_table_IR}`).textContent;
+        let ano = document.getElementById(`row-ano-${id_table_IR}`).textContent;
+        let status_smart_IR = document.getElementById(`row-status_smart_IR-${id_table_IR}`).textContent;
+        let dificuldade = document.getElementById(`row-dificuldade-${id_table_IR}`).textContent;
         let valor_ano_anterior = document.getElementById(`row-valor_ano_anterior-${id_table_IR}`).value;
         let valor_ano_atual = document.getElementById(`row-valor_ano_atual-${id_table_IR}`).value;
-        let situacao_ano_anterior = document.getElementById(`row-situacao_ano_anterior-${id_table_IR}`).value;
-        let status_pagamento_IR = document.getElementById(`row-status_pagamento_IR-${id_table_IR}`).value;
-        let info_forma_pagamento = document.getElementById(`row-info_forma_pagamento-${id_table_IR}`).value;
-        let info_dt_pagamento = document.getElementById(`row-dt_pagamento_IR-${id_table_IR}`).value;
+        let tt_comment = document.getElementById(`row-tt_comments-${id_table_IR}`).textContent;
+        let status_pagamento_IR = document.getElementById(`row-status_pagamento_IR-${id_table_IR}`).textContent;
+        let info_forma_pagamento = document.getElementById(`row-info_forma_pagamento-${id_table_IR}`).textContent;
+        let info_dt_pagamento = document.getElementById(`row-dt_pagamento_IR-${id_table_IR}`).textContent;
+
 
         // document.getElementById("id-delete-dt-pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
 
@@ -178,15 +180,18 @@
         document.getElementById("info_dificuldade").innerText = dificuldade;
         document.getElementById("info_valor_ano_anterior").innerText = valor_ano_anterior;
         document.getElementById("info_valor_ano_atual").innerText = valor_ano_atual;
-        document.getElementById("info_situacao_ano_anterior").innerText = situacao_ano_anterior;
         document.getElementById("info_dt_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
         document.getElementById("info_forma_pagamento").setAttribute("data-id-delete-dt-pagamento", id_table_IR);
         // ----
         document.getElementById("btn_open_modal_add_new_comment").setAttribute("data-id-table-IR", id_table_IR);
         document.getElementById("text_new_comment_IR").setAttribute("data-id-table-IR", id_table_IR);
-
+        
         document.getElementById("info_status_pagamento_IR").textContent = status_pagamento_IR;
         document.getElementById("info_forma_pagamento").textContent = info_forma_pagamento;
+        
+        // document.getElementById("info_tt_comment").innerText = tt_comment;
+        document.getElementById("card_tt_comment").innerText = tt_comment;
+
 
         if(info_dt_pagamento != ""){
             let dt_formatada = new Date(info_dt_pagamento);

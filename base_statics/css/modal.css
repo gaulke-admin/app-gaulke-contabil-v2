@@ -368,16 +368,30 @@
 }
 .block-comments span {
     gap: 6px;
+    height: 40px;
     color: white;
-    border: 1px solid var(--color-principal-azul-claro);
     background: var(--color-principal-azul-claro);
-    border-radius: 4px;
+    border-radius: 4.5px;
     cursor: pointer;
 }
+
 .block-comments span p {
     margin: 0;
     padding: 0;
+    min-width: 32px;
 }
+.block-comments span p b  {
+    color: #ffd42f;
+    background: #fbfbfb24;
+    border-radius: 8px;
+    padding: 2px 4px;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .block-col {
     display: flex;
     flex-direction: column;

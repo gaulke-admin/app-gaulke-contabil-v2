@@ -24,5 +24,31 @@
 }
 .block-table-info table thead tr th:nth-child(3),
 .block-table-info table tbody tr td:nth-child(3) {
-    left: 149px;
+    left: 114px;
+}
+
+
+.block-btns-table-IR {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding: 4px 12px;
+}
+.block-btns-table-IR button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 12px;
+    gap: 8px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    color: white;
+    background: #1f6e42;
+    transition: .4s all;
+}
+.block-btns-table-IR button:hover {
+    background: #165933;
 }

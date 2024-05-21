@@ -48,6 +48,13 @@
 
         </div>
 
+        <div class="block-btns-table-IR">
+            <button onclick="download_IR_CSV()">
+                <span>Download CSV</span>
+                <i class="fa-solid fa-file-csv"></i>
+            </button>
+        </div>
+
         <div class="block-table-info">
             <table class="table table-striped" data-table-name="table-indo-JB-SMART-IR">
 
@@ -56,20 +63,20 @@
                         <th style="width: 45px; text-align: center;">
                             <input type="checkbox" id="brn-select-all-rows-deliveries" onclick="selectAllRowsTable();">
                         </th>
-                        <th class="w-col-60"> Cód Sistema </th>
-                        <th class="w-col-200"> Contribuinte </th>
-                        <th class="w-col-150"> CPF </th>
-                        <th class="w-col-150"> Celular </th>
-                        <th class="w-col-150"> Telefone </th>
-                        <th class="w-col-100"> Ano </th>
-                        <th class="w-col-200"> Status Smart I.R </th>
-                        <th class="w-col-150"> Dificuldade </th>
-                        <th class="w-col-150"> Valor Ano Anterior </th>
-                        <th class="w-col-150"> Valor Ano Atual (Anterior + 10%) </th>
-                        <th class="w-col-200"> Situação Ano Anterior </th>
-                        <th class="w-col-150"> I.R Pago? </th>
-                        <th class="w-col-150"> Forma Pagt. </th>
-                        <th class="w-col-150"> Data Pagamento </th>
+                        <th data-table-header="table-IR" class="w-col-60"> Cód Sistema </th>
+                        <th data-table-header="table-IR" class="w-col-200"> Contribuinte </th>
+                        <th data-table-header="table-IR" class="w-col-150"> CPF </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Celular </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Telefone </th>
+                        <th data-table-header="table-IR" class="w-col-100"> Ano </th>
+                        <th data-table-header="table-IR" class="w-col-200"> Status Smart I.R </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Dificuldade </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Valor Ano Anterior </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Valor Ano Atual (Anterior + 10%) </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Comentários </th>
+                        <th data-table-header="table-IR" class="w-col-150"> I.R Pago? </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Forma Pagt. </th>
+                        <th data-table-header="table-IR" class="w-col-150"> Data Pagamento </th>
                         <th class="w-col-100 option-sticky-right"> Ações </th>
                     </tr>
                 </thead>
@@ -206,12 +213,6 @@
 
 
     }
-
-    // async function deleteDtPagamentoIR(element) {
-    //     let id_table_IR = element.getAttribute("data-id-delete-dt-pagamento");
-    //     let data_value = element.getAttribute("data-value");
-    //     console.log(id_table_IR)
-    // }
     
 
     async function selectAllRowsTable(){
@@ -235,9 +236,9 @@
                 elements_lote.push(`
                     <span data-update-lote="${id_row_update}">
                         <div class="block-datails-row-update">
-                            <p>#${td[1].querySelector("span").querySelector("input").value}</p>
-                            <p>${td[3].querySelector("span").querySelector("input").value}</p>
-                            <p>${td[2].querySelector("span").querySelector("input").value}</p>
+                            <p>#${td[1].querySelector("span").textContent}</p>
+                            <p>${td[3].querySelector("span").textContent}</p>
+                            <p>${td[2].querySelector("span").textContent}</p>
                         </div>
                         <div>
                             <i class="fa-solid fa-xmark" title="remover" data-remove-row-to-update="${id_row_update}" onclick="removeRowToUpdate(this);"></i>
@@ -286,9 +287,9 @@
                 elements_lote.push(`
                     <span data-update-lote="${id_row_update}">
                         <div class="block-datails-row-update">
-                            <p>#${td[1].querySelector("span").querySelector("input").value}</p>
-                            <p>${td[3].querySelector("span").querySelector("input").value}</p>
-                            <p>${td[2].querySelector("span").querySelector("input").value}</p>
+                            <p>#${td[1].querySelector("span").textContent}</p>
+                            <p>${td[3].querySelector("span").textContent}</p>
+                            <p>${td[2].querySelector("span").textContent}</p>
                         </div>
                         <div>
                             <i class="fa-solid fa-xmark" title="remover" data-remove-row-to-update="${id_row_update}" onclick="removeRowToUpdate(this);"></i>

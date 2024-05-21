@@ -34,7 +34,7 @@ class Model_tb_imposto_de_renda(models.Model):
     update_at = models.DateTimeField(default=datetime.now(tz=tz.gettz("America/Sao Paulo")))
 
 class Model_tb_imposto_de_renda_comments(models.Model):
-    IR       = models.ForeignKey(Model_tb_imposto_de_renda, on_delete=models.CASCADE)
+    IR          = models.ForeignKey(Model_tb_imposto_de_renda, on_delete=models.CASCADE)
     username    = models.CharField(max_length=155)
     comment     = models.CharField(max_length=155)
     created_at  = models.DateTimeField(default=datetime.now(tz=tz.gettz("America/Sao Paulo")))

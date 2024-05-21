@@ -1186,7 +1186,13 @@ def post_file_to_import_JB(request):
             "error": str(e)
         })
 
+
+
 # ---------------- GET AND POST DATA -- PROCESS FILES TO UPDATE DATA MYSQL ----------------
+def get_tt_comments_IR(delivery_IR_ID):
+    tt = Model_tb_imposto_de_renda_comments.objects.filter(IR_id=delivery_IR_ID).count()
+    return tt
+
 @login_required
 def get_all_data_JB_smart_IR(request):
     """
@@ -1243,7 +1249,7 @@ def get_all_data_JB_smart_IR(request):
                 "dificuldade": dado.dificuldade,
                 "valor_ano_anterior": valor_ano_anterior,
                 "valor_ano_atual": valor_ano_atual,
-                "situacao_ano_anterior": dado.situacao_ano_anterior,
+                "tt_comments": get_tt_comments_IR(delivery_IR_ID=dado.client.pk),
                 "status_pagamento_IR": dado.status_pagamento_IR,
                 "info_forma_pagamento": dado.info_forma_pagamento,
                 "dt_pagamento_IR": dado.dt_pagamento_IR,
@@ -1633,13 +1639,10 @@ def post_create_new_IR(request):
         cpf_cnpj                = body["cpf_cnpj"]
         ano                     = body["ano"]
         dificuldade             = body["dificuldade"]
-        situacao_ano_anterior   = body["situacao_ano_anterior"]
         valor_ano_anterior      = body["valor_ano_anterior"]
         valor_ano_atual         = body["valor_ano_atual"]
         status_smart_IR         = body["status_smart_IR"]
-    
-
-
+        
         print(f"\n\n ---- body ----- ")
         print(body)
 
@@ -1649,7 +1652,6 @@ def post_create_new_IR(request):
             ano: {ano} | {type(ano)}
             dificuldade: {dificuldade} | {type(dificuldade)}
             status_smart_IR: {status_smart_IR} | {type(status_smart_IR)}
-            situacao_ano_anterior: {situacao_ano_anterior} | {type(situacao_ano_anterior)}
             valor_ano_anterior: {valor_ano_anterior} | {type(valor_ano_anterior)}
             valor_ano_atual: {valor_ano_atual} | {type(valor_ano_atual)}
         """)
@@ -1667,7 +1669,6 @@ def post_create_new_IR(request):
                 dificuldade=dificuldade, 
                 valor_ano_anterior=valor_ano_anterior,
                 valor_ano_atual=valor_ano_atual,
-                situacao_ano_anterior=situacao_ano_anterior,
                 created_at=datetime.now(tz=tz.gettz("America/Sao Paulo")),
                 update_at=datetime.now(tz=tz.gettz("America/Sao Paulo"))
             )
