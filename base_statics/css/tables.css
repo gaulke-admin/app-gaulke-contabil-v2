@@ -17,14 +17,17 @@
 .block-table-info table thead tr th:nth-child(1),
 .block-table-info table tbody tr td:nth-child(1) {
     left: -12px;
+    /* z-index: 1; */
 }
 .block-table-info table thead tr th:nth-child(2),
 .block-table-info table tbody tr td:nth-child(2) {
     left: 49px;
+    /* z-index: 1; */
 }
 .block-table-info table thead tr th:nth-child(3),
 .block-table-info table tbody tr td:nth-child(3) {
     left: 114px;
+    /* z-index: 1; */
 }
 
 

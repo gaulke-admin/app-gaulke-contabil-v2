@@ -17,6 +17,7 @@
                             <td style="min-width: 150px;" >Contribuinte</td>
                             <td style="min-width: 150px;" >CPF</td>
                             <td style="min-width: 90px;"  >Ano</td>
+                            <td style="min-width: 90px;"  >Status Smart IR</td>
                             <td style="min-width: 105px;" >Valor Ano Anterior</td>
                             <td style="min-width: 105px;" >Valor Ano Atual (Anterior + 10%)</td>
                         </tr>
@@ -65,6 +66,7 @@
                     <td>${data_pend_IR[i]["contribuinte"]}</td>
                     <td>${data_pend_IR[i]["cpf_cnpj"]}</td>
                     <td>${data_pend_IR[i]["ano"]}</td>
+                    <td>${data_pend_IR[i]["status_smart_IR"]}</td>
                     <td>${data_pend_IR[i]["valor_ano_anterior"]}</td>
                     <td>
                         <input type="text" value="${value_valor_ano_atual}" data-field-name="valor_ano_atual" data-client-code="${IR_code}" oninput="update_object_edit_info(this);">

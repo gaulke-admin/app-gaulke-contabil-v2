@@ -61,6 +61,7 @@ async function get_all_companies(url){
         data_all_companies = JSON.parse(data["data"]);
         update_dropdown_all_companies_session(data);
         updateDropdownAllCompaniesCreateNewApontHours(data_all_companies);
+        
         return;
     })
     .then(()=>{

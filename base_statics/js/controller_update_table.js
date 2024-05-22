@@ -221,7 +221,10 @@ async function update_table_IR(){
         
 
         return resolve();
-    });
+    })
+    // .then(()=>{
+    //     renderizerTableAllDeliveriesIR();
+    // });
 
 }
 

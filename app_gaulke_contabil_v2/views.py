@@ -428,7 +428,6 @@ def home(request):
 
     print(user[0].is_superuser)
 
-    
     if request.method == "GET":
         context = {
             "get_all_companies": True,
@@ -923,7 +922,7 @@ def imports_JB(request):
 @login_required
 def post_file_to_import_JB(request):
     """
-        return: json com dados processados de extratos bancários, contas a pagar/receber e demais processos do setor contábil.
+        return: json com data_IRs processados de extratos bancários, contas a pagar/receber e demais processos do setor contábil.
     """
     try:
         if request.method == "POST":
@@ -1196,7 +1195,7 @@ def get_tt_comments_IR(delivery_IR_ID):
 @login_required
 def get_all_data_JB_smart_IR(request):
     """
-        return: retorna json com dados dos I.R extraídas do sistema Smart JB Software
+        return: retorna json com data_IRs dos I.R extraídas do sistema Smart JB Software
     """
     valor_porcent_add = 0.1
     try:
@@ -1209,50 +1208,50 @@ def get_all_data_JB_smart_IR(request):
             "status_pagamento": ["Todos"],
             "forma_pagamento": ["Todos"],
         }
-        dados = Model_tb_imposto_de_renda.objects.select_related('client').all().order_by("client__contribuinte")
+        data_IRs = Model_tb_imposto_de_renda.objects.select_related('client').all().order_by("client__contribuinte")
         cont = 0
         tt_pend = 0
-        for dado in dados:
+        for data_IR in data_IRs:
 
-            if dado.ano not in data_filters["ano"]:
-                if dado.ano != "":
-                    data_filters["ano"].append(dado.ano)
-            if dado.dificuldade not in data_filters["dificuldade"]:
-                if dado.dificuldade != "":
-                    data_filters["dificuldade"].append(dado.dificuldade)
+            if data_IR.ano not in data_filters["ano"]:
+                if data_IR.ano != "":
+                    data_filters["ano"].append(data_IR.ano)
+            if data_IR.dificuldade not in data_filters["dificuldade"]:
+                if data_IR.dificuldade != "":
+                    data_filters["dificuldade"].append(data_IR.dificuldade)
             
-            if dado.status_smart_IR not in data_filters["status_smart_IR"]:
-                if dado.status_smart_IR != "":
-                    data_filters["status_smart_IR"].append(dado.status_smart_IR)
+            if data_IR.status_smart_IR not in data_filters["status_smart_IR"]:
+                if data_IR.status_smart_IR != "":
+                    data_filters["status_smart_IR"].append(data_IR.status_smart_IR)
             
-            if dado.status_pagamento_IR not in data_filters["status_pagamento"]:
-                if dado.status_pagamento_IR != "":
-                    data_filters["status_pagamento"].append(dado.status_pagamento_IR)
+            if data_IR.status_pagamento_IR not in data_filters["status_pagamento"]:
+                if data_IR.status_pagamento_IR != "":
+                    data_filters["status_pagamento"].append(data_IR.status_pagamento_IR)
             
-            if dado.info_forma_pagamento not in data_filters["forma_pagamento"]:
-                if dado.info_forma_pagamento != "":
-                    data_filters["forma_pagamento"].append(dado.info_forma_pagamento)
+            if data_IR.info_forma_pagamento not in data_filters["forma_pagamento"]:
+                if data_IR.info_forma_pagamento != "":
+                    data_filters["forma_pagamento"].append(data_IR.info_forma_pagamento)
                         
-            valor_ano_anterior = dado.valor_ano_anterior
-            valor_ano_atual = dado.valor_ano_atual
+            valor_ano_anterior = data_IR.valor_ano_anterior
+            valor_ano_atual = data_IR.valor_ano_atual
 
             value = {
-                "id_table_CLIENT": dado.client.pk,
-                "id_table_IR": dado.pk,
-                "cod_sistema": dado.client.cod_sistema,
-                "contribuinte": dado.client.contribuinte,
-                "cpf_cnpj": dado.client.cpf_cnpj,
-                "celular": dado.client.celular,
-                "telefone": dado.client.telefone,
-                "ano": dado.ano,
-                "status_smart_IR": dado.status_smart_IR,
-                "dificuldade": dado.dificuldade,
+                "id_table_CLIENT": data_IR.client.pk,
+                "id_table_IR": data_IR.pk,
+                "cod_sistema": data_IR.client.cod_sistema,
+                "contribuinte": data_IR.client.contribuinte,
+                "cpf_cnpj": data_IR.client.cpf_cnpj,
+                "celular": data_IR.client.celular,
+                "telefone": data_IR.client.telefone,
+                "ano": data_IR.ano,
+                "status_smart_IR": data_IR.status_smart_IR,
+                "dificuldade": data_IR.dificuldade,
                 "valor_ano_anterior": valor_ano_anterior,
                 "valor_ano_atual": valor_ano_atual,
-                "tt_comments": get_tt_comments_IR(delivery_IR_ID=dado.client.pk),
-                "status_pagamento_IR": dado.status_pagamento_IR,
-                "info_forma_pagamento": dado.info_forma_pagamento,
-                "dt_pagamento_IR": dado.dt_pagamento_IR,
+                "tt_comments": get_tt_comments_IR(delivery_IR_ID=data_IR.client.pk),
+                "status_pagamento_IR": data_IR.status_pagamento_IR,
+                "info_forma_pagamento": data_IR.info_forma_pagamento,
+                "dt_pagamento_IR": data_IR.dt_pagamento_IR,
             }
 
             pend_valor_atual = False
@@ -1267,17 +1266,17 @@ def get_all_data_JB_smart_IR(request):
                 elif calc_valor_atual_aux[len(calc_valor_atual_aux)-2:len(calc_valor_atual_aux)-1] == ".":
                     calc_valor_atual_aux = f"{calc_valor_atual_aux}0".replace(".", ",")
                 value["valor_ano_atual"] = calc_valor_atual_aux
-                # print(f"\n ------------------------------- CPF: {dado.client.cpf_cnpj} | ID: {dado.pk}")
+                # print(f"\n ------------------------------- CPF: {data_IR.client.cpf_cnpj} | ID: {data_IR.pk}")
                 # print(valor_ano_anterior, " | ", calc_valor_atual_aux)
 
 
 
-            if dado.client.cod_sistema == "" or None or pend_valor_atual == True:
+            if data_IR.client.cod_sistema == "" or None or pend_valor_atual == True or data_IR.status_smart_IR == "Inativa":
                 tt_pend += 1
                 data_pend_IR.update({tt_pend: value})
                 # print(f"""
                 # ----------------------------------
-                # >>>> pendência identificada: {dado.pk} | {dado.client.contribuinte}
+                # >>>> pendência identificada: {data_IR.pk} | {data_IR.client.contribuinte}
 
                 # """)
               
@@ -1286,7 +1285,7 @@ def get_all_data_JB_smart_IR(request):
         
         print(f"""
             ----------------------------
-            Total IR encontrados: {len(dados)}
+            Total IR encontrados: {len(data_IRs)}
         """)
 
 
@@ -2128,7 +2127,7 @@ def post_query_by_field_cod_sistema(request):
 @login_required
 def post_query_by_cpf(request):
     """
-        return dict: Verifica se existe algum cliente cadastrado com o "cpf_cnpj" informado e retornado os dados do cliente.
+        return dict: Verifica se existe algum cliente cadastrado com o "cpf_cnpj" informado e retornado os data_IRs do cliente.
     """
     body = json.loads(request.body)
     field_name = body["field_name"]
