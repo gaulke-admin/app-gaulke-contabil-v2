@@ -1270,13 +1270,13 @@ def get_all_data_JB_smart_IR(request):
                 # print(valor_ano_anterior, " | ", calc_valor_atual_aux)
 
 
-
-            if data_IR.client.cod_sistema == "" or None or pend_valor_atual == True or data_IR.status_smart_IR == "Inativa":
-                tt_pend += 1
-                data_pend_IR.update({tt_pend: value})
-                # print(f"""
-                # ----------------------------------
-                # >>>> pendência identificada: {data_IR.pk} | {data_IR.client.contribuinte}
+            if data_IR.status_smart_IR != "Inativa":
+                if data_IR.client.cod_sistema == "" or None or pend_valor_atual == True:
+                    tt_pend += 1
+                    data_pend_IR.update({tt_pend: value})
+                    # print(f"""
+                    # ----------------------------------
+                    # >>>> pendência identificada: {data_IR.pk} | {data_IR.client.contribuinte}
 
                 # """)
               
